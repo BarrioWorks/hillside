@@ -32,7 +32,6 @@ async function start(): Promise<void> {
   const seed = 2026;
   const core = await createCore(seed);
   const library = new ModelLibrary(core.catalog());
-  await library.loadDetails();
   if (params.has('contact-sheet')) {
     showContactSheet(library, core.catalog());
     return;
@@ -117,7 +116,7 @@ async function start(): Promise<void> {
       }
     }
   });
-  world = new World(ui.canvas, controller.snapshot, library, (state) => ui.asset(state));
+  world = new World(ui.canvas, controller.snapshot, library);
   ui.lighting(world.lighting);
   let renderedSnapshot = controller.snapshot;
   controller.subscribe(() => {
@@ -207,7 +206,6 @@ async function start(): Promise<void> {
     metrics: () => ({
       ...world.metrics(),
       coreMilliseconds: controller.coreMilliseconds,
-      catalogAssets: library.detailsStatus,
       revision: controller.snapshot.revision,
     }),
     command: (command) => controller.execute(command),

@@ -297,7 +297,7 @@ fn save_load_roundtrip_is_versioned_and_atomic() {
     assert_eq!(snapshot(&game)["connected"], original["connected"]);
     assert_eq!(snapshot(&game)["revision"], 1);
     assert_eq!(save(&game)["version"], 1);
-    assert_eq!(save(&game)["terrainId"], "hillside-v1");
+    assert_eq!(save(&game)["terrainId"], "hillside-v2");
     let mut other = Game::new(33);
     assert_eq!(load(&mut other, &save(&game))["ok"], true);
     assert_eq!(
@@ -308,6 +308,22 @@ fn save_load_roundtrip_is_versioned_and_atomic() {
 }
 
 #[test]
+fn legacy_banded_saves_keep_their_original_terrain() {
+    let mut legacy = Game::new(7);
+    assert_eq!(load(&mut legacy, &empty_save(7))["ok"], true);
+    assert_eq!(save(&legacy)["terrainId"], "hillside-v1");
+    let state = snapshot(&legacy);
+    for z in 0..32 {
+        for x in 0..32 {
+            assert_eq!(height(&state, x, z), height(&state, x - x % 8, z));
+        }
+    }
+    assert_ne!(state["cells"], snapshot(&Game::new(7))["cells"]);
+    command(&mut legacy, json!({"type":"reset","seed":7}));
+    assert_eq!(save(&legacy)["terrainId"], "hillside-v2");
+}
+
+#[test]
 fn unsupported_or_missing_terrain_is_rejected_atomically() {
     let mut game = Game::new(2026);
     command(&mut game, json!({"type":"benchmark"}));
@@ -315,7 +331,7 @@ fn unsupported_or_missing_terrain_is_rejected_atomically() {
     let before_snapshot = game.snapshot();
     let before_save = save(&game);
     let mut unsupported = before_save.clone();
-    unsupported["terrainId"] = json!("hillside-v2");
+    unsupported["terrainId"] = json!("hillside-v9");
     let result = load(&mut game, &unsupported);
     assert_eq!(result["ok"], false);
     assert!(result["message"]

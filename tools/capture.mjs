@@ -9,6 +9,7 @@ await mkdir(out, { recursive: true });
 function buildNeighborhood(size) {
   const api = window.__barrio;
   api.command({ type: 'reset', seed: 2026 });
+  if (size === 'starter') return;
   for (const s of api.snapshot().structures) api.command({ type: 'remove', x: s.x, z: s.z });
   const snapshot = api.snapshot();
   const height = new Map(snapshot.cells.map((c) => [`${c.x},${c.z}`, c.height]));
@@ -37,6 +38,7 @@ function buildNeighborhood(size) {
     }
     return i;
   };
+  if (size === 'starter') return;
   if (size === 'single') {
     place('casa', 15, 15, [0]);
     return;
@@ -90,6 +92,7 @@ function buildNeighborhood(size) {
 
 const center = [16, 1.2, 16];
 const shots = [
+  { name: '00-starter', scene: 'starter', view: {}, ui: false },
   { name: '01-single-house', scene: 'single', view: { zoom: 3.4, target: [15.5, 1.5, 15.5] }, ui: false },
   { name: '02-six-buildings', scene: 'six', view: { zoom: 2.2, target: [16, 1.8, 17] }, ui: false },
   { name: '03-dense-hillside', scene: 'dense', view: { zoom: 1.35, target: center }, ui: false },

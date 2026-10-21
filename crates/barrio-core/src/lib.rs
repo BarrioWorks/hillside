@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
 use catalog::CATALOG;
-use terrain::{CELL_COUNT, DEPTH, TERRAIN_ID, WIDTH};
+use terrain::{Generator, CELL_COUNT, DEPTH, WIDTH};
 use world::{Preview, Structure, World};
 
 const SAVE_VERSION: u32 = 1;
@@ -137,7 +137,7 @@ impl Game {
     pub fn save(&self) -> String {
         json(&Save {
             version: SAVE_VERSION,
-            terrain_id: TERRAIN_ID.into(),
+            terrain_id: self.world.generator.id().into(),
             seed: self.world.seed,
             width: WIDTH,
             depth: DEPTH,
@@ -314,9 +314,9 @@ fn validate_save(input: &str) -> Result<(World, u32), String> {
     if save.version != SAVE_VERSION {
         return Err("This neighborhood uses an unsupported save version.".into());
     }
-    if save.terrain_id != TERRAIN_ID {
+    let Some(generator) = Generator::parse(&save.terrain_id) else {
         return Err("This neighborhood uses an unsupported terrain type.".into());
-    }
+    };
     if save.width != WIDTH || save.depth != DEPTH {
         return Err("Neighborhoods must use a 32 by 32 hillside.".into());
     }
@@ -327,7 +327,7 @@ fn validate_save(input: &str) -> Result<(World, u32), String> {
         return Err("This file has an invalid next placement identifier.".into());
     }
     let mut ids = HashSet::new();
-    let mut world = World::empty(save.seed);
+    let mut world = World::with_terrain(save.seed, generator);
     for structure in save.structures {
         if structure.id == 0 || structure.id >= save.next_id || !ids.insert(structure.id) {
             return Err("This file has duplicate or invalid placement identifiers.".into());

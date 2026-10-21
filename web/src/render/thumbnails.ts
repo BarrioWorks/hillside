@@ -2,9 +2,9 @@ import * as THREE from 'three';
 import type { BuildingDefinition } from '../domain';
 import type { ModelLibrary } from './models';
 export function lighting(scene: THREE.Scene): void {
-  scene.add(new THREE.HemisphereLight('#edf4fc', '#a6a58d', 2.4));
-  const sun = new THREE.DirectionalLight('#fff0d4', 3.1);
-  sun.position.set(-5, 9, 7);
+  scene.add(new THREE.HemisphereLight('#dfe9ef', '#b49a7a', 1.7));
+  const sun = new THREE.DirectionalLight('#ffe2bd', 3.2);
+  sun.position.set(-4, 9, 7);
   scene.add(sun);
 }
 export function thumbnails(
@@ -17,8 +17,7 @@ export function thumbnails(
   renderer.setSize(size, size);
   renderer.setPixelRatio(1);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
+  renderer.toneMapping = THREE.NeutralToneMapping;
   const scene = new THREE.Scene();
   lighting(scene);
   const result = new Map<string, string>();

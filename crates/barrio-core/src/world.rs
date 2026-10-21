@@ -3,7 +3,7 @@ use std::collections::{HashSet, VecDeque};
 use serde::{Deserialize, Serialize};
 
 use crate::catalog::{definition, footprint, Category};
-use crate::terrain::{self, facing, index, neighbor, CELL_COUNT, DEPTH, WIDTH};
+use crate::terrain::{self, facing, index, neighbor, Generator, CELL_COUNT, DEPTH, WIDTH};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -41,6 +41,7 @@ impl Preview {
 #[derive(Clone)]
 pub struct World {
     pub seed: u32,
+    pub generator: Generator,
     pub heights: [u8; CELL_COUNT],
     pub structures: Vec<Structure>,
     occupancy: [Option<usize>; CELL_COUNT],
@@ -48,9 +49,14 @@ pub struct World {
 
 impl World {
     pub fn empty(seed: u32) -> Self {
+        Self::with_terrain(seed, Generator::LATEST)
+    }
+
+    pub fn with_terrain(seed: u32, generator: Generator) -> Self {
         Self {
             seed,
-            heights: terrain::generate(seed),
+            generator,
+            heights: generator.generate(seed),
             structures: Vec::new(),
             occupancy: [None; CELL_COUNT],
         }
@@ -227,51 +233,79 @@ impl World {
         largest
     }
 
+    /// A dense, terrain-adaptive starter: a stair spine up the slope, three cross streets that step
+    /// with the contours, and homes packed along both sides facing the street.
     pub fn starter(seed: u32, next_id: &mut u32) -> Self {
         let mut world = Self::empty(seed);
-        for z in 5..29 {
-            let kind = if world.height(15, z - 1) == world.height(15, z) + 1 {
-                "stairs"
-            } else {
-                "path"
-            };
-            world.add(kind, 15, z, 2, next_id);
-        }
-        for z in [10, 16, 22] {
-            for x in 7..25 {
+        let street = |world: &mut Self, x: u32, z: u32, rotations: [u32; 2], next_id: &mut u32| {
+            if !rotations
+                .iter()
+                .any(|&rotation| world.add("stairs", x, z, rotation, next_id))
+            {
                 world.add("path", x, z, 0, next_id);
             }
+        };
+        for z in 3..30 {
+            street(&mut world, 15, z, [2, 0], next_id);
         }
-        let buildings = [
-            ("casa", 8, 11, 0),
-            ("tienda", 11, 11, 0),
-            ("torre", 17, 11, 0),
-            ("terraza", 21, 11, 0),
-            ("taller", 8, 17, 0),
-            ("esquina", 12, 17, 0),
-            ("casa", 17, 17, 0),
-            ("torre", 21, 17, 0),
-            ("tienda", 8, 23, 0),
-            ("casa", 12, 23, 0),
-            ("esquina", 17, 23, 0),
-            ("taller", 21, 23, 0),
+        let rows = [8, 15, 22];
+        for z in rows {
+            for x in 4..28 {
+                if x != 15 {
+                    street(&mut world, x, z, [1, 3], next_id);
+                }
+            }
+        }
+        let kinds = [
+            "casa", "tienda", "esquina", "torre", "casa", "terraza", "taller", "casa", "esquina",
+            "tienda", "casa", "torre", "casa", "esquina", "casa", "terraza",
         ];
-        for (kind, x, z, rotation) in buildings {
-            world.add(kind, x, z, rotation, next_id);
+        let mut lots: Vec<(u32, u32, u32)> = Vec::new();
+        for z in 3..30 {
+            lots.push((14, z, 1));
+            lots.push((16, z, 3));
         }
-        for (kind, x, z) in [
-            ("bench", 19, 11),
-            ("planter", 10, 17),
-            ("planter", 20, 23),
-            ("tree", 6, 14),
-        ] {
-            world.add(kind, x, z, 0, next_id);
+        for z in rows {
+            for x in 4..28 {
+                if x != 15 {
+                    lots.push((x, z - 1, 0));
+                    lots.push((x, z + 1, 2));
+                }
+            }
         }
-        for z in 6..28 {
-            for x in 5..27 {
-                let random = terrain::mix(seed ^ (x << 16) ^ z);
-                if random.is_multiple_of(19) {
-                    world.add("tree", x, z, random % 4, next_id);
+        // Dense near the spine, thinning toward the edges, with occasional gaps left for gardens.
+        lots.sort_by_key(|&(x, z, _)| x.abs_diff(15) * 2 + z.abs_diff(15) / 2);
+        let mut placed = 0;
+        for (x, z, facing_street) in lots {
+            if placed >= 46 || terrain::mix(seed ^ (x << 12) ^ (z << 4)).is_multiple_of(7) {
+                continue;
+            }
+            let kind = kinds[placed % kinds.len()];
+            let def = definition(kind).expect("starter kinds are in the catalog");
+            for turn in [0, 1, 3, 2] {
+                let rotation = (facing_street + turn) % 4;
+                let (width, depth) = footprint(def, rotation);
+                // Anchor the footprint so its front edge, not its corner, meets the street.
+                let (ox, oz) = match rotation {
+                    0 => (x, z.saturating_sub(depth - 1)),
+                    1 => (x.saturating_sub(width - 1), z),
+                    _ => (x, z),
+                };
+                if world.add(kind, ox, oz, rotation, next_id) {
+                    placed += 1;
+                    break;
+                }
+            }
+        }
+        let props = ["tree", "planter", "bench", "tree", "tree", "planter"];
+        let mut prop = 0;
+        for z in rows {
+            for x in [6, 10, 20, 24, 12, 18] {
+                for dz in [1, 2] {
+                    if prop < 16 && world.add(props[prop % props.len()], x, z + dz, 0, next_id) {
+                        prop += 1;
+                        break;
+                    }
                 }
             }
         }
