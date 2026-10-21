@@ -30,6 +30,9 @@ const DIRECTIONS = [
 ] as const;
 const PLACE_MS = 340;
 const REMOVE_MS = 170;
+const RING_POOL = 6;
+/** Edits larger than this (loads, resets, undoing a reset) appear at once instead of raining down. */
+const ANIMATED_EDIT_LIMIT = 4;
 const MIN_ZOOM = 0.55;
 const MAX_ZOOM = 6;
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
@@ -71,10 +74,11 @@ export class World {
   private readonly marker: THREE.Mesh;
   private readonly outline: THREE.LineLoop;
   private readonly rings: { mesh: THREE.Mesh; start: number }[] = [];
+  private readonly ringGeometry = new THREE.RingGeometry(0.42, 0.5, 40).rotateX(-Math.PI / 2);
   private readonly raycaster = new THREE.Raycaster();
   private readonly pointer = new THREE.Vector2();
   private readonly resizeObserver: ResizeObserver;
-  private targetZoom = 1;
+  private targetZoom = 1.2;
   private orbitTarget: number | null = null;
   private lastFrame = 0;
   private frameRequest = 0;
@@ -131,6 +135,8 @@ export class World {
     this.controls.minPolarAngle = 0.5;
     this.controls.maxPolarAngle = 1.2;
     this.controls.screenSpacePanning = false;
+    this.camera.zoom = this.targetZoom = 1.2;
+    this.camera.updateProjectionMatrix();
     this.controls.update();
     this.controls.saveState();
     this.controls.addEventListener('change', () => {
@@ -220,7 +226,11 @@ export class World {
       animate = false;
     }
     const now = performance.now();
-    const motion = animate && !this.reducedMotion;
+    const wanted = new Set(snapshot.structures.map((s) => s.id));
+    const changes =
+      snapshot.structures.filter((s) => !this.structures.has(s.id)).length +
+      [...this.structures.keys()].filter((id) => !wanted.has(id)).length;
+    const motion = animate && !this.reducedMotion && changes <= ANIMATED_EDIT_LIMIT;
     const occupied = new Map<number, Structure>();
     for (const structure of snapshot.structures) {
       const def = this.definitions.get(structure.kind);
@@ -229,7 +239,6 @@ export class World {
       for (let z = structure.z; z < structure.z + d; z++)
         for (let x = structure.x; x < structure.x + w; x++) occupied.set(z * snapshot.width + x, structure);
     }
-    const wanted = new Set(snapshot.structures.map((s) => s.id));
     for (const [id, entry] of this.structures)
       if (!wanted.has(id)) {
         this.structures.delete(id);
@@ -435,8 +444,9 @@ export class World {
   private ring(position: THREE.Vector3, size: number): void {
     let slot = this.rings.find((ring) => !ring.mesh.visible);
     if (!slot) {
+      if (this.rings.length >= RING_POOL) return;
       const mesh = new THREE.Mesh(
-        new THREE.RingGeometry(0.42, 0.5, 40).rotateX(-Math.PI / 2),
+        this.ringGeometry,
         new THREE.MeshBasicMaterial({ color: PALETTE.offWhite, transparent: true, depthWrite: false }),
       );
       mesh.renderOrder = 2;
@@ -601,6 +611,8 @@ export class World {
     this.decor.dispose();
     this.lights.dispose();
     this.ghostMaterial.dispose();
+    this.ringGeometry.dispose();
+    for (const ring of this.rings) (ring.mesh.material as THREE.Material).dispose();
     this.renderer.dispose();
   }
 }

@@ -1,26 +1,60 @@
+export type Cue = 'place' | 'remove' | 'refuse';
+
+/** Quiet, synthesized foley: a short filtered noise "tok" over a low body tone, pitch-jittered so repeats never sound identical. */
 export class Sound {
   muted = false;
   private context: AudioContext | null = null;
-  play(valid = true): void {
+  private noise: AudioBuffer | null = null;
+
+  play(cue: Cue = 'place'): void {
     if (this.muted) return;
     try {
       this.context ??= new AudioContext();
       const context = this.context;
       void context.resume();
-      const oscillator = context.createOscillator();
-      const gain = context.createGain();
-      oscillator.type = 'sine';
-      oscillator.frequency.setValueAtTime(valid ? 660 : 180, context.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(valid ? 990 : 130, context.currentTime + 0.12);
-      gain.gain.setValueAtTime(0.0001, context.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.06, context.currentTime + 0.008);
-      gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.18);
-      oscillator.connect(gain);
-      gain.connect(context.destination);
-      oscillator.start();
-      oscillator.stop(context.currentTime + 0.2);
+      const now = context.currentTime;
+      const jitter = 0.92 + Math.random() * 0.16;
+      const tone = { place: 210, remove: 150, refuse: 110 }[cue] * jitter;
+      const output = context.createGain();
+      output.gain.value = cue === 'refuse' ? 0.05 : 0.09;
+      output.connect(context.destination);
+
+      const body = context.createOscillator();
+      const bodyGain = context.createGain();
+      body.type = 'triangle';
+      body.frequency.setValueAtTime(tone * 1.6, now);
+      body.frequency.exponentialRampToValueAtTime(tone, now + 0.08);
+      bodyGain.gain.setValueAtTime(0.0001, now);
+      bodyGain.gain.exponentialRampToValueAtTime(0.7, now + 0.006);
+      bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + (cue === 'remove' ? 0.12 : 0.2));
+      body.connect(bodyGain).connect(output);
+      body.start(now);
+      body.stop(now + 0.25);
+
+      if (cue !== 'refuse') {
+        this.noise ??= this.whiteNoise(context);
+        const click = context.createBufferSource();
+        click.buffer = this.noise;
+        const filter = context.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = (cue === 'place' ? 1900 : 1200) * jitter;
+        filter.Q.value = 1.4;
+        const clickGain = context.createGain();
+        clickGain.gain.setValueAtTime(0.5, now);
+        clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+        click.connect(filter).connect(clickGain).connect(output);
+        click.start(now);
+        click.stop(now + 0.06);
+      }
     } catch {
       this.muted = true;
     }
+  }
+
+  private whiteNoise(context: AudioContext): AudioBuffer {
+    const buffer = context.createBuffer(1, Math.floor(context.sampleRate * 0.06), context.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+    return buffer;
   }
 }

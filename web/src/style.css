@@ -802,6 +802,10 @@ body.ui-hidden #world {
     width: 18px;
     height: 18px;
   }
+  .view-tools [data-action^="rotate-"],
+  .view-tools .tool-divider {
+    display: none;
+  }
   .bottom-ui {
     width: calc(100% - 24px);
     bottom: max(12px, env(safe-area-inset-bottom));

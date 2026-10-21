@@ -79,7 +79,17 @@ function wallFor(
   return brick;
 }
 
-function window(b: Builder, s: Style, side: Side, m: Mass, u: number, v: number, w = 0.24, h = 0.3): void {
+function window(
+  b: Builder,
+  s: Style,
+  side: Side,
+  m: Mass,
+  u: number,
+  v: number,
+  w = 0.24,
+  h = 0.3,
+  grille = false,
+): void {
   const r = facePoint(side, m.w / 2, m.d / 2, u, 0)[2];
   const at = (out: number, along = 0): [number, number] => {
     const [px, pz] = facePoint(side, m.w / 2, m.d / 2, u + along, out);
@@ -95,7 +105,7 @@ function window(b: Builder, s: Style, side: Side, m: Mass, u: number, v: number,
   b.box(w + 0.1, 0.035, 0.06, lx, v + h / 2 + 0.05, lz, 'concrete', Surface.concrete, r);
   const [mx, mz] = at(0.035);
   b.box(0.018, h, 0.02, mx, v, mz, s.finish === 'painted' ? 'offWhite' : s.trim, Surface.paint, r);
-  if (s.grilles) {
+  if (grille) {
     for (let i = 1; i < 4; i++) {
       const [qx, qz] = at(0.05, -w / 2 + (i * w) / 4);
       b.box(0.012, h + 0.02, 0.012, qx, v, qz, 'metal', Surface.metal, r);
@@ -159,7 +169,7 @@ function balcony(b: Builder, s: Style, side: Side, m: Mass, u: number, y: number
   const [rx, rz] = facePoint(side, m.w / 2, m.d / 2, u, 0.23);
   b.box(w, 0.02, 0.02, m.x + rx, y + 0.24, m.z + rz, s.trim, Surface.metal, r);
   b.box(w, 0.012, 0.012, m.x + rx, y + 0.06, m.z + rz, s.trim, Surface.metal, r);
-  const posts = Math.max(3, Math.round(w / 0.07));
+  const posts = Math.max(3, Math.round(w / 0.1));
   for (let i = 0; i <= posts; i++) {
     const [px, pz] = facePoint(side, m.w / 2, m.d / 2, u - w / 2 + (i * w) / posts, 0.23);
     b.box(0.011, 0.22, 0.011, m.x + px, y + 0.13, m.z + pz, 'metal', Surface.metal, r);
@@ -226,7 +236,8 @@ function mass(b: Builder, s: Style, m: Mass, rule: BayRule): void {
       for (let i = 0; i < count; i++) {
         const u = -along / 2 + (i + 0.5) * bay;
         const kind = rule(storey + level, i, count, side);
-        if (kind === 'window') window(b, s, side, m, u, y0 + STOREY * 0.55);
+        if (kind === 'window')
+          window(b, s, side, m, u, y0 + STOREY * 0.55, 0.24, 0.3, s.grilles && storey + level === 0);
         else if (kind === 'balcony') {
           window(b, s, side, m, u, y0 + STOREY * 0.5, 0.2, 0.4);
           balcony(b, s, side, m, u, y0 + 0.05, Math.min(bay * 0.95, 0.5));
@@ -273,7 +284,7 @@ function roof(
       [0.018, r.d, r.x - r.w / 2 + 0.02, r.z],
     ] as const) {
       b.block(w, 0.02, d, x, r.y + 0.26, z, s.trim, Surface.metal);
-      const posts = Math.round(Math.max(w, d) / 0.08);
+      const posts = Math.round(Math.max(w, d) / 0.12);
       for (let i = 0; i <= posts; i++) {
         const t = -0.5 + i / posts;
         b.block(

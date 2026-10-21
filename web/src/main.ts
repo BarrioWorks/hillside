@@ -143,8 +143,9 @@ async function start(): Promise<void> {
     const click = gestures.up(event.pointerId);
     if (click && event.button === 0) {
       controller.point(world.pick(event.clientX, event.clientY));
+      const removing = controller.tool.type === 'remove';
       const changed = controller.place();
-      sound.play(changed);
+      sound.play(!changed ? 'refuse' : removing ? 'remove' : 'place');
     }
   });
   ui.canvas.addEventListener('pointercancel', (event) => gestures.cancel(event.pointerId));

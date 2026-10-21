@@ -28,7 +28,7 @@ try {
   const loadStart = performance.now();
   await page.goto(`${baseURL}/?benchmark`, { waitUntil: 'networkidle' });
   await page.waitForFunction(() => window.__barrio?.ready === true);
-  await page.waitForFunction(() => window.__barrio.metrics().asset.status === 'ready');
+  await page.waitForFunction(() => window.__barrio.metrics().renderFrames > 0);
   const readyMilliseconds = performance.now() - loadStart;
   const save = await page.evaluate(() => {
     const stored = sessionStorage.getItem('barrio.autosave.v1');
@@ -89,6 +89,29 @@ try {
       metrics,
     });
   }
+  const memory = await page.evaluate(async () => {
+    const api = window.__barrio;
+    api.renderContinuously(false);
+    const read = () => {
+      const { geometries, textures, allocatedBatchCount } = api.metrics();
+      return { geometries, textures, allocatedBatchCount };
+    };
+    const free = api
+      .snapshot()
+      .cells.filter((cell) => api.preview('casa', cell.x, cell.z).valid)
+      .slice(0, 20);
+    const cycle = async () => {
+      for (const cell of free)
+        api.command({ type: 'place', kind: 'casa', x: cell.x, z: cell.z, rotation: 0 });
+      await new Promise((done) => setTimeout(done, 450));
+      for (const cell of free) api.command({ type: 'remove', x: cell.x, z: cell.z });
+      await new Promise((done) => setTimeout(done, 450));
+    };
+    await cycle();
+    const after1 = read();
+    for (let i = 0; i < 9; i++) await cycle();
+    return { cycles: 10, placementsPerCycle: free.length, afterFirstCycle: after1, afterTenCycles: read() };
+  });
   assert.deepEqual(failures, [], 'Benchmark page and network requests must succeed.');
   const ordered = runs.map((run) => run.metrics.frameMs).sort((a, b) => a - b);
   const result = {
@@ -97,6 +120,7 @@ try {
     buildAssets: (await readdir('dist/assets')).filter((file) => /\.(js|css|wasm)$/.test(file)).sort(),
     host,
     mode: 'production build, explicit SwiftShader software rendering',
+    quality: await page.evaluate(() => window.__barrio.metrics().graphics),
     method:
       'Generate the deterministic stress neighborhood, import 500 evenly distributed structures through the real save-file input, warm up for three seconds, then sample five eight-second runs with continuous rendering. Frame throughput uses actual rendered frames and host elapsed time. Frame intervals include browser scheduling, CPU work, and software rasterization.',
     limitations:
@@ -107,10 +131,12 @@ try {
     frameMedianMilliseconds: ordered[2],
     frameMedianRangeMilliseconds: [ordered[0], ordered.at(-1)],
     errors: failures,
+    memory,
     runs,
   };
   await mkdir('docs/benchmarks', { recursive: true });
-  await writeFile('docs/benchmarks/software-renderer.json', `${JSON.stringify(result, null, 2)}\n`);
+  const output = process.env.BARRIO_BENCHMARK_OUT ?? 'docs/benchmarks/software-renderer-redesign.json';
+  await writeFile(output, `${JSON.stringify(result, null, 2)}\n`);
   console.info(JSON.stringify(result, null, 2));
 } finally {
   await browser.close();
