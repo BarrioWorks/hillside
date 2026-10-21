@@ -1,0 +1,14 @@
+ 22:04:05 up 2 days,  2:06,  2 users,  load average: 10.05, 6.97, 3.88
+8
+    PID COMMAND         %CPU
+1886012 headless_shell   409
+1886123 headless_shell   362
+1886369 wasm-opt         104
+1886396 ps              50.0
+1886278 npm run build:w 20.2
+1886391 bash            20.0
+1886211 npm run build   11.8
+1886189 headless_shell  10.5
+1885981 MainThread       6.8
+1338597 node-MainThread  5.4
+1886294 MainThread       5.3

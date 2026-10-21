@@ -1,0 +1,42 @@
+{
+  "recordedAt": "2026-10-20T22:20:06.753Z",
+  "runtime": "v24.22.0",
+  "platform": "linux",
+  "cpu": "AMD EPYC 7B13 64-Core Processor",
+  "wasmSHA256": "ce928897147bd943e3751dfdd000a0aade4cff4bc188640b0e6874a2b8639339",
+  "method": "Five fresh games after one warmup. Time only the compiled WASM benchmark command and returned Rust-serialized JSON. JavaScript command creation and response parsing stay outside the timed region.",
+  "limitations": "Node WASM timing measures the same release core, not browser scheduling, scene updates, or GPU rendering. No comparative speedup is claimed.",
+  "medianMilliseconds": 3.8439809999999994,
+  "rangeMilliseconds": [
+    1.8383280000000042,
+    5.621206000000001
+  ],
+  "errors": 0,
+  "samples": [
+    {
+      "run": 1,
+      "milliseconds": 2.4818439999999953,
+      "structures": 1024
+    },
+    {
+      "run": 2,
+      "milliseconds": 1.8383280000000042,
+      "structures": 1024
+    },
+    {
+      "run": 3,
+      "milliseconds": 5.621206000000001,
+      "structures": 1024
+    },
+    {
+      "run": 4,
+      "milliseconds": 3.8439809999999994,
+      "structures": 1024
+    },
+    {
+      "run": 5,
+      "milliseconds": 4.093227999999996,
+      "structures": 1024
+    }
+  ]
+}

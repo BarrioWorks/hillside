@@ -1,0 +1,1128 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-20T22:25:18.204Z",
+  "title": "Design System: Barrio Builder",
+  "extensions": {
+    "colorMeta": {
+      "blue": {
+        "displayName": "Blue",
+        "role": "primary",
+        "tonalRamp": [
+          "oklch(15.00% 0.22464 264.08)",
+          "oklch(26.43% 0.22464 264.08)",
+          "oklch(37.86% 0.22464 264.08)",
+          "oklch(49.29% 0.22464 264.08)",
+          "oklch(60.71% 0.22464 264.08)",
+          "oklch(72.14% 0.22464 264.08)",
+          "oklch(83.57% 0.22464 264.08)",
+          "oklch(95.00% 0.22464 264.08)"
+        ]
+      },
+      "secondary": {
+        "displayName": "Secondary",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.04239 256.05)",
+          "oklch(26.43% 0.04239 256.05)",
+          "oklch(37.86% 0.04239 256.05)",
+          "oklch(49.29% 0.04239 256.05)",
+          "oklch(60.71% 0.04239 256.05)",
+          "oklch(72.14% 0.04239 256.05)",
+          "oklch(83.57% 0.04239 256.05)",
+          "oklch(95.00% 0.04239 256.05)"
+        ]
+      },
+      "surface": {
+        "displayName": "Surface",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 89.88)",
+          "oklch(26.43% 0.00000 89.88)",
+          "oklch(37.86% 0.00000 89.88)",
+          "oklch(49.29% 0.00000 89.88)",
+          "oklch(60.71% 0.00000 89.88)",
+          "oklch(72.14% 0.00000 89.88)",
+          "oklch(83.57% 0.00000 89.88)",
+          "oklch(95.00% 0.00000 89.88)"
+        ]
+      },
+      "line": {
+        "displayName": "Line",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.01789 253.35)",
+          "oklch(26.43% 0.01789 253.35)",
+          "oklch(37.86% 0.01789 253.35)",
+          "oklch(49.29% 0.01789 253.35)",
+          "oklch(60.71% 0.01789 253.35)",
+          "oklch(72.14% 0.01789 253.35)",
+          "oklch(83.57% 0.01789 253.35)",
+          "oklch(95.00% 0.01789 253.35)"
+        ]
+      },
+      "ink": {
+        "displayName": "Ink",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.03050 256.86)",
+          "oklch(26.43% 0.03050 256.86)",
+          "oklch(37.86% 0.03050 256.86)",
+          "oklch(49.29% 0.03050 256.86)",
+          "oklch(60.71% 0.03050 256.86)",
+          "oklch(72.14% 0.03050 256.86)",
+          "oklch(83.57% 0.03050 256.86)",
+          "oklch(95.00% 0.03050 256.86)"
+        ]
+      },
+      "atmosphere": {
+        "displayName": "Atmosphere",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.01487 175.69)",
+          "oklch(26.43% 0.01487 175.69)",
+          "oklch(37.86% 0.01487 175.69)",
+          "oklch(49.29% 0.01487 175.69)",
+          "oklch(60.71% 0.01487 175.69)",
+          "oklch(72.14% 0.01487 175.69)",
+          "oklch(83.57% 0.01487 175.69)",
+          "oklch(95.00% 0.01487 175.69)"
+        ]
+      },
+      "cloud": {
+        "displayName": "Cloud",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.00623 255.47)",
+          "oklch(26.43% 0.00623 255.47)",
+          "oklch(37.86% 0.00623 255.47)",
+          "oklch(49.29% 0.00623 255.47)",
+          "oklch(60.71% 0.00623 255.47)",
+          "oklch(72.14% 0.00623 255.47)",
+          "oklch(83.57% 0.00623 255.47)",
+          "oklch(95.00% 0.00623 255.47)"
+        ]
+      },
+      "hover": {
+        "displayName": "Hover",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.01199 259.82)",
+          "oklch(26.43% 0.01199 259.82)",
+          "oklch(37.86% 0.01199 259.82)",
+          "oklch(49.29% 0.01199 259.82)",
+          "oklch(60.71% 0.01199 259.82)",
+          "oklch(72.14% 0.01199 259.82)",
+          "oklch(83.57% 0.01199 259.82)",
+          "oklch(95.00% 0.01199 259.82)"
+        ]
+      },
+      "action-deep": {
+        "displayName": "Action Deep",
+        "role": "primary",
+        "tonalRamp": [
+          "oklch(15.00% 0.19837 263.98)",
+          "oklch(26.43% 0.19837 263.98)",
+          "oklch(37.86% 0.19837 263.98)",
+          "oklch(49.29% 0.19837 263.98)",
+          "oklch(60.71% 0.19837 263.98)",
+          "oklch(72.14% 0.19837 263.98)",
+          "oklch(83.57% 0.19837 263.98)",
+          "oklch(95.00% 0.19837 263.98)"
+        ]
+      },
+      "selected": {
+        "displayName": "Selected",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.01824 269.09)",
+          "oklch(26.43% 0.01824 269.09)",
+          "oklch(37.86% 0.01824 269.09)",
+          "oklch(49.29% 0.01824 269.09)",
+          "oklch(60.71% 0.01824 269.09)",
+          "oklch(72.14% 0.01824 269.09)",
+          "oklch(83.57% 0.01824 269.09)",
+          "oklch(95.00% 0.01824 269.09)"
+        ]
+      },
+      "model-selected": {
+        "displayName": "Model Selected",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.01403 268.49)",
+          "oklch(26.43% 0.01403 268.49)",
+          "oklch(37.86% 0.01403 268.49)",
+          "oklch(49.29% 0.01403 268.49)",
+          "oklch(60.71% 0.01403 268.49)",
+          "oklch(72.14% 0.01403 268.49)",
+          "oklch(83.57% 0.01403 268.49)",
+          "oklch(95.00% 0.01403 268.49)"
+        ]
+      },
+      "keycap": {
+        "displayName": "Keycap",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.00797 253.85)",
+          "oklch(26.43% 0.00797 253.85)",
+          "oklch(37.86% 0.00797 253.85)",
+          "oklch(49.29% 0.00797 253.85)",
+          "oklch(60.71% 0.00797 253.85)",
+          "oklch(72.14% 0.00797 253.85)",
+          "oklch(83.57% 0.00797 253.85)",
+          "oklch(95.00% 0.00797 253.85)"
+        ]
+      },
+      "border-strong": {
+        "displayName": "Border Strong",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.03126 251.34)",
+          "oklch(26.43% 0.03126 251.34)",
+          "oklch(37.86% 0.03126 251.34)",
+          "oklch(49.29% 0.03126 251.34)",
+          "oklch(60.71% 0.03126 251.34)",
+          "oklch(72.14% 0.03126 251.34)",
+          "oklch(83.57% 0.03126 251.34)",
+          "oklch(95.00% 0.03126 251.34)"
+        ]
+      },
+      "divider-soft": {
+        "displayName": "Divider Soft",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.00744 260.73)",
+          "oklch(26.43% 0.00744 260.73)",
+          "oklch(37.86% 0.00744 260.73)",
+          "oklch(49.29% 0.00744 260.73)",
+          "oklch(60.71% 0.00744 260.73)",
+          "oklch(72.14% 0.00744 260.73)",
+          "oklch(83.57% 0.00744 260.73)",
+          "oklch(95.00% 0.00744 260.73)"
+        ]
+      },
+      "menu-divider": {
+        "displayName": "Menu Divider",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.01142 252.09)",
+          "oklch(26.43% 0.01142 252.09)",
+          "oklch(37.86% 0.01142 252.09)",
+          "oklch(49.29% 0.01142 252.09)",
+          "oklch(60.71% 0.01142 252.09)",
+          "oklch(72.14% 0.01142 252.09)",
+          "oklch(83.57% 0.01142 252.09)",
+          "oklch(95.00% 0.01142 252.09)"
+        ]
+      },
+      "selection-surface": {
+        "displayName": "Selection Surface",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 89.88)",
+          "oklch(26.43% 0.00000 89.88)",
+          "oklch(37.86% 0.00000 89.88)",
+          "oklch(49.29% 0.00000 89.88)",
+          "oklch(60.71% 0.00000 89.88)",
+          "oklch(72.14% 0.00000 89.88)",
+          "oklch(83.57% 0.00000 89.88)",
+          "oklch(95.00% 0.00000 89.88)"
+        ]
+      },
+      "sun-surface": {
+        "displayName": "Sun Surface",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 89.88)",
+          "oklch(26.43% 0.00000 89.88)",
+          "oklch(37.86% 0.00000 89.88)",
+          "oklch(49.29% 0.00000 89.88)",
+          "oklch(60.71% 0.00000 89.88)",
+          "oklch(72.14% 0.00000 89.88)",
+          "oklch(83.57% 0.00000 89.88)",
+          "oklch(95.00% 0.00000 89.88)"
+        ]
+      },
+      "sun-ink": {
+        "displayName": "Sun Ink",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.04146 159.46)",
+          "oklch(26.43% 0.04146 159.46)",
+          "oklch(37.86% 0.04146 159.46)",
+          "oklch(49.29% 0.04146 159.46)",
+          "oklch(60.71% 0.04146 159.46)",
+          "oklch(72.14% 0.04146 159.46)",
+          "oklch(83.57% 0.04146 159.46)",
+          "oklch(95.00% 0.04146 159.46)"
+        ]
+      },
+      "caption-ink": {
+        "displayName": "Caption Ink",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.03600 168.57)",
+          "oklch(26.43% 0.03600 168.57)",
+          "oklch(37.86% 0.03600 168.57)",
+          "oklch(49.29% 0.03600 168.57)",
+          "oklch(60.71% 0.03600 168.57)",
+          "oklch(72.14% 0.03600 168.57)",
+          "oklch(83.57% 0.03600 168.57)",
+          "oklch(95.00% 0.03600 168.57)"
+        ]
+      },
+      "caption-secondary": {
+        "displayName": "Caption Secondary",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.03172 163.31)",
+          "oklch(26.43% 0.03172 163.31)",
+          "oklch(37.86% 0.03172 163.31)",
+          "oklch(49.29% 0.03172 163.31)",
+          "oklch(60.71% 0.03172 163.31)",
+          "oklch(72.14% 0.03172 163.31)",
+          "oklch(83.57% 0.03172 163.31)",
+          "oklch(95.00% 0.03172 163.31)"
+        ]
+      },
+      "caption-line": {
+        "displayName": "Caption Line",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.04449 153.75)",
+          "oklch(26.43% 0.04449 153.75)",
+          "oklch(37.86% 0.04449 153.75)",
+          "oklch(49.29% 0.04449 153.75)",
+          "oklch(60.71% 0.04449 153.75)",
+          "oklch(72.14% 0.04449 153.75)",
+          "oklch(83.57% 0.04449 153.75)",
+          "oklch(95.00% 0.04449 153.75)"
+        ]
+      },
+      "hint-ink": {
+        "displayName": "Hint Ink",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.03774 167.15)",
+          "oklch(26.43% 0.03774 167.15)",
+          "oklch(37.86% 0.03774 167.15)",
+          "oklch(49.29% 0.03774 167.15)",
+          "oklch(60.71% 0.03774 167.15)",
+          "oklch(72.14% 0.03774 167.15)",
+          "oklch(83.57% 0.03774 167.15)",
+          "oklch(95.00% 0.03774 167.15)"
+        ]
+      },
+      "hint-muted": {
+        "displayName": "Hint Muted",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.03218 162.56)",
+          "oklch(26.43% 0.03218 162.56)",
+          "oklch(37.86% 0.03218 162.56)",
+          "oklch(49.29% 0.03218 162.56)",
+          "oklch(60.71% 0.03218 162.56)",
+          "oklch(72.14% 0.03218 162.56)",
+          "oklch(83.57% 0.03218 162.56)",
+          "oklch(95.00% 0.03218 162.56)"
+        ]
+      },
+      "hint-dot": {
+        "displayName": "Hint Dot",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.08948 156.42)",
+          "oklch(26.43% 0.08948 156.42)",
+          "oklch(37.86% 0.08948 156.42)",
+          "oklch(49.29% 0.08948 156.42)",
+          "oklch(60.71% 0.08948 156.42)",
+          "oklch(72.14% 0.08948 156.42)",
+          "oklch(83.57% 0.08948 156.42)",
+          "oklch(95.00% 0.08948 156.42)"
+        ]
+      },
+      "feedback-danger": {
+        "displayName": "Feedback Danger",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.16618 19.91)",
+          "oklch(26.43% 0.16618 19.91)",
+          "oklch(37.86% 0.16618 19.91)",
+          "oklch(49.29% 0.16618 19.91)",
+          "oklch(60.71% 0.16618 19.91)",
+          "oklch(72.14% 0.16618 19.91)",
+          "oklch(83.57% 0.16618 19.91)",
+          "oklch(95.00% 0.16618 19.91)"
+        ]
+      },
+      "feedback-danger-surface": {
+        "displayName": "Feedback Danger Surface",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.00858 17.30)",
+          "oklch(26.43% 0.00858 17.30)",
+          "oklch(37.86% 0.00858 17.30)",
+          "oklch(49.29% 0.00858 17.30)",
+          "oklch(60.71% 0.00858 17.30)",
+          "oklch(72.14% 0.00858 17.30)",
+          "oklch(83.57% 0.00858 17.30)",
+          "oklch(95.00% 0.00858 17.30)"
+        ]
+      },
+      "placement-danger": {
+        "displayName": "Placement Danger",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15.00% 0.17911 20.27)",
+          "oklch(26.43% 0.17911 20.27)",
+          "oklch(37.86% 0.17911 20.27)",
+          "oklch(49.29% 0.17911 20.27)",
+          "oklch(60.71% 0.17911 20.27)",
+          "oklch(72.14% 0.17911 20.27)",
+          "oklch(83.57% 0.17911 20.27)",
+          "oklch(95.00% 0.17911 20.27)"
+        ]
+      },
+      "world-plaster": {
+        "displayName": "World Plaster",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.01879 100.14)",
+          "oklch(26.43% 0.01879 100.14)",
+          "oklch(37.86% 0.01879 100.14)",
+          "oklch(49.29% 0.01879 100.14)",
+          "oklch(60.71% 0.01879 100.14)",
+          "oklch(72.14% 0.01879 100.14)",
+          "oklch(83.57% 0.01879 100.14)",
+          "oklch(95.00% 0.01879 100.14)"
+        ]
+      },
+      "world-concrete": {
+        "displayName": "World Concrete",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.02355 106.93)",
+          "oklch(26.43% 0.02355 106.93)",
+          "oklch(37.86% 0.02355 106.93)",
+          "oklch(49.29% 0.02355 106.93)",
+          "oklch(60.71% 0.02355 106.93)",
+          "oklch(72.14% 0.02355 106.93)",
+          "oklch(83.57% 0.02355 106.93)",
+          "oklch(95.00% 0.02355 106.93)"
+        ]
+      },
+      "world-window": {
+        "displayName": "World Window",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.03885 200.67)",
+          "oklch(26.43% 0.03885 200.67)",
+          "oklch(37.86% 0.03885 200.67)",
+          "oklch(49.29% 0.03885 200.67)",
+          "oklch(60.71% 0.03885 200.67)",
+          "oklch(72.14% 0.03885 200.67)",
+          "oklch(83.57% 0.03885 200.67)",
+          "oklch(95.00% 0.03885 200.67)"
+        ]
+      },
+      "world-metal": {
+        "displayName": "World Metal",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.02667 189.44)",
+          "oklch(26.43% 0.02667 189.44)",
+          "oklch(37.86% 0.02667 189.44)",
+          "oklch(49.29% 0.02667 189.44)",
+          "oklch(60.71% 0.02667 189.44)",
+          "oklch(72.14% 0.02667 189.44)",
+          "oklch(83.57% 0.02667 189.44)",
+          "oklch(95.00% 0.02667 189.44)"
+        ]
+      },
+      "world-brick": {
+        "displayName": "World Brick",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.10222 43.73)",
+          "oklch(26.43% 0.10222 43.73)",
+          "oklch(37.86% 0.10222 43.73)",
+          "oklch(49.29% 0.10222 43.73)",
+          "oklch(60.71% 0.10222 43.73)",
+          "oklch(72.14% 0.10222 43.73)",
+          "oklch(83.57% 0.10222 43.73)",
+          "oklch(95.00% 0.10222 43.73)"
+        ]
+      },
+      "world-leaf": {
+        "displayName": "World Leaf",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.09980 151.76)",
+          "oklch(26.43% 0.09980 151.76)",
+          "oklch(37.86% 0.09980 151.76)",
+          "oklch(49.29% 0.09980 151.76)",
+          "oklch(60.71% 0.09980 151.76)",
+          "oklch(72.14% 0.09980 151.76)",
+          "oklch(83.57% 0.09980 151.76)",
+          "oklch(95.00% 0.09980 151.76)"
+        ]
+      },
+      "world-ground": {
+        "displayName": "World Ground",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.03183 133.33)",
+          "oklch(26.43% 0.03183 133.33)",
+          "oklch(37.86% 0.03183 133.33)",
+          "oklch(49.29% 0.03183 133.33)",
+          "oklch(60.71% 0.03183 133.33)",
+          "oklch(72.14% 0.03183 133.33)",
+          "oklch(83.57% 0.03183 133.33)",
+          "oklch(95.00% 0.03183 133.33)"
+        ]
+      },
+      "world-mountain": {
+        "displayName": "World Mountain",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.04273 164.28)",
+          "oklch(26.43% 0.04273 164.28)",
+          "oklch(37.86% 0.04273 164.28)",
+          "oklch(49.29% 0.04273 164.28)",
+          "oklch(60.71% 0.04273 164.28)",
+          "oklch(72.14% 0.04273 164.28)",
+          "oklch(83.57% 0.04273 164.28)",
+          "oklch(95.00% 0.04273 164.28)"
+        ]
+      },
+      "world-trunk": {
+        "displayName": "World Trunk",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.04567 98.44)",
+          "oklch(26.43% 0.04567 98.44)",
+          "oklch(37.86% 0.04567 98.44)",
+          "oklch(49.29% 0.04567 98.44)",
+          "oklch(60.71% 0.04567 98.44)",
+          "oklch(72.14% 0.04567 98.44)",
+          "oklch(83.57% 0.04567 98.44)",
+          "oklch(95.00% 0.04567 98.44)"
+        ]
+      },
+      "world-sky-light": {
+        "displayName": "World Sky Light",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.01654 259.42)",
+          "oklch(26.43% 0.01654 259.42)",
+          "oklch(37.86% 0.01654 259.42)",
+          "oklch(49.29% 0.01654 259.42)",
+          "oklch(60.71% 0.01654 259.42)",
+          "oklch(72.14% 0.01654 259.42)",
+          "oklch(83.57% 0.01654 259.42)",
+          "oklch(95.00% 0.01654 259.42)"
+        ]
+      },
+      "world-ground-light": {
+        "displayName": "World Ground Light",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.04976 102.26)",
+          "oklch(26.43% 0.04976 102.26)",
+          "oklch(37.86% 0.04976 102.26)",
+          "oklch(49.29% 0.04976 102.26)",
+          "oklch(60.71% 0.04976 102.26)",
+          "oklch(72.14% 0.04976 102.26)",
+          "oklch(83.57% 0.04976 102.26)",
+          "oklch(95.00% 0.04976 102.26)"
+        ]
+      },
+      "world-sun-light": {
+        "displayName": "World Sun Light",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.04521 84.57)",
+          "oklch(26.43% 0.04521 84.57)",
+          "oklch(37.86% 0.04521 84.57)",
+          "oklch(49.29% 0.04521 84.57)",
+          "oklch(60.71% 0.04521 84.57)",
+          "oklch(72.14% 0.04521 84.57)",
+          "oklch(83.57% 0.04521 84.57)",
+          "oklch(95.00% 0.04521 84.57)"
+        ]
+      },
+      "thumbnail-sky-light": {
+        "displayName": "Thumbnail Sky Light",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.01308 251.56)",
+          "oklch(26.43% 0.01308 251.56)",
+          "oklch(37.86% 0.01308 251.56)",
+          "oklch(49.29% 0.01308 251.56)",
+          "oklch(60.71% 0.01308 251.56)",
+          "oklch(72.14% 0.01308 251.56)",
+          "oklch(83.57% 0.01308 251.56)",
+          "oklch(95.00% 0.01308 251.56)"
+        ]
+      },
+      "thumbnail-ground-light": {
+        "displayName": "Thumbnail Ground Light",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.03370 105.26)",
+          "oklch(26.43% 0.03370 105.26)",
+          "oklch(37.86% 0.03370 105.26)",
+          "oklch(49.29% 0.03370 105.26)",
+          "oklch(60.71% 0.03370 105.26)",
+          "oklch(72.14% 0.03370 105.26)",
+          "oklch(83.57% 0.03370 105.26)",
+          "oklch(95.00% 0.03370 105.26)"
+        ]
+      },
+      "thumbnail-sun-light": {
+        "displayName": "Thumbnail Sun Light",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.04007 83.13)",
+          "oklch(26.43% 0.04007 83.13)",
+          "oklch(37.86% 0.04007 83.13)",
+          "oklch(49.29% 0.04007 83.13)",
+          "oklch(60.71% 0.04007 83.13)",
+          "oklch(72.14% 0.04007 83.13)",
+          "oklch(83.57% 0.04007 83.13)",
+          "oklch(95.00% 0.04007 83.13)"
+        ]
+      },
+      "world-casa-0": {
+        "displayName": "World Casa 0",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.13400 81.42)",
+          "oklch(26.43% 0.13400 81.42)",
+          "oklch(37.86% 0.13400 81.42)",
+          "oklch(49.29% 0.13400 81.42)",
+          "oklch(60.71% 0.13400 81.42)",
+          "oklch(72.14% 0.13400 81.42)",
+          "oklch(83.57% 0.13400 81.42)",
+          "oklch(95.00% 0.13400 81.42)"
+        ]
+      },
+      "world-casa-1": {
+        "displayName": "World Casa 1",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.10545 38.96)",
+          "oklch(26.43% 0.10545 38.96)",
+          "oklch(37.86% 0.10545 38.96)",
+          "oklch(49.29% 0.10545 38.96)",
+          "oklch(60.71% 0.10545 38.96)",
+          "oklch(72.14% 0.10545 38.96)",
+          "oklch(83.57% 0.10545 38.96)",
+          "oklch(95.00% 0.10545 38.96)"
+        ]
+      },
+      "world-casa-2": {
+        "displayName": "World Casa 2",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.04395 196.24)",
+          "oklch(26.43% 0.04395 196.24)",
+          "oklch(37.86% 0.04395 196.24)",
+          "oklch(49.29% 0.04395 196.24)",
+          "oklch(60.71% 0.04395 196.24)",
+          "oklch(72.14% 0.04395 196.24)",
+          "oklch(83.57% 0.04395 196.24)",
+          "oklch(95.00% 0.04395 196.24)"
+        ]
+      },
+      "world-tienda-0": {
+        "displayName": "World Tienda 0",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.13725 33.27)",
+          "oklch(26.43% 0.13725 33.27)",
+          "oklch(37.86% 0.13725 33.27)",
+          "oklch(49.29% 0.13725 33.27)",
+          "oklch(60.71% 0.13725 33.27)",
+          "oklch(72.14% 0.13725 33.27)",
+          "oklch(83.57% 0.13725 33.27)",
+          "oklch(95.00% 0.13725 33.27)"
+        ]
+      },
+      "world-tienda-1": {
+        "displayName": "World Tienda 1",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.11729 76.07)",
+          "oklch(26.43% 0.11729 76.07)",
+          "oklch(37.86% 0.11729 76.07)",
+          "oklch(49.29% 0.11729 76.07)",
+          "oklch(60.71% 0.11729 76.07)",
+          "oklch(72.14% 0.11729 76.07)",
+          "oklch(83.57% 0.11729 76.07)",
+          "oklch(95.00% 0.11729 76.07)"
+        ]
+      },
+      "world-tienda-2": {
+        "displayName": "World Tienda 2",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.04441 175.34)",
+          "oklch(26.43% 0.04441 175.34)",
+          "oklch(37.86% 0.04441 175.34)",
+          "oklch(49.29% 0.04441 175.34)",
+          "oklch(60.71% 0.04441 175.34)",
+          "oklch(72.14% 0.04441 175.34)",
+          "oklch(83.57% 0.04441 175.34)",
+          "oklch(95.00% 0.04441 175.34)"
+        ]
+      },
+      "world-torre-0": {
+        "displayName": "World Torre 0",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.11657 40.16)",
+          "oklch(26.43% 0.11657 40.16)",
+          "oklch(37.86% 0.11657 40.16)",
+          "oklch(49.29% 0.11657 40.16)",
+          "oklch(60.71% 0.11657 40.16)",
+          "oklch(72.14% 0.11657 40.16)",
+          "oklch(83.57% 0.11657 40.16)",
+          "oklch(95.00% 0.11657 40.16)"
+        ]
+      },
+      "world-torre-1": {
+        "displayName": "World Torre 1",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.09497 40.13)",
+          "oklch(26.43% 0.09497 40.13)",
+          "oklch(37.86% 0.09497 40.13)",
+          "oklch(49.29% 0.09497 40.13)",
+          "oklch(60.71% 0.09497 40.13)",
+          "oklch(72.14% 0.09497 40.13)",
+          "oklch(83.57% 0.09497 40.13)",
+          "oklch(95.00% 0.09497 40.13)"
+        ]
+      },
+      "world-torre-2": {
+        "displayName": "World Torre 2",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.10299 46.30)",
+          "oklch(26.43% 0.10299 46.30)",
+          "oklch(37.86% 0.10299 46.30)",
+          "oklch(49.29% 0.10299 46.30)",
+          "oklch(60.71% 0.10299 46.30)",
+          "oklch(72.14% 0.10299 46.30)",
+          "oklch(83.57% 0.10299 46.30)",
+          "oklch(95.00% 0.10299 46.30)"
+        ]
+      },
+      "world-terraza-0": {
+        "displayName": "World Terraza 0",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.07047 204.00)",
+          "oklch(26.43% 0.07047 204.00)",
+          "oklch(37.86% 0.07047 204.00)",
+          "oklch(49.29% 0.07047 204.00)",
+          "oklch(60.71% 0.07047 204.00)",
+          "oklch(72.14% 0.07047 204.00)",
+          "oklch(83.57% 0.07047 204.00)",
+          "oklch(95.00% 0.07047 204.00)"
+        ]
+      },
+      "world-terraza-1": {
+        "displayName": "World Terraza 1",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.05431 142.40)",
+          "oklch(26.43% 0.05431 142.40)",
+          "oklch(37.86% 0.05431 142.40)",
+          "oklch(49.29% 0.05431 142.40)",
+          "oklch(60.71% 0.05431 142.40)",
+          "oklch(72.14% 0.05431 142.40)",
+          "oklch(83.57% 0.05431 142.40)",
+          "oklch(95.00% 0.05431 142.40)"
+        ]
+      },
+      "world-terraza-2": {
+        "displayName": "World Terraza 2",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.07844 49.69)",
+          "oklch(26.43% 0.07844 49.69)",
+          "oklch(37.86% 0.07844 49.69)",
+          "oklch(49.29% 0.07844 49.69)",
+          "oklch(60.71% 0.07844 49.69)",
+          "oklch(72.14% 0.07844 49.69)",
+          "oklch(83.57% 0.07844 49.69)",
+          "oklch(95.00% 0.07844 49.69)"
+        ]
+      },
+      "world-taller-0": {
+        "displayName": "World Taller 0",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.10226 41.82)",
+          "oklch(26.43% 0.10226 41.82)",
+          "oklch(37.86% 0.10226 41.82)",
+          "oklch(49.29% 0.10226 41.82)",
+          "oklch(60.71% 0.10226 41.82)",
+          "oklch(72.14% 0.10226 41.82)",
+          "oklch(83.57% 0.10226 41.82)",
+          "oklch(95.00% 0.10226 41.82)"
+        ]
+      },
+      "world-taller-1": {
+        "displayName": "World Taller 1",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.06713 63.91)",
+          "oklch(26.43% 0.06713 63.91)",
+          "oklch(37.86% 0.06713 63.91)",
+          "oklch(49.29% 0.06713 63.91)",
+          "oklch(60.71% 0.06713 63.91)",
+          "oklch(72.14% 0.06713 63.91)",
+          "oklch(83.57% 0.06713 63.91)",
+          "oklch(95.00% 0.06713 63.91)"
+        ]
+      },
+      "world-taller-2": {
+        "displayName": "World Taller 2",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.01605 164.54)",
+          "oklch(26.43% 0.01605 164.54)",
+          "oklch(37.86% 0.01605 164.54)",
+          "oklch(49.29% 0.01605 164.54)",
+          "oklch(60.71% 0.01605 164.54)",
+          "oklch(72.14% 0.01605 164.54)",
+          "oklch(83.57% 0.01605 164.54)",
+          "oklch(95.00% 0.01605 164.54)"
+        ]
+      },
+      "world-esquina-0": {
+        "displayName": "World Esquina 0",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.04916 87.57)",
+          "oklch(26.43% 0.04916 87.57)",
+          "oklch(37.86% 0.04916 87.57)",
+          "oklch(49.29% 0.04916 87.57)",
+          "oklch(60.71% 0.04916 87.57)",
+          "oklch(72.14% 0.04916 87.57)",
+          "oklch(83.57% 0.04916 87.57)",
+          "oklch(95.00% 0.04916 87.57)"
+        ]
+      },
+      "world-esquina-1": {
+        "displayName": "World Esquina 1",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.01696 156.86)",
+          "oklch(26.43% 0.01696 156.86)",
+          "oklch(37.86% 0.01696 156.86)",
+          "oklch(49.29% 0.01696 156.86)",
+          "oklch(60.71% 0.01696 156.86)",
+          "oklch(72.14% 0.01696 156.86)",
+          "oklch(83.57% 0.01696 156.86)",
+          "oklch(95.00% 0.01696 156.86)"
+        ]
+      },
+      "world-esquina-2": {
+        "displayName": "World Esquina 2",
+        "role": "secondary",
+        "tonalRamp": [
+          "oklch(15.00% 0.04827 46.71)",
+          "oklch(26.43% 0.04827 46.71)",
+          "oklch(37.86% 0.04827 46.71)",
+          "oklch(49.29% 0.04827 46.71)",
+          "oklch(60.71% 0.04827 46.71)",
+          "oklch(72.14% 0.04827 46.71)",
+          "oklch(83.57% 0.04827 46.71)",
+          "oklch(95.00% 0.04827 46.71)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "display",
+        "purpose": "Brand wordmark; font-weight 400 is inherited from :root, while only Fraunces 600 is imported."
+      },
+      "display-mobile": {
+        "displayName": "display-mobile",
+        "purpose": "Mobile brand wordmark; inherited weight 400, only Fraunces 600 imported."
+      },
+      "headline": {
+        "displayName": "headline",
+        "purpose": "Implemented headline role; see DESIGN.md Typography for source selector."
+      },
+      "title": {
+        "displayName": "title",
+        "purpose": "Implemented title role; see DESIGN.md Typography for source selector."
+      },
+      "caption": {
+        "displayName": "caption",
+        "purpose": "Implemented caption role; see DESIGN.md Typography for source selector."
+      },
+      "body": {
+        "displayName": "body",
+        "purpose": "Implemented body role; see DESIGN.md Typography for source selector."
+      },
+      "dialog-body": {
+        "displayName": "dialog-body",
+        "purpose": "Implemented dialog-body role; see DESIGN.md Typography for source selector."
+      },
+      "help-body": {
+        "displayName": "help-body",
+        "purpose": "Implemented help-body role; see DESIGN.md Typography for source selector."
+      },
+      "button": {
+        "displayName": "button",
+        "purpose": "Implemented button role; see DESIGN.md Typography for source selector."
+      },
+      "label": {
+        "displayName": "label",
+        "purpose": "Implemented label role; see DESIGN.md Typography for source selector."
+      },
+      "metadata": {
+        "displayName": "metadata",
+        "purpose": "Implemented metadata role; see DESIGN.md Typography for source selector."
+      },
+      "collection-title": {
+        "displayName": "collection-title",
+        "purpose": "Implemented collection-title role; see DESIGN.md Typography for source selector."
+      },
+      "collection-title-mobile": {
+        "displayName": "collection-title-mobile",
+        "purpose": "Implemented collection-title-mobile role; see DESIGN.md Typography for source selector."
+      },
+      "loading-mark": {
+        "displayName": "loading-mark",
+        "purpose": "Implemented loading-mark role; see DESIGN.md Typography for source selector."
+      }
+    },
+    "shadows": [
+      {
+        "name": "floating",
+        "value": "0 8px 32px #243e3420",
+        "purpose": "--shadow: toolbar, camera, storage warning, loading action"
+      },
+      {
+        "name": "palette",
+        "value": "0 10px 36px #1f3f3830",
+        "purpose": ".palette"
+      },
+      {
+        "name": "selection",
+        "value": "0 3px 18px #243e3410",
+        "purpose": ".selection-line"
+      },
+      {
+        "name": "popover",
+        "value": "0 14px 48px #17212f26",
+        "purpose": ".file-menu and .help-panel"
+      },
+      {
+        "name": "feedback",
+        "value": "0 5px 16px #243e3420",
+        "purpose": ".placement-feedback"
+      },
+      {
+        "name": "dialog",
+        "value": "0 16px 64px #17212f40",
+        "purpose": "dialog"
+      },
+      {
+        "name": "caption-text",
+        "value": "0 1px 4px #d9e6e2",
+        "purpose": ".scene-caption text-shadow"
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-transition",
+        "value": "background 0.16s, color 0.16s, transform 0.16s",
+        "purpose": "Base button; default CSS ease."
+      },
+      {
+        "name": "placement-pop",
+        "value": "240ms; scale.y = 1 - (1 - t) ** 3 * 0.65",
+        "purpose": "world.ts frame, bypassed with reduced motion."
+      },
+      {
+        "name": "camera-damping",
+        "value": "0.1",
+        "purpose": "OrbitControls dampingFactor; damping disabled with reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "(max-width: 600px)"
+      },
+      {
+        "name": "compact",
+        "value": "(max-width: 1000px)"
+      },
+      {
+        "name": "wide",
+        "value": "(min-width: 1500px)"
+      }
+    ],
+    "sourceLocations": {
+      "primitives": "web/src/style.css: :root, button, kbd, named component selectors, media queries; extracted literals are not new CSS variables.",
+      "components": "web/src/ui.ts: button helper, UI constructor, renderPalette, update; web/src/style.css: matching component selectors.",
+      "models": "web/src/render/models.ts: shared constants, variants, architecture, ModelLibrary material.",
+      "terrain": "web/src/render/terrain.ts: STEP, Terrain constructor, landscape.",
+      "renderer": "web/src/render/world.ts: constructor, ghostMaterial, updatePreview, frame.",
+      "thumbnails": "web/src/render/thumbnails.ts: lighting, thumbnails, showContactSheet.",
+      "identity": "PRODUCT.md; BRAND.md; docs/implementation-contract.md: Art and experience.",
+      "review": "docs/verification/final-review.md: limited ship disposition for two findings only.",
+      "icons": "web/src/icons.ts: paths.save, paths.check, icon SVG attributes."
+    },
+    "renderer": {
+      "terrainColorFormulas": {
+        "variation": "sin(cell.x * 17.23 + cell.z * 7.93 + snapshot.seed) * 0.5 + 0.5",
+        "soil": "setHSL(0.1, 0.18, 0.52 + variation * 0.045)",
+        "grass": "setHSL(0.235 + variation * 0.012, 0.32, 0.38 + variation * 0.025)",
+        "mountainInstances": "setHSL(0.39, 0.12, 0.57 + (i % 3) * 0.035)",
+        "leaves": "setHSL(0.29 + (i % 4) * 0.018, 0.24, 0.34 + (i % 5) * 0.025)"
+      },
+      "outputColorSpace": "SRGBColorSpace",
+      "toneMapping": "ACESFilmicToneMapping",
+      "exposure": 1.15,
+      "fog": {
+        "near": 60,
+        "far": 150
+      },
+      "ghostOpacity": 0.53,
+      "markerOpacity": 0.4,
+      "modelRoughness": 0.9,
+      "terrainRoughness": 1
+    },
+    "focus": {
+      "outline": "3px solid var(--blue)",
+      "offset": "4px",
+      "canvasOffset": "-4px",
+      "source": "web/src/style.css: :focus-visible and #world"
+    },
+    "backdrop": {
+      "value": "#17212f50",
+      "source": "web/src/style.css: dialog::backdrop"
+    },
+    "rampPolicy": "Synthetic OKLCH lightness strips for panel display only; not implemented palettes or approved new tokens. Alpha swatches use their RGB channels for strips. Normative primitives remain in DESIGN.md.",
+    "snippetPolicy": "Self-contained CSS with source custom-property fallbacks, scoped ds- classes, no external assets or runtime. Static partial samples, not new application behavior. Font names require the project font faces; no browser rendering validated.",
+    "validationContext": {
+      "method": "Source inspection and documentation JSON checks only.",
+      "reportedByUser": "Nine production browser tests passed.",
+      "independentReview": "Ship scoped to reset dismissal and mobile Save aria-label resolution; review snapshot predates nine-test completion.",
+      "hardwareFPS": "Unverified"
+    }
+  },
+  "components": [
+    {
+      "name": "Ghost button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Base control; text-only existing dialog cancel variant.",
+      "html": "<button class=\"ds-ghost\">Keep building</button>",
+      "css": ".ds-ghost{font-family:\"Nunito Sans\",sans-serif;font-size:14px;font-weight:700;border:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:44px;min-height:44px;padding:10px;border-radius:10px;cursor:pointer;transition:background .16s,color .16s,transform .16s;background:transparent;color:#17212f}.ds-ghost:hover{background:#edf2fa}.ds-ghost:disabled{opacity:.3;cursor:default;transform:none}.ds-ghost:disabled:hover{background:transparent}.ds-ghost:focus-visible{outline:3px solid var(--blue,#245beb);outline-offset:4px}.ds-ghost:active{transform:translateY(1px)}@media(prefers-reduced-motion:reduce){.ds-ghost{transition:none}}"
+    },
+    {
+      "name": "Save button",
+      "kind": "button",
+      "refersTo": "button-save",
+      "description": "Implemented Save state, including effective unchanged blue hover.",
+      "html": "<button class=\"ds-save\" aria-label=\"Save\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 3h12l4 4v14H3V3h2Zm2 0v6h10V3M7 21v-8h10v8\"/></svg><span>Save</span></button>",
+      "css": ".ds-save{font-family:\"Nunito Sans\",sans-serif;font-size:14px;font-weight:700;border:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:44px;min-height:44px;padding:10px;border-radius:10px;cursor:pointer;transition:background .16s,color .16s,transform .16s;background:var(--blue,#245beb);color:white;padding:10px 14px;margin:0 3px}.ds-save:hover{background:var(--blue,#245beb)}.ds-save:focus-visible{outline:3px solid var(--blue,#245beb);outline-offset:4px}.ds-save:active{transform:translateY(1px)}@media(prefers-reduced-motion:reduce){.ds-save{transition:none}}@media(max-width:600px){.ds-save{padding:8px;margin:0 1px}.ds-save span{display:none}}"
+    },
+    {
+      "name": "Dialog primary button",
+      "kind": "button",
+      "refersTo": "button-dialog-primary",
+      "description": "Start fresh action.",
+      "html": "<button class=\"ds-primary\">Start fresh</button>",
+      "css": ".ds-primary{font-family:\"Nunito Sans\",sans-serif;font-size:14px;font-weight:700;border:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:44px;min-height:44px;padding:10px;border-radius:10px;cursor:pointer;transition:background .16s,color .16s,transform .16s;background:var(--blue,#245beb);color:#fff}.ds-primary:hover{background:var(--blue,#245beb)}.ds-primary:focus-visible{outline:3px solid var(--blue,#245beb);outline-offset:4px}.ds-primary:active{transform:translateY(1px)}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}"
+    },
+    {
+      "name": "Selected category tab",
+      "kind": "nav",
+      "refersTo": "palette-tab-selected",
+      "description": "Category navigation state; icon omitted from this text sample.",
+      "html": "<div role=\"tablist\" aria-label=\"Palette categories\"><button class=\"ds-tab\" role=\"tab\" aria-selected=\"true\">Homes</button></div>",
+      "css": ".ds-tab{font-family:\"Nunito Sans\",sans-serif;font-size:14px;font-weight:700;border:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:44px;min-height:44px;padding:10px;border-radius:10px;cursor:pointer;transition:background .16s,color .16s,transform .16s;font-size:12px;padding:7px 12px;gap:7px;background:#edf2ff;color:#1948c3;white-space:nowrap}.ds-tab:hover{background:#edf2ff}.ds-tab:focus-visible{outline:3px solid var(--blue,#245beb);outline-offset:4px}.ds-tab:active{transform:translateY(1px)}@media(prefers-reduced-motion:reduce){.ds-tab{transition:none}}@media(max-width:600px){.ds-tab{font-size:10px;padding:7px 6px;gap:4px}}"
+    },
+    {
+      "name": "Palette container",
+      "kind": "card",
+      "refersTo": "palette",
+      "description": "Floating palette surface; content supplied by catalog at runtime.",
+      "html": "<section class=\"ds-palette\" aria-label=\"Building palette\">Homes</section>",
+      "css": ".ds-palette{font-family:\"Nunito Sans\",sans-serif;color:#17212f;font-size:12px;font-weight:700;background:var(--surface,#fff);padding:8px 10px 10px;border-radius:17px;box-shadow:0 10px 36px #1f3f3830}@media(max-width:600px){.ds-palette{padding:6px 7px 8px;border-radius:14px}}"
+    },
+    {
+      "name": "Selection strip",
+      "kind": "custom",
+      "refersTo": "selection-strip",
+      "description": "Context title and description above palette; rotate control omitted.",
+      "html": "<div class=\"ds-selection\"><span class=\"ds-selection-title\">Casa</span><span class=\"ds-divider\"></span><span class=\"ds-description\">A place to begin.</span></div>",
+      "css": ".ds-selection{font-family:\"Nunito Sans\",sans-serif;display:flex;align-items:center;gap:10px;min-height:44px;background:#ffffffed;padding:5px 7px 5px 16px;width:fit-content;max-width:100%;border-radius:10px;box-shadow:0 3px 18px #243e3410;font-size:11px;color:#17212f}.ds-selection-title{font-weight:800;font-size:13px;white-space:nowrap}.ds-divider{width:1px;height:14px;background:var(--line,#d9e2ed)}.ds-description{color:var(--secondary,#53647b);max-width:430px;line-height:1.3}"
+    },
+    {
+      "name": "Help panel",
+      "kind": "card",
+      "refersTo": "help-panel",
+      "description": "Help surface typography and depth; partial content sample.",
+      "html": "<aside class=\"ds-help\"><h2>A neighborhood starts with you.</h2><p>Pick a little building, then click an open terrace to give it a home.</p></aside>",
+      "css": ".ds-help{font-family:\"Nunito Sans\",sans-serif;color:#17212f;width:330px;max-width:calc(100% - 28px);background:var(--surface,#fff);border-radius:16px;padding:21px 24px;box-shadow:0 14px 48px #17212f26}.ds-help h2{font:600 24px/1.2 \"Fraunces\",serif;letter-spacing:-.02em;margin:0 0 13px}.ds-help p{font-size:13px;line-height:1.55;color:var(--secondary,#53647b)}"
+    },
+    {
+      "name": "Placement feedback",
+      "kind": "custom",
+      "refersTo": "placement-feedback",
+      "description": "Pointer feedback with literal SVG check and text.",
+      "html": "<div class=\"ds-feedback\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m5 12 4 4L19 6\"/></svg>Ready to build</div>",
+      "css": ".ds-feedback{font-family:\"Nunito Sans\",sans-serif;display:flex;align-items:center;gap:7px;background:var(--surface,#fff);box-shadow:0 5px 16px #243e3420;border-radius:8px;padding:9px 12px;color:#1948c3;font-size:12px;font-weight:800;max-width:260px;line-height:1.4}.ds-feedback svg{flex-shrink:0}.ds-feedback.ds-invalid{color:#a31f31;background:#fff7f7}"
+    }
+  ],
+  "narrative": {
+    "northStar": "A neighborhood built one useful piece at a time",
+    "overview": "A neighborhood built one useful piece at a time. The implemented world is a sunlit, terraced miniature: warm architectural plaster and brick, small plants, stairs, and paths under an orthographic camera.\n\nCompact white floating controls sit above the scene. Cobalt carries actions and selection, while brand-pinned Fraunces and Nunito Sans provide character and legibility. The architecture-only warm palette exception in PRODUCT.md and docs/implementation-contract.md does not extend to interface surfaces.",
+    "keyCharacteristics": [
+      "Full-viewport orthographic miniature with compact floating controls.",
+      "Cool white interface surfaces and cobalt action states.",
+      "Warm, varied architecture with matte materials and soft scene shadows.",
+      "Brand-pinned Fraunces display type and Nunito Sans interface type."
+    ],
+    "rules": [
+      {
+        "name": "The World and Controls Rule",
+        "body": "Keep warm plaster and brick in the game world; keep interface surfaces cool white and gray.",
+        "section": "colors"
+      },
+      {
+        "name": "The Brand Pairing Rule",
+        "body": "Keep Fraunces for expressive titles and Nunito Sans for everyday controls; keycaps inherit the interface family.",
+        "section": "typography"
+      },
+      {
+        "name": "The Floating Surface Rule",
+        "body": "Use soft shadows to separate compact controls from the scene, preserving the open canvas.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do preserve the pinned Fraunces/Nunito Sans pairing.",
+      "Do retain 44px minimum button targets, visible keyboard focus, and explicit names for icon controls.",
+      "Do pair placement colors with footprint geometry and reason text.",
+      "Do honor reduced motion in both CSS transitions and renderer placement/camera motion."
+    ],
+    "donts": [
+      "Don't apply the architectural warm-neutral exception to interface panels.",
+      "Don't replace the compact floating palette with a permanent large sidebar.",
+      "Don't infer hardware FPS or full accessibility conformance from browser automation."
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+[workspace]
+members = ["crates/barrio-core"]
+resolver = "2"
+
+[profile.release]
+lto = true
+opt-level = "s"
+codegen-units = 1
+panic = "abort"

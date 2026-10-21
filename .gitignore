@@ -1,0 +1,11 @@
+node_modules/
+target/
+dist/
+dist-benchmark/
+web/dist/
+web/src/wasm/
+test-results/
+playwright-report/
+.impeccable/review/
+*.log
+.DS_Store

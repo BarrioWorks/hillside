@@ -1,0 +1,12 @@
+ 22:14:00 up 2 days,  2:16,  2 users,  load average: 1.41, 2.78, 3.26
+8
+    PID COMMAND         %CPU
+1892870 headless_shell   150
+1892801 MainThread       103
+1892879 ps               100
+1892821 headless_shell  90.0
+1892841 headless_shell  60.0
+1892842 headless_shell  40.0
+1892856 bash            33.3
+1892823 headless_shell  12.5
+1892824 headless_shell  12.5

@@ -1,0 +1,54 @@
+{
+  "browser": "Chromium 154 collaborative preview",
+  "renderer": "SwiftShader",
+  "method": "Six actual add/remove cycles. Each insertion and removal waits two animation frames before the GPU resource proxy is read.",
+  "cell": {
+    "x": 0,
+    "z": 0,
+    "height": 5
+  },
+  "samples": [
+    {
+      "cycle": 1,
+      "geometries": 35,
+      "textures": 4,
+      "allocatedBatches": 29,
+      "structures": 109
+    },
+    {
+      "cycle": 2,
+      "geometries": 35,
+      "textures": 4,
+      "allocatedBatches": 29,
+      "structures": 109
+    },
+    {
+      "cycle": 3,
+      "geometries": 35,
+      "textures": 4,
+      "allocatedBatches": 29,
+      "structures": 109
+    },
+    {
+      "cycle": 4,
+      "geometries": 35,
+      "textures": 4,
+      "allocatedBatches": 29,
+      "structures": 109
+    },
+    {
+      "cycle": 5,
+      "geometries": 35,
+      "textures": 4,
+      "allocatedBatches": 29,
+      "structures": 109
+    },
+    {
+      "cycle": 6,
+      "geometries": 35,
+      "textures": 4,
+      "allocatedBatches": 29,
+      "structures": 109
+    }
+  ]
+}

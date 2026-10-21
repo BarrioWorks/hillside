@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "tests": 9,
+  "failedTests": [],
+  "durationSeconds": 54.6,
+  "browser": "Chromium 134.0.6998.35 with SwiftShader",
+  "baseURL": "http://127.0.0.1:4174",
+  "buildAssets": [
+    "barrio_core_bg-CPOL02Lv.wasm",
+    "index-BZVSPaQ_.css",
+    "index-Cu5NuV0A.js"
+  ],
+  "provenance": "Parent-observed full production Playwright terminal result. Original test-results/.last-run.json also reports passed.",
+  "coverage": [
+    "placement, paths, deletion, history, persistence and portable saves",
+    "camera drag and home",
+    "mobile palette",
+    "desktop and mobile screenshots and target sizes",
+    "roof-aware removal",
+    "eleven-object contact sheet at 128px and 512px",
+    "reopened reset cancellation preserves snapshot and autosave",
+    "mobile Save accessible name"
+  ]
+}

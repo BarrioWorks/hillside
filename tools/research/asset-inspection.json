@@ -1,0 +1,177 @@
+[
+  {
+    "file": "detail-overhang.glb",
+    "bytes": 6704,
+    "vertices": 100,
+    "triangles": 64,
+    "min": [
+      -0.25,
+      -3.1591686090528296e-18,
+      0.05000000447034836
+    ],
+    "max": [
+      0.25,
+      0.4000000059604645,
+      0.25
+    ],
+    "size": [
+      0.5,
+      0.4000000059604645,
+      0.19999999552965164
+    ],
+    "meshes": 1,
+    "materials": 1,
+    "nodes": [
+      {
+        "mesh": 0,
+        "name": "detail-overhang"
+      }
+    ],
+    "images": [
+      {
+        "uri": "Textures/colormap.png",
+        "name": "colormap"
+      }
+    ]
+  },
+  {
+    "file": "building-a.glb",
+    "bytes": 108936,
+    "vertices": 2074,
+    "triangles": 1252,
+    "min": [
+      -0.44179391860961914,
+      0.0,
+      -0.4699999690055847
+    ],
+    "max": [
+      0.4417939782142639,
+      1.2929999828338623,
+      0.4700000286102295
+    ],
+    "size": [
+      0.8835878968238831,
+      1.2929999828338623,
+      0.9399999976158142
+    ],
+    "meshes": 1,
+    "materials": 1,
+    "nodes": [
+      {
+        "mesh": 0,
+        "name": "building-a"
+      }
+    ],
+    "images": [
+      {
+        "uri": "Textures/colormap.png",
+        "name": "colormap"
+      }
+    ]
+  },
+  {
+    "file": "building-i.glb",
+    "bytes": 209728,
+    "vertices": 4012,
+    "triangles": 2544,
+    "min": [
+      -0.6200000047683716,
+      0.0,
+      -0.6509999632835388
+    ],
+    "max": [
+      0.6200000643730164,
+      1.6800000667572021,
+      0.6510000228881836
+    ],
+    "size": [
+      1.240000069141388,
+      1.6800000667572021,
+      1.3019999861717224
+    ],
+    "meshes": 1,
+    "materials": 1,
+    "nodes": [
+      {
+        "mesh": 0,
+        "name": "building-i"
+      }
+    ],
+    "images": [
+      {
+        "uri": "Textures/colormap.png",
+        "name": "colormap"
+      }
+    ]
+  },
+  {
+    "file": "building-e.glb",
+    "bytes": 128208,
+    "vertices": 2443,
+    "triangles": 1509,
+    "min": [
+      -0.8199999928474426,
+      0.0,
+      -0.5039456486701965
+    ],
+    "max": [
+      0.8200000524520874,
+      0.8930000066757202,
+      0.5039458870887756
+    ],
+    "size": [
+      1.64000004529953,
+      0.8930000066757202,
+      1.0078915357589722
+    ],
+    "meshes": 1,
+    "materials": 1,
+    "nodes": [
+      {
+        "mesh": 0,
+        "name": "building-e"
+      }
+    ],
+    "images": [
+      {
+        "uri": "Textures/colormap.png",
+        "name": "colormap"
+      }
+    ]
+  },
+  {
+    "file": "detail-awning.glb",
+    "bytes": 5528,
+    "vertices": 76,
+    "triangles": 40,
+    "min": [
+      -0.20000000298023224,
+      -3.1583624553714476e-16,
+      0.09999999403953552
+    ],
+    "max": [
+      0.20000000298023224,
+      0.4000000059604645,
+      0.24789130687713623
+    ],
+    "size": [
+      0.4000000059604645,
+      0.4000000059604648,
+      0.1478913128376007
+    ],
+    "meshes": 1,
+    "materials": 1,
+    "nodes": [
+      {
+        "mesh": 0,
+        "name": "detail-awning"
+      }
+    ],
+    "images": [
+      {
+        "uri": "Textures/colormap.png",
+        "name": "colormap"
+      }
+    ]
+  }
+]

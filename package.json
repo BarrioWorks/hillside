@@ -1,0 +1,42 @@
+{
+  "name": "barrio-builder",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build:wasm": "node tools/build-wasm.mjs",
+    "build": "npm run build:wasm && npm run typecheck && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check web tools/build-wasm.mjs tools/benchmark.mjs tools/benchmark-core.mjs tools/verify-wasm.mjs tools/asset-pipeline vite.config.ts playwright.config.ts",
+    "format": "biome format --write web tools/build-wasm.mjs tools/benchmark.mjs tools/benchmark-core.mjs tools/verify-wasm.mjs tools/asset-pipeline vite.config.ts playwright.config.ts",
+    "check": "npm run typecheck && npm run lint && npm test",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "assets:build": "node tools/asset-pipeline/build.mjs",
+    "assets:validate": "node tools/asset-pipeline/validate.mjs",
+    "benchmark": "node tools/benchmark.mjs",
+    "verify:wasm": "node tools/verify-wasm.mjs",
+    "benchmark:core": "node tools/benchmark-core.mjs"
+  },
+  "dependencies": {
+    "@fontsource/fraunces": "^5.2.7",
+    "@fontsource/nunito-sans": "^5.2.7",
+    "three": "^0.180.0",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.0",
+    "@playwright/test": "^1.56.0",
+    "@types/node": "^24.7.0",
+    "@types/three": "^0.180.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12",
+    "vitest": "^3.2.4",
+    "jsdom": "^27.0.1",
+    "@gltf-transform/core": "^4.2.1",
+    "@gltf-transform/extensions": "^4.2.1",
+    "@gltf-transform/functions": "^4.2.1"
+  }
+}

@@ -1,0 +1,174 @@
+[
+  {
+    "repo": "mxgmn/WaveFunctionCollapse",
+    "branch": "master",
+    "sha": "de7d22e705e816b62b4d613199d0463820fcaef3",
+    "files": [
+      {
+        "path": "LICENSE",
+        "bytes": 1149,
+        "sha256": "c3e9f0d9aceebfe7b2afd99339f7df2689cbfaf9df20bb10e3f578d7e6b3841f",
+        "url": "https://raw.githubusercontent.com/mxgmn/WaveFunctionCollapse/de7d22e705e816b62b4d613199d0463820fcaef3/LICENSE"
+      },
+      {
+        "path": "Model.cs",
+        "bytes": 7519,
+        "sha256": "09dc984bc1a4f7c2193388f87f4d1facf7a4a9e70fadbeaba0a401d444cc33e9",
+        "url": "https://raw.githubusercontent.com/mxgmn/WaveFunctionCollapse/de7d22e705e816b62b4d613199d0463820fcaef3/Model.cs"
+      },
+      {
+        "path": "OverlappingModel.cs",
+        "bytes": 5662,
+        "sha256": "d1caf17a04ba93ec89a5490f5905d4655dc4859d1505aaadf9397a539f2c7244",
+        "url": "https://raw.githubusercontent.com/mxgmn/WaveFunctionCollapse/de7d22e705e816b62b4d613199d0463820fcaef3/OverlappingModel.cs"
+      },
+      {
+        "path": "README.md",
+        "bytes": 37920,
+        "sha256": "f3136128c2e9c51b7e695f8991730c2bde81f30f31bdf5d8fff36bd3fa7f5d3b",
+        "url": "https://raw.githubusercontent.com/mxgmn/WaveFunctionCollapse/de7d22e705e816b62b4d613199d0463820fcaef3/README.md"
+      },
+      {
+        "path": "SimpleTiledModel.cs",
+        "bytes": 9937,
+        "sha256": "57be3b70eb1672c16c67a61bcb9972436ef4ededcf2636db26b79759293d484b",
+        "url": "https://raw.githubusercontent.com/mxgmn/WaveFunctionCollapse/de7d22e705e816b62b4d613199d0463820fcaef3/SimpleTiledModel.cs"
+      }
+    ]
+  },
+  {
+    "repo": "Basinity/CitySimulator",
+    "branch": "main",
+    "sha": "49f22bb1c3c225974119fd2bd56c10ddcab1482a",
+    "files": [
+      {
+        "path": "Assets/Scripts/Generation/CityBuilding.cs",
+        "bytes": 68,
+        "sha256": "ea6c2823ea5539bdb96f7728c35c1dc98fd18f1abc1b0fbe006f2bb61868d3a9",
+        "url": "https://raw.githubusercontent.com/Basinity/CitySimulator/49f22bb1c3c225974119fd2bd56c10ddcab1482a/Assets/Scripts/Generation/CityBuilding.cs"
+      },
+      {
+        "path": "Assets/Scripts/Generation/CityCell.cs",
+        "bytes": 213,
+        "sha256": "21fce147f43fb84ed62c73804be90c505102c9f441b6204366ac7804a68ae2e9",
+        "url": "https://raw.githubusercontent.com/Basinity/CitySimulator/49f22bb1c3c225974119fd2bd56c10ddcab1482a/Assets/Scripts/Generation/CityCell.cs"
+      },
+      {
+        "path": "Assets/Scripts/Generation/CityGenerator.cs",
+        "bytes": 8602,
+        "sha256": "e63c73fe8bfcea20b4e015956242fccc592c8dfbc06e255d898b6a9b41d8da8f",
+        "url": "https://raw.githubusercontent.com/Basinity/CitySimulator/49f22bb1c3c225974119fd2bd56c10ddcab1482a/Assets/Scripts/Generation/CityGenerator.cs"
+      },
+      {
+        "path": "Assets/Scripts/Generation/GeneratorStructs.cs",
+        "bytes": 314,
+        "sha256": "4e02f0215b27eb906a2f95740a8a36339824d53ed393fc1da6fae3f0cc5d003d",
+        "url": "https://raw.githubusercontent.com/Basinity/CitySimulator/49f22bb1c3c225974119fd2bd56c10ddcab1482a/Assets/Scripts/Generation/GeneratorStructs.cs"
+      },
+      {
+        "path": "Assets/Scripts/ScriptableObjects/GeneratorSettings.cs",
+        "bytes": 410,
+        "sha256": "7e03f763565cbd8c3bccc0791ced9c2f033a8cdd4f9f28126044dcb42743a234",
+        "url": "https://raw.githubusercontent.com/Basinity/CitySimulator/49f22bb1c3c225974119fd2bd56c10ddcab1482a/Assets/Scripts/ScriptableObjects/GeneratorSettings.cs"
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 1065,
+        "sha256": "08b359aeb9309b8263862ce0b96bca8e4c536a76da61288a9a3a052dc912ac99",
+        "url": "https://raw.githubusercontent.com/Basinity/CitySimulator/49f22bb1c3c225974119fd2bd56c10ddcab1482a/LICENSE"
+      },
+      {
+        "path": "README.md",
+        "bytes": 11337,
+        "sha256": "9a7cca4bc25114e8336d9bc03ef351ad83cf2ef26184735be2937de5bfd6cc1a",
+        "url": "https://raw.githubusercontent.com/Basinity/CitySimulator/49f22bb1c3c225974119fd2bd56c10ddcab1482a/README.md"
+      }
+    ]
+  },
+  {
+    "repo": "marian42/wavefunctioncollapse",
+    "branch": "master",
+    "sha": "8750c537e6c8f95806ba709e2ae5d940fd51bff3",
+    "files": [
+      {
+        "path": "Assets/Code/WaveFunctionCollapse/AbstractMap.cs",
+        "bytes": 5627,
+        "sha256": "463c177ecc6aaf926c20f4908c12c050e4d924f381b7a87aedf541df41e9bb10",
+        "url": "https://raw.githubusercontent.com/marian42/wavefunctioncollapse/8750c537e6c8f95806ba709e2ae5d940fd51bff3/Assets/Code/WaveFunctionCollapse/AbstractMap.cs"
+      },
+      {
+        "path": "Assets/Code/WaveFunctionCollapse/InfiniteMap.cs",
+        "bytes": 3037,
+        "sha256": "fe973273f618cbcc56f435d30c4a033ca70dae1c84fa765883a5bbb793ff95a6",
+        "url": "https://raw.githubusercontent.com/marian42/wavefunctioncollapse/8750c537e6c8f95806ba709e2ae5d940fd51bff3/Assets/Code/WaveFunctionCollapse/InfiniteMap.cs"
+      },
+      {
+        "path": "Assets/Code/WaveFunctionCollapse/Module.cs",
+        "bytes": 2201,
+        "sha256": "5c052cff6c93e521b9468217cedd5546c947ca7e8e64bf022cbf101b845466e8",
+        "url": "https://raw.githubusercontent.com/marian42/wavefunctioncollapse/8750c537e6c8f95806ba709e2ae5d940fd51bff3/Assets/Code/WaveFunctionCollapse/Module.cs"
+      },
+      {
+        "path": "Assets/Code/WaveFunctionCollapse/Slot.cs",
+        "bytes": 6130,
+        "sha256": "c3fb4a5ddb6670b376c5737045b1df9d32a720d058472ee6f42d5ab96dd8f295",
+        "url": "https://raw.githubusercontent.com/marian42/wavefunctioncollapse/8750c537e6c8f95806ba709e2ae5d940fd51bff3/Assets/Code/WaveFunctionCollapse/Slot.cs"
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 1074,
+        "sha256": "1256ecc3b26fa46c4f0616c13dca48b6ed7c5966d1b58560d0401c64feefe720",
+        "url": "https://raw.githubusercontent.com/marian42/wavefunctioncollapse/8750c537e6c8f95806ba709e2ae5d940fd51bff3/LICENSE"
+      },
+      {
+        "path": "README.md",
+        "bytes": 2493,
+        "sha256": "4f9fe142cce62a6a98d9bafa226381bee5d70fa7bdca2551f71fe176f7ba2b43",
+        "url": "https://raw.githubusercontent.com/marian42/wavefunctioncollapse/8750c537e6c8f95806ba709e2ae5d940fd51bff3/README.md"
+      }
+    ]
+  },
+  {
+    "repo": "mrdoob/three.js",
+    "branch": "dev",
+    "sha": "d94661f70646128e269859e12dcaf4a6a9a79466",
+    "files": [
+      {
+        "path": "LICENSE",
+        "bytes": 1081,
+        "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc",
+        "url": "https://raw.githubusercontent.com/mrdoob/three.js/d94661f70646128e269859e12dcaf4a6a9a79466/LICENSE"
+      },
+      {
+        "path": "examples/jsm/controls/OrbitControls.js",
+        "bytes": 40918,
+        "sha256": "e7fca2fe9e7670a828af9b28084669a5909445b7f36f1f26cee9bf8f2961c32c",
+        "url": "https://raw.githubusercontent.com/mrdoob/three.js/d94661f70646128e269859e12dcaf4a6a9a79466/examples/jsm/controls/OrbitControls.js"
+      },
+      {
+        "path": "examples/jsm/loaders/GLTFLoader.js",
+        "bytes": 119387,
+        "sha256": "c4e3782c64f99bf59ca15a577011eeb7652ac61d1ca039ed707760847561a22b",
+        "url": "https://raw.githubusercontent.com/mrdoob/three.js/d94661f70646128e269859e12dcaf4a6a9a79466/examples/jsm/loaders/GLTFLoader.js"
+      },
+      {
+        "path": "examples/webgl_instancing_performance.html",
+        "bytes": 7270,
+        "sha256": "241ca59d6decbeb027fb17a13a89b364c626141bbb18fabda594a832e7514e2d",
+        "url": "https://raw.githubusercontent.com/mrdoob/three.js/d94661f70646128e269859e12dcaf4a6a9a79466/examples/webgl_instancing_performance.html"
+      },
+      {
+        "path": "examples/webgl_shadowmap.html",
+        "bytes": 9323,
+        "sha256": "2289caa0a22dfdb8bcdafd08397dbf6470ea737a767d12e67eeb8c129623a731",
+        "url": "https://raw.githubusercontent.com/mrdoob/three.js/d94661f70646128e269859e12dcaf4a6a9a79466/examples/webgl_shadowmap.html"
+      },
+      {
+        "path": "src/objects/InstancedMesh.js",
+        "bytes": 10820,
+        "sha256": "2da0ae90c4e964e4000db49ff502eaec8654160a5b7677c00387bc8023d1c911",
+        "url": "https://raw.githubusercontent.com/mrdoob/three.js/d94661f70646128e269859e12dcaf4a6a9a79466/src/objects/InstancedMesh.js"
+      }
+    ]
+  }
+]

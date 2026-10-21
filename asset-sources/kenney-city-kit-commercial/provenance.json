@@ -1,0 +1,50 @@
+{
+  "publisher": "Kenney",
+  "pack": "City Kit Commercial",
+  "version": "2.1",
+  "sourcePage": "https://kenney.nl/assets/city-kit-commercial",
+  "downloadURL": "https://kenney.nl/media/pages/assets/city-kit-commercial/a742d900eb-1753115042/kenney_city-kit-commercial_2.1.zip",
+  "retrievedUTC": "2026-10-20",
+  "archiveSHA256": "f8b09b081c2bb88bcc126e2dec1cb40fd0dad7e7e591b6c26aaefe96fb35276b",
+  "license": "CC0-1.0",
+  "licenseFile": "License.txt",
+  "modifications": "None. Selected original binary glTF files extracted byte-for-byte.",
+  "files": [
+    {
+      "file": "detail-overhang.glb",
+      "bytes": 6704,
+      "sha256": "291b00c1f698296b50cf25c393777eee9547a4aa0f912efe73cb9789d104ba2b",
+      "sourceMember": "Models/GLB format/detail-overhang.glb"
+    },
+    {
+      "file": "building-a.glb",
+      "bytes": 108936,
+      "sha256": "5cf220f90ee3f21e7abe38055ca409a48aa8ef1d5ffab6e2deb99e5a5e1ed5e0",
+      "sourceMember": "Models/GLB format/building-a.glb"
+    },
+    {
+      "file": "building-i.glb",
+      "bytes": 209728,
+      "sha256": "3e572277d3eead30e24668a653ec6a11a488228a219d4902f08638cbca7c3dfe",
+      "sourceMember": "Models/GLB format/building-i.glb"
+    },
+    {
+      "file": "building-e.glb",
+      "bytes": 128208,
+      "sha256": "edbe5b49858a3c83e72d3cf496129c06082ef3a3d6005769f8883138e275b456",
+      "sourceMember": "Models/GLB format/building-e.glb"
+    },
+    {
+      "file": "detail-awning.glb",
+      "bytes": 5528,
+      "sha256": "386978daf81dc11ac601638f19a41918a391ff882a8c518ae5a3215a1bed4d8a",
+      "sourceMember": "Models/GLB format/detail-awning.glb"
+    },
+    {
+      "file": "Textures/colormap.png",
+      "bytes": 11002,
+      "sha256": "191bec3889aaaca5018380038fecc129ebb5c2182879a099b7b538b3fa050b5d",
+      "sourceMember": "Models/GLB format/Textures/colormap.png"
+    }
+  ]
+}
