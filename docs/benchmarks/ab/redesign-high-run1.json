@@ -1,0 +1,309 @@
+{
+  "recordedAt": "2026-10-21T06:07:53.666Z",
+  "browserVersion": "134.0.6998.35",
+  "buildAssets": [
+    "barrio_core_bg-Dc9Z0Wtq.wasm",
+    "index-B0cy4nCe.css",
+    "index-kuw2wCYj.js"
+  ],
+  "host": {
+    "platform": "linux",
+    "release": "7.0.0-34-generic",
+    "cpu": "AMD EPYC 7B13 64-Core Processor",
+    "logicalCPUs": 8,
+    "loadAverageAtStart": [
+      4.24,
+      8.06,
+      8.21
+    ]
+  },
+  "mode": "production build, explicit SwiftShader software rendering",
+  "quality": {
+    "quality": "low",
+    "software": true,
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "shadowSize": 1024
+  },
+  "method": "Generate the deterministic stress neighborhood, import 500 evenly distributed structures through the real save-file input, warm up for three seconds, then sample five eight-second runs with continuous rendering. Frame throughput uses actual rendered frames and host elapsed time. Frame intervals include browser scheduling, CPU work, and software rasterization.",
+  "limitations": "This is a software-renderer environment. It does not establish hardware desktop or physical mobile targets. No comparative speedup is claimed.",
+  "readyMilliseconds": 11332.956333999999,
+  "importMilliseconds": 79.57581399999981,
+  "environment": {
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/134.0.6998.35 Safari/537.36",
+    "hardwareConcurrency": 8,
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "viewport": {
+      "width": 1440,
+      "height": 900,
+      "pixelRatio": 1
+    },
+    "hidden": false
+  },
+  "frameMedianMilliseconds": 2100,
+  "frameMedianRangeMilliseconds": [
+    1966.5999999999985,
+    2299.899999999998
+  ],
+  "errors": [],
+  "memory": {
+    "cycles": 10,
+    "placementsPerCycle": 20,
+    "afterFirstCycle": {
+      "geometries": 95,
+      "textures": 2,
+      "allocatedBatchCount": 128
+    },
+    "afterTenCycles": {
+      "geometries": 95,
+      "textures": 2,
+      "allocatedBatchCount": 128
+    }
+  },
+  "runs": [
+    {
+      "run": 1,
+      "update": {
+        "structures": 500,
+        "startingFrame": 5
+      },
+      "elapsedMilliseconds": 8579.094563999999,
+      "renderedFrames": 4,
+      "framesPerSecond": 0.4662496689085336,
+      "metrics": {
+        "frames": 9,
+        "renderFrames": 9,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "low",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 1024
+        },
+        "lighting": "afternoon",
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 2100,
+        "p95FrameMs": 2416.5999999999985,
+        "frameSamples": 4,
+        "renderMs": 2093.0999999940395,
+        "renderSamples": 4,
+        "drawCalls": 62,
+        "triangles": 620089,
+        "geometries": 91,
+        "textures": 2,
+        "structures": 500,
+        "structureParts": 500,
+        "batchCount": 55,
+        "allocatedBatchCount": 124,
+        "renderObjectCount": 61,
+        "reconciled": 1281,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 9.699999988079071,
+        "revision": 2,
+        "hidden": false
+      }
+    },
+    {
+      "run": 2,
+      "update": {
+        "structures": 500,
+        "startingFrame": 10
+      },
+      "elapsedMilliseconds": 9018.569208,
+      "renderedFrames": 4,
+      "framesPerSecond": 0.44352933461460436,
+      "metrics": {
+        "frames": 14,
+        "renderFrames": 14,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "low",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 1024
+        },
+        "lighting": "afternoon",
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 2299.899999999998,
+        "p95FrameMs": 2366.5,
+        "frameSamples": 4,
+        "renderMs": 2284.699999988079,
+        "renderSamples": 4,
+        "drawCalls": 62,
+        "triangles": 620089,
+        "geometries": 91,
+        "textures": 2,
+        "structures": 500,
+        "structureParts": 500,
+        "batchCount": 55,
+        "allocatedBatchCount": 124,
+        "renderObjectCount": 61,
+        "reconciled": 1281,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 9.699999988079071,
+        "revision": 2,
+        "hidden": false
+      }
+    },
+    {
+      "run": 3,
+      "update": {
+        "structures": 500,
+        "startingFrame": 15
+      },
+      "elapsedMilliseconds": 8120.173392000004,
+      "renderedFrames": 4,
+      "framesPerSecond": 0.4926003186016693,
+      "metrics": {
+        "frames": 19,
+        "renderFrames": 19,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "low",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 1024
+        },
+        "lighting": "afternoon",
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 2216.7000000000044,
+        "p95FrameMs": 2233.199999999997,
+        "frameSamples": 4,
+        "renderMs": 2060.9000000059605,
+        "renderSamples": 4,
+        "drawCalls": 62,
+        "triangles": 620089,
+        "geometries": 91,
+        "textures": 2,
+        "structures": 500,
+        "structureParts": 500,
+        "batchCount": 55,
+        "allocatedBatchCount": 124,
+        "renderObjectCount": 61,
+        "reconciled": 1281,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 9.699999988079071,
+        "revision": 2,
+        "hidden": false
+      }
+    },
+    {
+      "run": 4,
+      "update": {
+        "structures": 500,
+        "startingFrame": 20
+      },
+      "elapsedMilliseconds": 8059.696176000005,
+      "renderedFrames": 4,
+      "framesPerSecond": 0.4962966236756066,
+      "metrics": {
+        "frames": 24,
+        "renderFrames": 24,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "low",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 1024
+        },
+        "lighting": "afternoon",
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 1966.5999999999985,
+        "p95FrameMs": 2016.5999999999985,
+        "frameSamples": 4,
+        "renderMs": 2018.7000000178814,
+        "renderSamples": 4,
+        "drawCalls": 62,
+        "triangles": 620089,
+        "geometries": 91,
+        "textures": 2,
+        "structures": 500,
+        "structureParts": 500,
+        "batchCount": 55,
+        "allocatedBatchCount": 124,
+        "renderObjectCount": 61,
+        "reconciled": 1281,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 9.699999988079071,
+        "revision": 2,
+        "hidden": false
+      }
+    },
+    {
+      "run": 5,
+      "update": {
+        "structures": 500,
+        "startingFrame": 25
+      },
+      "elapsedMilliseconds": 9830.617594999996,
+      "renderedFrames": 5,
+      "framesPerSecond": 0.508615043936108,
+      "metrics": {
+        "frames": 30,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "low",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 1024
+        },
+        "lighting": "afternoon",
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 2016.6000000000058,
+        "p95FrameMs": 2066.5,
+        "frameSamples": 5,
+        "renderMs": 1917.300000011921,
+        "renderSamples": 5,
+        "drawCalls": 62,
+        "triangles": 620089,
+        "geometries": 91,
+        "textures": 2,
+        "structures": 500,
+        "structureParts": 500,
+        "batchCount": 55,
+        "allocatedBatchCount": 124,
+        "renderObjectCount": 61,
+        "reconciled": 1281,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 9.699999988079071,
+        "revision": 2,
+        "hidden": false
+      }
+    }
+  ]
+}

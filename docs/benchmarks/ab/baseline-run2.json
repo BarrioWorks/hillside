@@ -1,0 +1,314 @@
+{
+  "recordedAt": "2026-10-21T06:38:25.134Z",
+  "browserVersion": "134.0.6998.35",
+  "buildAssets": [
+    "barrio_core_bg-CPOL02Lv.wasm",
+    "index-B80NQ-eH.js",
+    "index-BZVSPaQ_.css"
+  ],
+  "host": {
+    "platform": "linux",
+    "release": "7.0.0-34-generic",
+    "cpu": "AMD EPYC 7B13 64-Core Processor",
+    "logicalCPUs": 8,
+    "loadAverageAtStart": [
+      9.65,
+      9.4,
+      9.18
+    ]
+  },
+  "mode": "production build, explicit SwiftShader software rendering",
+  "method": "Generate the deterministic stress neighborhood, import 500 evenly distributed structures through the real save-file input, warm up for three seconds, then sample five eight-second runs with continuous rendering. Frame throughput uses actual rendered frames and host elapsed time. Frame intervals include browser scheduling, CPU work, and software rasterization.",
+  "limitations": "This is a software-renderer environment. It does not establish hardware desktop or physical mobile targets. No comparative speedup is claimed.",
+  "readyMilliseconds": 19075.445522,
+  "importMilliseconds": 13580.034141999997,
+  "environment": {
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/134.0.6998.35 Safari/537.36",
+    "hardwareConcurrency": 8,
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "viewport": {
+      "width": 1440,
+      "height": 900,
+      "pixelRatio": 1
+    },
+    "hidden": false
+  },
+  "frameMedianMilliseconds": 1000,
+  "frameMedianRangeMilliseconds": [
+    899.8999999999942,
+    1033.300000000003
+  ],
+  "errors": [],
+  "runs": [
+    {
+      "run": 1,
+      "update": {
+        "structures": 500,
+        "startingFrame": 25
+      },
+      "elapsedMilliseconds": 9095.506510000007,
+      "renderedFrames": 9,
+      "framesPerSecond": 0.9894995941243072,
+      "metrics": {
+        "frames": 34,
+        "renderFrames": 34,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "low",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 512
+        },
+        "shadowUpdates": 4,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 983.3000000000029,
+        "p95FrameMs": 1083.2000000000044,
+        "frameSamples": 9,
+        "renderMs": 985.7999999821186,
+        "renderSamples": 9,
+        "drawCalls": 25,
+        "triangles": 475469,
+        "geometries": 24,
+        "textures": 2,
+        "structures": 500,
+        "structureParts": 500,
+        "batchCount": 18,
+        "allocatedBatchCount": 26,
+        "renderObjectCount": 25,
+        "reconciled": 1134,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "asset": {
+          "status": "ready",
+          "meshes": 1,
+          "source": "Kenney City Kit Commercial · CC0"
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 10,
+        "catalogAssets": "ready",
+        "revision": 2,
+        "hidden": false
+      }
+    },
+    {
+      "run": 2,
+      "update": {
+        "structures": 500,
+        "startingFrame": 35
+      },
+      "elapsedMilliseconds": 8043.785763,
+      "renderedFrames": 8,
+      "framesPerSecond": 0.9945565727021962,
+      "metrics": {
+        "frames": 43,
+        "renderFrames": 43,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "low",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 512
+        },
+        "shadowUpdates": 4,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 1016.5999999999985,
+        "p95FrameMs": 1066.6000000000058,
+        "frameSamples": 8,
+        "renderMs": 1005.5,
+        "renderSamples": 8,
+        "drawCalls": 25,
+        "triangles": 475469,
+        "geometries": 24,
+        "textures": 2,
+        "structures": 500,
+        "structureParts": 500,
+        "batchCount": 18,
+        "allocatedBatchCount": 26,
+        "renderObjectCount": 25,
+        "reconciled": 1134,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "asset": {
+          "status": "ready",
+          "meshes": 1,
+          "source": "Kenney City Kit Commercial · CC0"
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 10,
+        "catalogAssets": "ready",
+        "revision": 2,
+        "hidden": false
+      }
+    },
+    {
+      "run": 3,
+      "update": {
+        "structures": 500,
+        "startingFrame": 44
+      },
+      "elapsedMilliseconds": 8133.617944999991,
+      "renderedFrames": 8,
+      "framesPerSecond": 0.9835721390033902,
+      "metrics": {
+        "frames": 52,
+        "renderFrames": 52,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "low",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 512
+        },
+        "shadowUpdates": 4,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 1000,
+        "p95FrameMs": 1066.699999999997,
+        "frameSamples": 8,
+        "renderMs": 1019.1999999880791,
+        "renderSamples": 8,
+        "drawCalls": 25,
+        "triangles": 475469,
+        "geometries": 24,
+        "textures": 2,
+        "structures": 500,
+        "structureParts": 500,
+        "batchCount": 18,
+        "allocatedBatchCount": 26,
+        "renderObjectCount": 25,
+        "reconciled": 1134,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "asset": {
+          "status": "ready",
+          "meshes": 1,
+          "source": "Kenney City Kit Commercial · CC0"
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 10,
+        "catalogAssets": "ready",
+        "revision": 2,
+        "hidden": false
+      }
+    },
+    {
+      "run": 4,
+      "update": {
+        "structures": 500,
+        "startingFrame": 53
+      },
+      "elapsedMilliseconds": 8141.820620999992,
+      "renderedFrames": 8,
+      "framesPerSecond": 0.9825812152340722,
+      "metrics": {
+        "frames": 61,
+        "renderFrames": 61,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "low",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 512
+        },
+        "shadowUpdates": 4,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 1033.300000000003,
+        "p95FrameMs": 1050,
+        "frameSamples": 8,
+        "renderMs": 1031.7000000178814,
+        "renderSamples": 8,
+        "drawCalls": 25,
+        "triangles": 475469,
+        "geometries": 24,
+        "textures": 2,
+        "structures": 500,
+        "structureParts": 500,
+        "batchCount": 18,
+        "allocatedBatchCount": 26,
+        "renderObjectCount": 25,
+        "reconciled": 1134,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "asset": {
+          "status": "ready",
+          "meshes": 1,
+          "source": "Kenney City Kit Commercial · CC0"
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 10,
+        "catalogAssets": "ready",
+        "revision": 2,
+        "hidden": false
+      }
+    },
+    {
+      "run": 5,
+      "update": {
+        "structures": 500,
+        "startingFrame": 62
+      },
+      "elapsedMilliseconds": 8881.123362000013,
+      "renderedFrames": 10,
+      "framesPerSecond": 1.1259836838645172,
+      "metrics": {
+        "frames": 72,
+        "renderFrames": 72,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "low",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 512
+        },
+        "shadowUpdates": 4,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 899.8999999999942,
+        "p95FrameMs": 983.3000000000029,
+        "frameSamples": 10,
+        "renderMs": 908.4000000059605,
+        "renderSamples": 10,
+        "drawCalls": 25,
+        "triangles": 475469,
+        "geometries": 24,
+        "textures": 2,
+        "structures": 500,
+        "structureParts": 500,
+        "batchCount": 18,
+        "allocatedBatchCount": 26,
+        "renderObjectCount": 25,
+        "reconciled": 1134,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "asset": {
+          "status": "ready",
+          "meshes": 1,
+          "source": "Kenney City Kit Commercial · CC0"
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 10,
+        "catalogAssets": "ready",
+        "revision": 2,
+        "hidden": false
+      }
+    }
+  ]
+}
