@@ -73,6 +73,8 @@ export class World {
   });
   private readonly marker: THREE.Mesh;
   private readonly outline: THREE.LineLoop;
+  /** Translucent volume and edge outline around the building the remove tool would take away. */
+  private readonly doomed: THREE.Group;
   private readonly rings: { mesh: THREE.Mesh; start: number }[] = [];
   private readonly ringGeometry = new THREE.RingGeometry(0.42, 0.5, 40).rotateX(-Math.PI / 2);
   private readonly raycaster = new THREE.Raycaster();
@@ -169,7 +171,20 @@ export class World {
     );
     this.outline.renderOrder = 3;
     this.marker.visible = this.outline.visible = false;
-    this.scene.add(this.marker, this.outline);
+    const unit = new THREE.BoxGeometry(1, 1, 1).translate(0, 0.5, 0);
+    const volume = new THREE.Mesh(
+      unit,
+      new THREE.MeshBasicMaterial({ color: PALETTE.coral, transparent: true, opacity: 0.34, depthWrite: false }),
+    );
+    const edges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(unit),
+      new THREE.LineBasicMaterial({ color: PALETTE.coral, transparent: true, opacity: 0.95, depthTest: false }),
+    );
+    volume.renderOrder = 3;
+    edges.renderOrder = 5;
+    this.doomed = new THREE.Group().add(volume, edges);
+    this.doomed.visible = false;
+    this.scene.add(this.marker, this.outline, this.doomed);
     this.scene.add(this.batches.group, this.decor.group);
     this.reconcile(snapshot, false);
     this.resizeObserver = new ResizeObserver(() => this.resize());
@@ -318,6 +333,7 @@ export class World {
     this.needsRender = true;
     const active = !!cell && tool.type !== 'navigate';
     this.marker.visible = this.outline.visible = active;
+    this.doomed.visible = false;
     if (this.ghost) this.ghost.visible = false;
     if (!cell || !active) return;
     let [w, d] = [preview?.width || 1, preview?.depth || 1];
@@ -330,6 +346,11 @@ export class World {
       if (target) {
         origin = { x: target.x, z: target.z };
         [w, d] = this.footprint(target.kind, target.rotation);
+        const height = (this.structures.get(target.id)?.mesh.geometry.boundingBox?.max.y ?? 0.5) + 0.06;
+        this.doomed.visible = true;
+        this.doomed.position.set(origin.x + w / 2, heightAt(this.snapshot, origin.x, origin.z), origin.z + d / 2);
+        this.doomed.scale.set(w + 0.06, height, d + 0.06);
+        this.marker.visible = this.outline.visible = false;
       }
     }
     const valid = tool.type === 'place' && !!preview?.valid;
@@ -612,6 +633,12 @@ export class World {
     this.lights.dispose();
     this.ghostMaterial.dispose();
     this.ringGeometry.dispose();
+    this.doomed.traverse((object) => {
+      if (object instanceof THREE.Mesh || object instanceof THREE.LineSegments) {
+        object.geometry.dispose();
+        (object.material as THREE.Material).dispose();
+      }
+    });
     for (const ring of this.rings) (ring.mesh.material as THREE.Material).dispose();
     this.renderer.dispose();
   }

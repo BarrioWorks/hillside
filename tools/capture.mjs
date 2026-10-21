@@ -102,6 +102,8 @@ const shots = [
   { name: '07-low-angle', scene: 'dense', view: { zoom: 1.8, polar: 1.15, target: center }, ui: false },
   { name: '08-mobile', scene: 'dense', view: {}, ui: true, mobile: true },
   { name: '09-evening', scene: 'dense', view: { zoom: 1.35, target: center }, ui: false, light: 'evening' },
+  { name: '11-placement-ghost', scene: 'six', view: { zoom: 2.6, target: [16, 1.8, 17] }, ui: true, hover: [17, 18] },
+  { name: '12-remove-hover', scene: 'six', view: { zoom: 2.6, target: [16, 1.8, 17] }, ui: true, hover: [16, 15], key: 'x', hoverElevation: 1.0 },
   { name: '10-daylight', scene: 'dense', view: { zoom: 1.35, target: center }, ui: false, light: 'daylight' },
 ].filter((shot) => !only || only.includes(shot.name));
 
@@ -125,8 +127,9 @@ for (const shot of shots) {
   if (shot.light) await page.evaluate((light) => window.__barrio.light(light), shot.light);
   if (!shot.ui)
     await page.addStyleTag({ content: '#app > :not(canvas){display:none!important}' });
+  if (shot.key) await page.keyboard.press(shot.key);
   if (shot.hover) {
-    const point = await page.evaluate(([x, z]) => window.__barrio.cellToScreen(x, z), shot.hover);
+    const point = await page.evaluate(([x, z, e]) => window.__barrio.cellToScreen(x, z, e), [...shot.hover, shot.hoverElevation ?? 0]);
     await page.mouse.move(point.x, point.y);
   }
   await page.evaluate(() => window.__barrio.updateShadows());
