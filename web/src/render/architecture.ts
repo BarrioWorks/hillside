@@ -345,8 +345,9 @@ function roof(
     const [x, z] = slot;
     if (feature === 'tank') {
       b.block(0.26, 0.06, 0.26, x, top, z, 'concrete', Surface.concrete);
-      b.cylinder(0.12, 0.24, x, top + 0.06, z, 'tankBlack', Surface.paint, 0.1, 12);
-      b.cylinder(0.07, 0.04, x, top + 0.3, z, 'tankBlack', Surface.paint, 0.07, 10);
+      const tank: Paint = s.rng() < 0.33 ? 'tankBlue' : 'tankBlack';
+      b.cylinder(0.105, 0.22, x, top + 0.06, z, tank, Surface.paint, 0.09, 12);
+      b.cylinder(0.06, 0.035, x, top + 0.28, z, tank, Surface.paint, 0.06, 10);
     } else if (feature === 'plants') {
       for (const [dx, dz, c] of [
         [-0.08, 0, 'terracotta'],

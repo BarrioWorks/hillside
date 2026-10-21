@@ -53,10 +53,26 @@ function pole(): THREE.BufferGeometry {
   return b.finish();
 }
 
+function motorcycle(): THREE.BufferGeometry {
+  const b = new Builder(false);
+  for (const z of [-0.13, 0.13]) {
+    const wheel = new THREE.CylinderGeometry(0.055, 0.055, 0.03, 10);
+    wheel.rotateZ(Math.PI / 2);
+    wheel.translate(0, 0.055, z);
+    b.add(wheel, 'tankBlack', Surface.paint);
+  }
+  b.block(0.07, 0.07, 0.24, 0, 0.07, 0, 'coral', Surface.paint);
+  b.block(0.06, 0.03, 0.12, 0, 0.14, -0.04, 'tankBlack', Surface.paint);
+  b.bar(new THREE.Vector3(0, 0.09, 0.12), new THREE.Vector3(0, 0.2, 0.14), 0.02, 'metal', Surface.metal);
+  b.block(0.14, 0.015, 0.015, 0, 0.2, 0.14, 'metal', Surface.metal);
+  return b.finish();
+}
+
 export class Decor {
   readonly group = new THREE.Group();
   private readonly cover: THREE.InstancedMesh[];
   private readonly poles: THREE.InstancedMesh;
+  private readonly motorcycles: THREE.InstancedMesh;
   private readonly cables: THREE.LineSegments;
   private readonly matrix = new THREE.Matrix4();
 
@@ -72,6 +88,10 @@ export class Decor {
     this.poles.castShadow = true;
     this.poles.receiveShadow = true;
     this.poles.count = 0;
+    this.motorcycles = new THREE.InstancedMesh(motorcycle(), worldMaterial, 128);
+    this.motorcycles.castShadow = true;
+    this.motorcycles.count = 0;
+    this.group.add(this.motorcycles);
     this.cables = new THREE.LineSegments(
       new THREE.BufferGeometry(),
       new THREE.LineBasicMaterial({ color: PALETTE.tankBlack, transparent: true, opacity: 0.75 }),
@@ -113,6 +133,42 @@ export class Decor {
       mesh.computeBoundingSphere();
     });
     this.wire(snapshot, lots);
+    this.park(snapshot, lots);
+  }
+
+  /** A few motorcycles parked along street edges that face a home. */
+  private park(snapshot: Snapshot, lots: readonly Lot[]): void {
+    const buildings = new Set<number>();
+    for (const lot of lots)
+      if (lot.category === 'building')
+        for (let z = lot.structure.z; z < lot.structure.z + lot.depth; z++)
+          for (let x = lot.structure.x; x < lot.structure.x + lot.width; x++)
+            buildings.add(z * snapshot.width + x);
+    let count = 0;
+    for (const lot of lots) {
+      const { x, z } = lot.structure;
+      if (lot.category !== 'path' || hash(x, z, 23) > 0.16 || count >= this.motorcycles.instanceMatrix.count)
+        continue;
+      const side = [
+        [0, 1],
+        [1, 0],
+        [0, -1],
+        [-1, 0],
+      ].find(([dx = 0, dz = 0]) => buildings.has((z + dz) * snapshot.width + x + dx));
+      if (!side) continue;
+      const [dx = 0, dz = 0] = side;
+      this.matrix
+        .makeRotationY(dx ? 0 : Math.PI / 2)
+        .setPosition(
+          x + 0.5 + dx * 0.32,
+          (snapshot.cells[z * snapshot.width + x]?.height ?? 0) * STEP,
+          z + 0.5 + dz * 0.32,
+        );
+      this.motorcycles.setMatrixAt(count++, this.matrix);
+    }
+    this.motorcycles.count = count;
+    this.motorcycles.instanceMatrix.needsUpdate = true;
+    this.motorcycles.computeBoundingSphere();
   }
 
   /** Poles along streets with spacing, wired to each other and to the nearest homes. */
@@ -179,7 +235,7 @@ export class Decor {
   }
 
   dispose(): void {
-    for (const mesh of [...this.cover, this.poles]) {
+    for (const mesh of [...this.cover, this.poles, this.motorcycles]) {
       mesh.geometry.dispose();
       mesh.dispose();
     }

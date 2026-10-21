@@ -105,6 +105,7 @@ const shots = [
   { name: '11-placement-ghost', scene: 'six', view: { zoom: 2.6, target: [16, 1.8, 17] }, ui: true, hover: [17, 18] },
   { name: '12-remove-hover', scene: 'six', view: { zoom: 2.6, target: [16, 1.8, 17] }, ui: true, hover: [16, 15], key: 'x', hoverElevation: 1.0 },
   { name: '13-low-quality', scene: 'dense', view: { zoom: 1.35, target: center }, ui: false, quality: 'low' },
+  { name: '14-street-detail', scene: 'starter', view: { zoom: 3.4, target: [15.5, 2.4, 14] }, ui: false },
   { name: '10-daylight', scene: 'dense', view: { zoom: 1.35, target: center }, ui: false, light: 'daylight' },
 ].filter((shot) => !only || only.includes(shot.name));
 
