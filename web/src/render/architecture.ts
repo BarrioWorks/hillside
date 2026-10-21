@@ -35,6 +35,8 @@ interface Style {
   mural: boolean;
   /** Most houses paint only the street facade; side and back walls stay exposed brick. */
   paintedSides: boolean;
+  /** Flat roof finish: bare slab, red ceramic terrace tile, or red-oxide waterproofing. */
+  deck: { color: Paint; surface: (typeof Surface)[keyof typeof Surface] };
 }
 
 function style(kind: string, variation: number): Style {
@@ -61,6 +63,18 @@ function style(kind: string, variation: number): Style {
     grilles: rng() < 0.6,
     mural: kind === 'esquina' ? variation % 3 !== 2 : variation % 7 === 3,
     paintedSides: rng() < 0.6,
+    deck: (
+      [
+        { color: 'concrete', surface: Surface.concrete },
+        { color: 'stone', surface: Surface.concrete },
+        { color: 'terracotta', surface: Surface.tile },
+        { color: 'concrete', surface: Surface.concrete },
+        { color: 'brickRed', surface: Surface.paint },
+        { color: 'stone', surface: Surface.concrete },
+        { color: 'concrete', surface: Surface.concrete },
+        { color: 'terracotta', surface: Surface.tile },
+      ] as const
+    )[variation % 8] ?? { color: 'concrete', surface: Surface.concrete },
   };
 }
 
@@ -265,6 +279,7 @@ function roof(
   options: { parapet?: 'wall' | 'rail' | 'none'; slots?: number; features?: readonly string[] },
 ): void {
   b.box(r.w + 0.04, 0.05, r.d + 0.04, r.x, r.y + 0.025, r.z, 'concrete', Surface.concrete);
+  b.block(r.w - 0.09, 0.012, r.d - 0.09, r.x, r.y + 0.05, r.z, s.deck.color, s.deck.surface);
   const parapet = options.parapet ?? 'wall';
   if (parapet === 'wall') {
     const color: Paint = s.finish === 'painted' ? s.plaster : 'brick';
@@ -273,9 +288,13 @@ function roof(
     b.block(r.w + 0.04, 0.14, 0.05, r.x, r.y, r.z - r.d / 2 + 0.005, color, surface);
     b.block(0.05, 0.14, r.d - 0.04, r.x + r.w / 2 - 0.005, r.y, r.z, color, surface);
     b.block(0.05, 0.14, r.d - 0.04, r.x - r.w / 2 + 0.005, r.y, r.z, color, surface);
-    b.block(r.w + 0.07, 0.025, r.d + 0.07, r.x, r.y + 0.14, r.z, 'concrete', Surface.concrete);
-    b.block(r.w - 0.06, 0.03, r.d - 0.06, r.x, r.y + 0.135, r.z, 'concrete', Surface.concrete);
-    b.block(r.w - 0.1, 0.02, r.d - 0.1, r.x, r.y + 0.05, r.z, 'concrete', Surface.concrete);
+    for (const [w, d, x, z] of [
+      [r.w + 0.08, 0.08, r.x, r.z + r.d / 2 - 0.005],
+      [r.w + 0.08, 0.08, r.x, r.z - r.d / 2 + 0.005],
+      [0.08, r.d, r.x + r.w / 2 - 0.005, r.z],
+      [0.08, r.d, r.x - r.w / 2 + 0.005, r.z],
+    ] as const)
+      b.block(w, 0.025, d, x, r.y + 0.14, z, 'concrete', Surface.concrete);
   } else if (parapet === 'rail') {
     for (const [w, d, x, z] of [
       [r.w, 0.018, r.x, r.z + r.d / 2 - 0.02],
