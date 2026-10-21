@@ -32,6 +32,23 @@ describe('catalog model assembly', () => {
     }
     library.dispose();
   });
+  it('keeps every building variant within its triangle budget', () => {
+    const catalog = realCore().catalog();
+    const library = new ModelLibrary(catalog);
+    const report: Record<string, number> = {};
+    for (const def of catalog) {
+      let total = 0;
+      for (let variation = 0; variation < 16; variation++) {
+        const geometry = library.create(def.id, variation).geometry;
+        const triangles = (geometry.index?.count ?? geometry.getAttribute('position').count) / 3;
+        expect(triangles).toBeLessThanOrEqual(3600);
+        total += triangles;
+      }
+      report[def.id] = Math.round(total / 16);
+    }
+    console.info('average triangles per model', JSON.stringify(report));
+    library.dispose();
+  });
   it('shares geometry and materials across repeated placements', () => {
     const library = new ModelLibrary(realCore().catalog());
     const a = library.create('casa', 0),

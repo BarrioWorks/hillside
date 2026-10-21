@@ -16,17 +16,37 @@ The exact contract is in [implementation-contract.md](implementation-contract.md
 
 ## Rendering and interaction
 
-Three.js uses an orthographic camera. Pointer raycasting maps a visible terrain cell to integer coordinates. The preview model comes from the same architectural catalog as placed buildings. Camera gestures must not trigger placement when the pointer is released.
+Three.js uses an orthographic camera. Pointer raycasting maps a visible terrain cell to integer coordinates. The preview model comes from the same generator as placed buildings. Camera gestures must not trigger placement when the pointer is released.
 
-The renderer retains terrain and scenery between commands. Structures reconcile by stable ID so an edit only adds or removes affected visual objects. Shared geometries, materials, and structure instances reduce resource duplication.
+Render modules in `web/src/render/`:
 
-The measured 500-structure scene initially submitted 505 draw calls. `StructureBatches` now groups matching geometry and materials, including imported child details, into instanced draws. Each placement retains a logical transform and stable ID. Per-batch slots map raycast instances back to those IDs. Removal swaps the last active slot into the gap, and only changed matrices are uploaded. Conservative bounds expand during movement and reset when a batch empties.
+- `world.ts`: `World` owns the renderer, camera, controls, reconciliation, picking, ghost and remove previews, placement animation, quality tiers, and metrics.
+- `palette.ts`: the named sRGB palette and the surface ids written to a vertex attribute.
+- `builder.ts`: `Builder` merges colored, surface-tagged primitives into one indexed geometry. It bakes base occlusion and drops downward faces.
+- `architecture.ts`: the shape grammar for the six building kinds. Mass, storeys, bays, openings, and roof slots.
+- `models.ts`: `ModelLibrary` caches geometry by kind and one of 16 variants. Streets are also keyed by their four-side context. It also builds streets, stairs, trees, planters, and benches.
+- `material.ts`: one shared `MeshStandardMaterial` patched with `onBeforeCompile`. The surface id selects brick, stone, paving, mural, and noise patterns, plus roughness, metalness, and evening window glow.
+- `terrain.ts`: terraces, retaining walls with coping, terrace occlusion, the diorama slab, the margin vegetation, and the invisible pick grid.
+- `decor.ts`: derived details. Grass tufts and flowers on free cells, utility poles along streets, cables to nearby homes, and parked motorcycles on street cells next to buildings.
+- `lighting.ts`: sun, hemisphere light, sky gradient, and fog for the three presets.
+- `batches.ts`: `StructureBatches` packs placements into `InstancedMesh` batches.
+- `thumbnails.ts`: palette and contact-sheet thumbnails.
 
-The renderer skips redundant idle draws and caches directional shadow maps. Placement, completed pop animation, terrain changes, and asset loading invalidate shadows. Software renderers automatically use pixel ratio 1 and a 512px shadow map. Hardware defaults allow pixel ratio 2 and a 2048px map. The explicit quality query parameter overrides automatic selection.
+There are no runtime model files. Every building is generated in TypeScript from its kind and saved variation.
+
+The renderer retains terrain and scenery between commands. Structures reconcile by stable ID. A placement rebuilds only when its signature changes. The signature covers kind, cell, rotation, variation, height, and street context. Decor is recomputed from the snapshot after each reconcile.
+
+`StructureBatches` groups matching geometry into instanced draws. Each placement retains a logical transform and stable ID. Per-batch slots map raycast instances back to those IDs. Removal swaps the last active slot into the gap, and only changed matrices are uploaded. The 500-structure benchmark scene submits 62 draws (`docs/benchmarks/ab/`).
+
+The renderer draws only on change. Shadow maps have auto-update disabled. Edits, lighting changes, and animation completion invalidate them. Software renderers automatically use the low tier: pixel ratio 1, 1024px PCF shadows, and no procedural patterns. Hardware uses the high tier: pixel ratio up to 2, 2048px soft shadows, and patterns. The `quality` query parameter overrides automatic selection. `?profile` adds a per-frame render-cost probe (see [performance.md](performance.md)).
 
 Benchmark mode forces continuous rendering. Its frame throughput therefore counts actual rendered frames rather than idle animation-loop callbacks. Static idle metrics must not be interpreted as sustained gameplay FPS.
 
-The interface is a floating palette and small toolbar. Browser-local persistence provides a neighborhood without accounts. Portable files provide explicit export and import. Web Audio begins after a player interaction and can be muted.
+The interface is a floating palette, a top toolbar with a lighting popover, and a view toolbar. The whole interface can be hidden. Browser-local persistence provides a neighborhood without accounts. Portable files provide explicit export and import. Web Audio begins after a player interaction and can be muted.
+
+## Terrain versions
+
+Rust generates terrain by a named generator stored in each save. `hillside-v2` (contour terraces from quantized smooth noise, with neighbors limited to one step) is the default. `hillside-v1` (straight bands) remains so older saves load unchanged. See `Generator` in `crates/barrio-core/src/terrain.rs`.
 
 ## Alternatives considered
 
@@ -38,7 +58,7 @@ An ECS, physics engine, backend, and cloud save system add no required capabilit
 
 ## Asset boundary
 
-Imported geometry must have its original license, author, source, and modification record. Source files remain separate from selected runtime GLBs. A validation tool checks geometry, textures, transforms, bounds, counts, and provenance. A shared lighting/camera contact sheet supports visual review at large and gameplay sizes.
+The runtime loads no imported geometry. The prototype's Kenney GLB models, the asset build and validation pipeline, and the GLB loader were removed in commit 60d2805. The Kenney sources stay in `asset-sources/` with their licenses and provenance ([asset-manifest.md](asset-manifest.md)). Any future imported asset must again carry its original license, author, source, and modification record. The `/?contact-sheet` page renders the procedural catalog under shared lighting for visual review.
 
 ## Verification
 

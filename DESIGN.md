@@ -1,96 +1,105 @@
 ---
 name: "Barrio Builder"
-description: "A sunlit hillside miniature with compact floating controls."
+description: "A Medellín hillside diorama with warm floating game controls."
 colors:
-  blue: "#245beb"
-  secondary: "#53647b"
-  surface: "#fff"
-  line: "#d9e2ed"
-  ink: "#17212f"
-  atmosphere: "#d9e6e2"
-  cloud: "#f4f7fb"
-  hover: "#edf2fa"
-  action-deep: "#1948c3"
-  selected: "#edf2ff"
-  model-selected: "#f1f5ff"
-  keycap: "#edf1f6"
-  border-strong: "#a8b8ca"
-  divider-soft: "#edf0f5"
-  menu-divider: "#e8eef5"
-  selection-surface: "#ffffffed"
-  sun-surface: "#ffffff9c"
-  sun-ink: "#526e5e"
-  caption-ink: "#344e44"
-  caption-secondary: "#50665b"
-  caption-line: "#637f6b"
-  hint-ink: "#344f44"
-  hint-muted: "#6e8579"
-  hint-dot: "#387954"
-  feedback-danger: "#a31f31"
-  feedback-danger-surface: "#fff7f7"
-  placement-danger: "#b42336"
-  world-plaster: "#e8e6d8"
-  world-concrete: "#b8b8a7"
-  world-window: "#294a4c"
-  world-metal: "#4c6260"
-  world-brick: "#b56d4e"
-  world-leaf: "#387b4d"
-  world-ground: "#c7d4bf"
-  world-mountain: "#91b2a2"
-  world-trunk: "#7c7657"
-  world-sky-light: "#edf4ff"
-  world-ground-light: "#afab87"
-  world-sun-light: "#ffefcf"
-  thumbnail-sky-light: "#edf4fc"
-  thumbnail-ground-light: "#a6a58d"
-  thumbnail-sun-light: "#fff0d4"
-  world-casa-0: "#e9b44c"
-  world-casa-1: "#cf8066"
-  world-casa-2: "#8bb4b4"
-  world-tienda-0: "#e77c65"
-  world-tienda-1: "#d6a14f"
-  world-tienda-2: "#83a99e"
-  world-torre-0: "#b96547"
-  world-torre-1: "#ab674f"
-  world-torre-2: "#c07855"
-  world-terraza-0: "#69aeb5"
-  world-terraza-1: "#8ba788"
-  world-terraza-2: "#cf987a"
-  world-taller-0: "#cb8063"
-  world-taller-1: "#b18b68"
-  world-taller-2: "#9aa6a0"
-  world-esquina-0: "#e7d8b5"
-  world-esquina-1: "#c8d4cc"
-  world-esquina-2: "#d5b1a0"
+  ink: "#423e33"
+  secondary: "#716454"
+  surface: "#fffaf2f0"
+  surface-solid: "#fffaf2"
+  page: "#efe6d8"
+  accent: "#a24f32"
+  accent-deep: "#884029"
+  teal: "#28665c"
+  hover: "#ebdfce"
+  pressed: "#ecdbc7"
+  line: "#d8cbbb"
+  highlight: "#fffdf8"
+  brand-ink: "#3c5147"
+  keycap: "#e8dfd2"
+  keycap-edge: "#c9baa5"
+  scrollbar: "#b7a28a"
+  model-rest: "#eee6d8"
+  model-hover: "#f6ede0"
+  model-selected: "#fbefda"
+  model-ring: "#b56546"
+  tab-underline: "#b46a49"
+  tooltip: "#423e33"
+  tooltip-keycap: "#615b4f"
+  status: "#325e51"
+  feedback-valid: "#226357"
+  feedback-danger: "#a04631"
+  feedback-danger-surface: "#fff1e8"
+  backdrop: "#38332866"
+  collection-page: "#f4f7fb"
+  collection-secondary: "#53647b"
+  world-terracotta: "#b5603f"
+  world-burnt-orange: "#c9733a"
+  world-coral: "#e0806e"
+  world-brick-red: "#9e4a35"
+  world-ochre: "#c99a52"
+  world-mustard: "#d9ae3f"
+  world-cream: "#eadfc4"
+  world-off-white: "#f1ede3"
+  world-turquoise: "#4fb3bf"
+  world-teal: "#5f8f88"
+  world-dusty-blue: "#6f8fb5"
+  world-muted-green: "#7e9a5a"
+  world-concrete: "#a9a398"
+  world-brick: "#b8613f"
+  world-brick-dark: "#94492f"
+  world-mortar: "#cfc6b4"
+  world-window-dark: "#2b3236"
+  world-metal: "#4a5157"
+  world-tank-black: "#24282b"
+  world-tank-blue: "#2f5f8f"
+  world-wood: "#8a5e3b"
+  world-leaf: "#5f8c4a"
+  world-leaf-deep: "#3f6b3c"
+  world-grass: "#96b47f"
+  world-soil: "#a8643f"
+  world-stone: "#b9ad99"
+  world-asphalt: "#8e8a84"
+  world-zinc: "#9aa3a1"
+  world-shutter: "#8b958f"
+  world-lamp: "#ffe2a8"
+  world-ghost: "#fff4e2"
+  light-afternoon-sun: "#ffd9a8"
+  light-afternoon-zenith: "#a9c6cf"
+  light-afternoon-horizon: "#f2dcc0"
+  light-daylight-sun: "#fff6ea"
+  light-daylight-zenith: "#9fc3dc"
+  light-daylight-horizon: "#e9f0ef"
+  light-evening-sun: "#ffa66e"
+  light-evening-zenith: "#58648f"
+  light-evening-horizon: "#f0a982"
 typography:
   display:
     fontFamily: "Fraunces, serif"
-    fontSize: "32px"
+    fontSize: "27px"
     fontWeight: 400
-    lineHeight: 0.9
+    lineHeight: 1
     letterSpacing: "-0.035em"
   display-mobile:
     fontFamily: "Fraunces, serif"
-    fontSize: "26px"
+    fontSize: "25px"
     fontWeight: 400
-    lineHeight: 0.9
+    lineHeight: 1
     letterSpacing: "-0.035em"
   headline:
     fontFamily: "Fraunces, serif"
-    fontSize: "28px"
+    fontSize: "27px"
     fontWeight: 600
     lineHeight: 1.2
   title:
     fontFamily: "Fraunces, serif"
-    fontSize: "24px"
+    fontSize: "23px"
     fontWeight: 600
-    lineHeight: 1.2
+    lineHeight: 1.15
     letterSpacing: "-0.02em"
-  caption:
+  panel-title:
     fontFamily: "Fraunces, serif"
-    fontSize: "18px"
+    fontSize: "17px"
     fontWeight: 600
-    lineHeight: 1.3
   body:
     fontFamily: "Nunito Sans, sans-serif"
     fontSize: "14px"
@@ -100,25 +109,26 @@ typography:
     fontSize: "14px"
     fontWeight: 400
     lineHeight: 1.6
-  help-body:
-    fontFamily: "Nunito Sans, sans-serif"
-    fontSize: "13px"
-    fontWeight: 400
-    lineHeight: 1.55
   button:
     fontFamily: "Nunito Sans, sans-serif"
     fontSize: "14px"
+    fontWeight: 700
+  menu-item:
+    fontFamily: "Nunito Sans, sans-serif"
+    fontSize: "13px"
     fontWeight: 700
   label:
     fontFamily: "Nunito Sans, sans-serif"
     fontSize: "12px"
     fontWeight: 800
-    lineHeight: 1.2
+  chip:
+    fontFamily: "Nunito Sans, sans-serif"
+    fontSize: "11px"
+    fontWeight: 700
   metadata:
     fontFamily: "Nunito Sans, sans-serif"
     fontSize: "10px"
-    fontWeight: 600
-    lineHeight: 1.6
+    fontWeight: 700
   collection-title:
     fontFamily: "Fraunces, serif"
     fontSize: "38px"
@@ -133,14 +143,16 @@ typography:
     fontWeight: 600
 rounded:
   keycap: "4px"
-  feedback: "8px"
-  control: "10px"
-  camera: "12px"
-  toolbar: "14px"
-  panel: "16px"
-  palette: "17px"
+  tooltip: "9px"
+  control: "11px"
+  model: "12px"
+  warning: "14px"
+  toolbar: "16px"
+  palette: "18px"
+  feedback: "18px"
   dialog: "18px"
-  circle: "50%"
+  chip: "20px"
+  selection: "24px"
 spacing:
   space-1: "4px"
   space-2: "8px"
@@ -148,165 +160,194 @@ spacing:
   space-4: "16px"
   space-5: "20px"
   space-6: "24px"
-  space-8: "32px"
 components:
   button-ghost:
     textColor: "{colors.ink}"
     typography: "{typography.button}"
     rounded: "{rounded.control}"
     padding: "10px"
-  button-save:
-    backgroundColor: "{colors.blue}"
-    textColor: "{colors.surface}"
-    typography: "{typography.button}"
-    rounded: "{rounded.control}"
-    padding: "10px 14px"
-  button-dialog-primary:
-    backgroundColor: "{colors.blue}"
-    textColor: "{colors.surface}"
+  button-primary:
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.surface-solid}"
     typography: "{typography.button}"
     rounded: "{rounded.control}"
     padding: "10px"
-  palette-tab-selected:
-    backgroundColor: "{colors.selected}"
-    textColor: "{colors.action-deep}"
+  button-save:
+    textColor: "{colors.teal}"
+    typography: "{typography.button}"
     rounded: "{rounded.control}"
-    padding: "7px 12px"
+    padding: "10px"
+  toolbar:
+    backgroundColor: "{colors.surface}"
+    rounded: "{rounded.toolbar}"
+    padding: "4px"
+  count-chip:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.secondary}"
+    typography: "{typography.chip}"
+    rounded: "{rounded.chip}"
+    padding: "7px 11px"
   palette:
     backgroundColor: "{colors.surface}"
     rounded: "{rounded.palette}"
-    padding: "8px 10px 10px"
+    padding: "6px 9px 9px"
+  model-card:
+    backgroundColor: "{colors.model-rest}"
+    rounded: "{rounded.model}"
+    width: "64px"
+    height: "64px"
   selection-strip:
-    backgroundColor: "{colors.selection-surface}"
-    rounded: "{rounded.control}"
-    padding: "5px 7px 5px 16px"
-  help-panel:
     backgroundColor: "{colors.surface}"
-    rounded: "{rounded.panel}"
-    padding: "21px 24px"
-    width: "330px"
+    rounded: "{rounded.selection}"
+    padding: "0 10px 0 16px"
+  tooltip:
+    backgroundColor: "{colors.tooltip}"
+    textColor: "{colors.surface-solid}"
+    rounded: "{rounded.tooltip}"
+    padding: "7px 10px"
+  status-toast:
+    backgroundColor: "{colors.status}"
+    textColor: "{colors.surface-solid}"
+    rounded: "{rounded.chip}"
   placement-feedback:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.action-deep}"
+    backgroundColor: "{colors.surface-solid}"
+    textColor: "{colors.feedback-valid}"
     rounded: "{rounded.feedback}"
-    padding: "9px 12px"
+  lighting-panel:
+    backgroundColor: "{colors.surface-solid}"
+    rounded: "{rounded.toolbar}"
+    width: "228px"
+  dialog:
+    backgroundColor: "{colors.surface-solid}"
+    rounded: "{rounded.dialog}"
+    padding: "28px"
+    width: "420px"
 ---
 
 # Design System: Barrio Builder
 
 ## Overview
 
-**Creative North Star: "A neighborhood built one useful piece at a time"**
+**Creative North Star: "A neighborhood built one floor at a time"**
 
-A neighborhood built one useful piece at a time. The implemented world is a sunlit, terraced miniature: warm architectural plaster and brick, small plants, stairs, and paths under an orthographic camera.
+The world is a Medellín hillside held as a diorama. Self-built houses climb contour terraces. Street facades are painted. Side and back walls and upper floors stay exposed brick. Concrete slab bands mark every floor. Upper floors cantilever over the street (volados). Roofs carry black or blue water tanks, plants, laundry lines, rebar stubs, and small sheds. Utility poles and sagging cables connect the streets to the houses, and motorcycles park along the streets. Stone retaining walls with concrete coping hold each terrace. The board floats as a slab with soil sides and a fringe of trees, against a sky gradient. Three lighting presets change the mood: warm afternoon, bright daylight, and soft evening with lit windows.
 
-Compact white floating controls sit above the scene. Cobalt carries actions and selection, while brand-pinned Fraunces and Nunito Sans provide character and legibility. The architecture-only warm palette exception in PRODUCT.md and docs/implementation-contract.md does not extend to interface surfaces.
+The interface is a set of warm, compact floating controls: a cream translucent surface, terracotta accent, and deep teal for Save and status. Fraunces carries the brand and titles. Nunito Sans carries the controls.
 
-**Key Characteristics:**
-- Full-viewport orthographic miniature with compact floating controls.
-- Cool white interface surfaces and cobalt action states.
-- Warm, varied architecture with matte materials and soft scene shadows.
-- Brand-pinned Fraunces display type and Nunito Sans interface type.
+**Key characteristics:**
 
-This is a source-based record of the completed implementation, refreshing the incumbent direction. Source locations below identify declarations rather than new shared CSS variables. Only `--blue`, `--secondary`, `--surface`, `--shadow`, and `--line` are CSS custom properties; the other documented tokens are extracted literals. BRAND.md supplies identity; implemented game values win over its proposed generic scales.
+- Orthographic diorama with a bounded board and a sky gradient.
+- Construction honestly shown: brick, concrete, steel, and paint, without grime or decay.
+- Warm brick dominates. Cool hues stay low in chroma and appear on painted facades and doors.
+- Compact cream controls that can be hidden entirely (`H`).
 
-Verification context: the user reports nine production browser tests passed. This documentation pass ran no browser, build, test, or benchmark. The independent `docs/verification/final-review.md` ship disposition covers only dismissal of the unsupported reset finding and resolution of the mobile Save accessible name; its evidence snapshot predates the reported nine-test completion. Hardware FPS remains unverified.
+Sources: `web/src/render/` for the world, `web/src/style.css` and `web/src/ui.ts` for the interface. The research behind the direction is in `docs/visual-reference-analysis.md`.
+
+Conflict to resolve: `PRODUCT.md` says UI surfaces keep the cool Barrio brand neutrals. The shipped interface (commit 3a1fc8c) uses warm cream surfaces and a terracotta accent. This document records the shipped state.
 
 ## Colors
 
-The palette separates cool functional controls from sunlit architectural materials. Frontmatter holds exact reusable color values; renderer lighting changes their on-screen appearance.
+### World
 
-### Primary
+All world colors come from `PALETTE` in `web/src/render/palette.ts`. They are sRGB hex values converted to linear through `THREE.Color`. They are stored as vertex colors on one shared material. Rendered appearance depends on the lighting preset and Neutral tone mapping.
 
-- **Barrio cobalt** (`blue`): primary Save/dialog actions, selected model border, focus, valid footprint and ghost. Source: `web/src/style.css` :root, button focus, .save-button, button.primary, .model-button; `web/src/render/world.ts` ghostMaterial and updatePreview.
-- **Deep action blue** (`action-deep`), **selected wash** (`selected`), and **model wash** (`model-selected`): selected tools, category tabs, model cards, and placement feedback. The deeper Save hover declaration is present but does not win the cascade; see Do's and Don'ts.
+- **Painted plaster** (`PLASTER` list): terracotta, turquoise, mustard, coral, dusty blue, ochre, teal, cream, burnt orange, muted green, and off-white. Street facades and ground floors use them. A darker plinth at 72 percent of the wall color runs along the base of painted ground floors.
+- **Trim** (`TRIM` list): teal, brick red, dusty blue, mustard, turquoise, and coral. Doors, railings, and window frames on brick walls use them. Frames on painted walls are off-white.
+- **Brick** (`world-brick`, `world-brick-dark`, `world-mortar`): exposed walls. On the high quality tier the shader draws running-bond courses 0.1 units tall with mortar joints.
+- **Construction** (`world-concrete`, `world-stone`, `world-zinc`, `world-shutter`, `world-metal`): slabs, coping, retaining walls, corrugated roofs, roll-down shutters, grilles, and rails.
+- **Landscape** (`world-grass`, `world-leaf`, `world-leaf-deep`, `world-soil`, `world-stone`): terraces, trees, shrubs, and diorama sides.
+- **Accents** (`world-tank-black`, `world-tank-blue`, `world-lamp`, `world-window-dark`): water tanks, street lamps, and glass.
+- **Preview** (`world-ghost`, `world-off-white`, `world-coral`): a valid ghost is warm off-white at 0.62 opacity. Invalid and remove states are coral. Source: `World.showGhost()` in `web/src/render/world.ts`.
 
-### Secondary
+### Light
 
-- **Architectural families** (`world-casa-0` through `world-esquina-2`): the exact three facade variants per building, indexed as in `web/src/render/models.ts` variants. Mustard, coral, brick, turquoise, cream plaster, and concrete tones belong to buildings.
-- **Material colors** (`world-plaster`, `world-concrete`, `world-window`, `world-metal`, `world-brick`, `world-leaf`): shared model constants in `web/src/render/models.ts`; vertex-color MeshStandardMaterial uses roughness 0.9. Small one-off architectural details stay in that source rather than becoming house tokens.
-- **Landscape and light** (`world-ground`, `world-mountain`, `world-trunk`, the light tokens): `web/src/render/terrain.ts`, `world.ts`, and `thumbnails.ts`. Scene invalid/removal preview uses `placement-danger`; DOM invalid feedback uses `feedback-danger` and `feedback-danger-surface`. These are distinct implemented colors, not a unified semantic ramp.
+`web/src/render/lighting.ts` defines three presets. Each sets the sun color, intensity, and direction, the hemisphere sky and ground colors, exposure, a zenith-to-horizon background gradient, and fog tinted to the horizon. Evening also lights a random 62 percent of window cells through an emissive term in `material.ts`. The `light-*` tokens record the sun, zenith, and horizon colors.
 
-### Neutral
+### Interface
 
-- **Clean white**, **cloud**, **ink**, **secondary**, and **line**: panels, collection background/model hover, default text, supporting text, and dividers. Sources: `web/src/style.css` :root, .contact-page, .model-button:hover, .history, .palette-tools.
-- **Atmosphere**: root background, renderer background/fog, and caption text-shadow. **Selection surface** and **sun surface** retain source alpha instead of flattening to opaque white. **Caption** and **hint** families support text against the landscape. Sources: .selection-line, .sun, .scene-caption, .bottom-hints.
-- **Hover**, **keycap**, **border-strong**, **divider-soft**, and **menu-divider**: button hover, keyboard hints, scrollbar thumb, palette/help separators, and file-menu rule respectively.
+- **Surfaces**: `surface` (translucent cream, `--surface`) for toolbars, palette, chip, and selection strip. `surface-solid` for menus, help, dialogs, and feedback. `page` is the root background.
+- **Text**: `ink` (`--ink`) and `secondary` (`--secondary`). `brand-ink` for the wordmark.
+- **Accent**: `accent` (`--accent`) marks pressed tools, the brand mark, primary dialog buttons, and the active lighting preset. `accent-deep` is the primary hover.
+- **Teal** (`--teal`): Save icon, focus outline, text selection, and the loading screen. `status` is the toast background. `feedback-valid` is the valid placement note.
+- **Danger**: `feedback-danger` on `feedback-danger-surface` for invalid placement notes and the storage warning.
+- **Collection page**: `/?contact-sheet` keeps the older cool `collection-page` and `collection-secondary` values.
 
-**The World and Controls Rule.** Keep warm plaster and brick in the game world; keep interface surfaces cool white and gray.
+**The World and Controls Rule.** World colors stay in the world. The interface uses its own warm neutrals and a single terracotta accent. Do not paint controls with facade colors.
 
 ## Typography
 
-**Display Font:** Fraunces, serif. **Body Font:** Nunito Sans, sans-serif. These remain pinned. `web/src/style.css` imports Fraunces 600 and Nunito Sans 400/600/700/800 locally through @fontsource. There is no implemented monospace role; kbd inherits the interface font.
+**Display font:** Fraunces, serif, imported at weight 600. **Body font:** Nunito Sans, sans-serif, at 400, 600, 700, and 800. Both load locally through @fontsource.
 
-### Hierarchy
-
-- **Display:** .brand > span; mobile override at max-width 600px. The brand inherits root weight 400 even though only Fraunces 600 is imported and font-synthesis is none; the frontmatter records the inherited weight, without claiming a separately loaded 400 face.
-- **Headline / title:** dialog h2 and .help-panel h2.
-- **Caption:** .scene-caption; reduced to 16px at max-width 1000px, hidden at max-width 600px.
-- **Body:** root base; dialog p and help paragraphs/dd have explicit prose line heights. Root body has no explicit line-height token.
-- **Buttons / labels / metadata:** base button, .model-button span, .model-button small. Category tabs are 12px/700, mobile 10px/700; model labels become 11px on mobile. Selection title is 13px/800, mobile 12px. Help labels are 12px/800; keycaps 11px/700. Supporting labels and hints reach 10px; these compact values are not a general reading-text recommendation.
-- **Collection / loading:** .contact-page h1 and its mobile override; .loading-mark. Collection article titles are 17px/700.
-
-**The Brand Pairing Rule.** Keep Fraunces for expressive titles and Nunito Sans for everyday controls; keycaps inherit the interface family.
+- **Display:** the wordmark (`.brand > span`), 27px, 25px at 700px and below. It inherits weight 400 from the root, and only Fraunces 600 is imported, with `font-synthesis: none`. The token records the declared weight.
+- **Headline:** dialog titles, 27px/600. **Title:** help panel title, 23px/600. **Panel title:** lighting panel heading, 17px/600.
+- **Body:** 14px root. Dialog paragraphs use a 1.6 line height.
+- **Controls:** buttons 700. Menu and lighting items 13px. The selection title and help labels are 12px/800. The count chip, tooltips, and the selection description are 11px. Keycaps and some mobile labels are 10px.
 
 ## Layout
 
-Source: `web/src/style.css` #app, #world, .topbar, .view-tools, .bottom-ui, .palette-items, and media queries. The viewport uses 100dvw/100dvh and body overflow hidden; the collection route restores scrolling. Topbar is inset 30px horizontally and 24px vertically. Camera controls sit at right 30px and top calc(50% - 84px). Bottom UI centers at bottom 22px with width min(720px, calc(100% - 40px)). Selection strip sits above the palette. Six desktop model cards share the row; horizontal scrolling supports overflow. There is no permanent large sidebar.
+Source: `web/src/style.css`.
 
-The observed 4/8/12/16/20/24/32px rhythm coexists with component-specific 3/5/6/7/9/10px gaps and padding; it is not an enforced spacing grid. Buttons have minimum width and height 44px. The decorative sun is 36px, not a button target.
+- **Top bar:** inset 20px from the top and 24px from the sides. The wordmark and count chip sit on the left. The action toolbar sits on the right: undo, redo, lighting, hide interface, Save, and menu.
+- **View tools:** a vertical toolbar 24px from the right edge, centered vertically. It holds zoom in, zoom out, rotate left, rotate right, and home.
+- **Bottom UI:** centered, 440px wide (at most 100% − 24px), 18px from the bottom or the safe-area inset. The selection strip sits above the palette. The palette has icon-only category tabs, tool buttons (explore, remove, rotate), and a row of 64px model cards that scrolls horizontally.
+- **At 700px and below:** 12px insets. The wordmark and chip stack. The action toolbar becomes a 3-column grid of 44px buttons. The view-rotate buttons are hidden. Model cards are 52px. The selection strip spans the full width.
+- **Hidden interface:** `body.ui-hidden` fades every overlay to opacity 0. A faint show-interface button stays at the top right.
+- Buttons keep a minimum target of 44 × 44px.
 
-- **At min-width 1500px:** bottom UI 770px; model thumbnails 84px and cards at least 118px high; scene caption bottom 38px.
-- **At max-width 1000px:** neighborhood summary and desktop hints disappear; topbar uses 22px horizontal/20px top insets, bottom UI bottom 18px.
-- **At max-width 600px:** topbar 16px horizontal/15px top; Save text, topbar sound/help, and scene caption disappear. Save keeps its button-level aria-label; sound/help remain in the menu. Bottom UI width calc(100% - 24px), bottom max(12px, env(safe-area-inset-bottom)). Palette radius becomes 14px; model cards use flex 0 0 74px, minimum width 72px, minimum height 104px, thumbnails 72px. Tabs compact but retain 44px minimum height.
+### Camera
 
-Renderer spatial rules: `web/src/render/terrain.ts` STEP is 0.55 world units and cells are 1 unit horizontally. `world.ts` uses an orthographic camera, initial position (43,34,48), target (16,1,16), zoom limits 0.65–3.5 and polar limits 0.28–1.25 radians. Terrain colors are deterministic formulas, recorded in sidecar extensions rather than misrepresented as fixed CSS swatches.
+`World` in `web/src/render/world.ts` uses an orthographic camera. It starts at (43, 34, 48), looks at (16, 1.2, 16), and uses zoom 1.2. The frustum spans 27 units on landscape screens and 30 / aspect on portrait screens. Zoom is limited to 0.55 to 6, the polar angle to 0.5 to 1.2 rad, and the pan target to the board plus 2 cells. `Q` and `E` turn the view a quarter turn with easing.
 
-## Elevation & Depth
+## Elevation and depth
 
-Soft ambient shadows lift controls off the miniature; they are structural separators rather than hard offset decoration. Exact shadow strings are in the sidecar: toolbar/camera/storage/loading share --shadow; palette, selection strip, feedback, popover/help, and modal each retain their source shadows. The dialog backdrop uses translucent ink. Caption text-shadow maintains separation against the scene.
+Interface surfaces use soft warm shadows: `--shadow` (`0 6px 24px #53412a1f` plus a 1px inner highlight) for toolbars, chip, strip, and feedback. The palette uses a slightly deeper `0 8px 30px #53412a2b`, and dialogs use `0 16px 64px #3e302f40`.
 
-The renderer uses sRGB output, ACES filmic tone mapping, exposure 1.15, fog from 60 to 150, and PCF soft shadows. Main hemisphere intensity is 2.3; sun intensity is 3.3 at (-12,34,23). Shadow maps are 512px low quality and 2048px high quality. Thumbnail lighting intentionally differs: hemisphere 2.4, sun 3.1 at (-5,9,7), same exposure, transparent background. Sources: `web/src/render/world.ts` constructor and `thumbnails.ts` lighting/thumbnails. These settings describe appearance, not a performance guarantee.
+In the world, depth comes from four sources:
 
-**The Floating Surface Rule.** Use soft shadows to separate compact controls from the scene, preserving the open canvas.
+- Sun shadows: a fixed fitted frustum, PCF at 1024px on the low tier and PCF soft at 2048px on the high tier.
+- Baked contact darkening at wall bases.
+- Corner occlusion on grass at the foot of each terrace.
+- Concrete coping that outlines each terrace edge.
+
+Rendering uses sRGB output and Neutral tone mapping. Thumbnails use their own fixed light (hemisphere `#dfe9ef` / `#b49a7a` at 1.7, sun `#ffe2bd` at 3.2) and the same tone mapping (`web/src/render/thumbnails.ts`).
 
 ## Shapes
 
-Source: `web/src/style.css` button, kbd, .placement-feedback, .top-actions, .view-tools, .palette, .selection-line, .help-panel, dialog, and .contact-grid article. Gently rounded rectangles distinguish controls, grouped toolbars, and larger overlays. Radius tokens name these observed roles rather than imposing the unimplemented BRAND.md scale. The sun and status dot are circles. Model selection adds a 1.5px cobalt border; ordinary controls use no border. Renderer buildings use stacked blocks, flat roofs, parapets, balcony rails, grilles, tanks, and small plants, with architectural silhouette differences in `web/src/render/models.ts` architecture.
+Controls are rounded rectangles: 11px buttons, 12px model cards, 16px toolbars, and 18px palette, feedback, and dialogs. The count chip and the selection strip are pills. Pressed palette tabs show a 2px terracotta underline. Pressed model cards show a 2px terracotta inner ring and lift by 3px.
+
+Buildings are stacked storey volumes 0.68 units tall with 0.07 slab bands, framed openings, and flat roofs with parapets, rails, or bare slabs. The shape grammar is in `web/src/render/architecture.ts`.
 
 ## Components
 
-### Buttons and action groups
+- **Toolbars:** `.top-actions` and `.view-tools` on `surface` with the 16px radius. Undo and redo are separated from the other actions by a `line` divider.
+- **Lighting panel:** a 228px popover under the sun button with three preset buttons. The active preset shows a 3px terracotta bar on its left edge.
+- **Palette:** category tabs, tool buttons, and model cards with rendered thumbnails. Hovering a card lifts it 2px.
+- **Selection strip:** the selected item's name and description, with a rotate button and an `R` keycap.
+- **Feedback:** a placement note near the cursor, teal when valid and red-brown on pale peach when invalid. A status toast (`#status`) on deep teal confirms actions. Tooltips are dark ink with cream text and a keycap.
+- **Dialog:** native `<dialog>` on `surface-solid`, with a terracotta primary action.
 
-Compact, familiar controls. Base button padding and geometry live in frontmatter; gap is 8px, weight 700, transition 160ms for background/color/transform. Active translates down 1px; disabled opacity is 0.3, transform none, transparent hover. Generic hover uses the hover wash. Focus-visible is a 3px cobalt outline offset 4px on buttons, links, and canvas; #world overrides offset to -4px. Save has horizontal margin 3px and mobile padding 8px/margin 0 1px. Dialog primary uses the base 10px padding. Source: `web/src/style.css` base button and variants; `web/src/ui.ts` button helper/constructor.
+## Motion
 
-### Category navigation and model cards
-
-Tabs use aria-selected; tool/model buttons use aria-pressed. Model cards have a transparent 1.5px border at rest, cloud hover, selected model wash and cobalt border, 76px thumbnails, 12px/800 labels, and 10px/600 footprints. Desktop minimum card height is 109px. Source: `web/src/style.css` .palette* and .model-button*; `web/src/ui.ts` renderPalette/update. Thumbnails are actual rendered catalog models, not icon substitutions; sidecar snippets omit thumbnail assets rather than inventing replacements.
-
-### Floating containers and feedback
-
-Palette, selection strip, file menu (290px, padding 12px), help panel, storage warning, and modal use white/alpha-white surfaces with role-specific radii and shadows. File menu width becomes 275px on mobile. Selection strip title/description and rotate button provide context. Placement feedback combines check/close/trash SVG, reason text, and scene footprint; invalid styling is separate from scene preview color. Live status uses role=status/aria-live=polite. Source: `web/src/style.css` relevant selectors and `web/src/ui.ts` constructor/update.
-
-### Dialog and fields
-
-Native dialog has radius 18px, padding 30px, width 420px bounded by calc(100vw - 32px), with right-aligned actions and gap 10px. Reset confirmation remains unchanged. Import uses a hidden native file input; there is no visible text-field design to document or synthesize. Source: `web/src/style.css` dialog* and `web/src/ui.ts` constructor.
-
-### Motion and scene feedback
-
-Source: `web/src/render/world.ts` ghostMaterial, updatePreview, constructor, and frame. Valid placement is cobalt; invalid/removal is danger, combined with footprint geometry and DOM reason text. Ghost opacity is 0.53; marker opacity 0.4. Placement grows vertically over 240ms with a cubic ease-out formula from 0.35 to 1. Orbit damping factor is 0.1 and is disabled for reduced motion; reduced motion also bypasses placement animation. CSS reduced-motion query removes transitions/animations and restores auto scroll behavior. Sound begins after explicit player interaction, with mute controls (`web/src/sound.ts`, `web/src/ui.ts`).
+- Placement: the structure drops 0.6 units with ease-out cubic, then squashes and settles. The whole motion takes 340 ms. A pooled ring expands and fades over 520 ms on landing.
+- Removal shrinks over 170 ms. Edits of more than 4 structures appear at once.
+- Zoom and orbit ease toward their targets.
+- UI transitions run at 160ms.
+- `prefers-reduced-motion` disables renderer easing, CSS transitions, and animations.
+- The idle world is still by design. There is no wind, traffic, or day cycle.
+- Sound is synthesized foley in `web/src/sound.ts`: a short low tone with a filtered noise click, pitch-jittered. It starts after the first interaction and can be muted from the menu.
 
 ## Do's and Don'ts
 
-### Do:
-- **Do** preserve the pinned Fraunces/Nunito Sans pairing.
-- **Do** retain 44px minimum button targets, visible keyboard focus, and explicit names for icon controls.
-- **Do** pair placement colors with footprint geometry and reason text.
-- **Do** honor reduced motion in both CSS transitions and renderer placement/camera motion.
+### Do
 
-### Don't:
-- **Don't** apply the architectural warm-neutral exception to interface panels.
-- **Don't** replace the compact floating palette with a permanent large sidebar.
-- **Don't** infer hardware FPS or full accessibility conformance from browser automation.
+- Keep the brick-first rule: painted street fronts, brick sides and upper floors.
+- Add new building details through the grammar in `architecture.ts`, so they inherit finish rules and slot placement.
+- Add new world colors to `palette.ts` and to this file together.
+- Keep 44px targets, visible focus, and names on icon-only controls.
 
-Not canonized or repaired: the more specific .top-actions .save-button background defeats .save-button:hover, so the declared deep-blue hover is not the effective Save hover. The small letter-spaced .brand-product identifier remains specific to the existing brand lockup, not a reusable eyebrow pattern. Compact metadata sizes are recorded for existing controls, not endorsed for general prose. No UI corrections or new visual validation were performed in this documentation-only pass.
+### Don't
+
+- Don't add grime, trash, or decay textures. Unfinished is not derelict.
+- Don't use pitched clay-tile roofs, colonial balconies, or national clichés.
+- Don't use the world palette on interface surfaces.
+- Don't infer hardware frame rates from SwiftShader measurements.

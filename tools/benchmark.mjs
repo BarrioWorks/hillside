@@ -30,7 +30,10 @@ page.on('response', (response) => {
 
 try {
   const loadStart = performance.now();
-  await page.goto(`${baseURL}/?benchmark&profile`, { waitUntil: 'networkidle' });
+  await page.goto(
+    `${baseURL}/?benchmark&profile${process.env.BARRIO_QUALITY ? `&quality=${process.env.BARRIO_QUALITY}` : ''}`,
+    { waitUntil: 'networkidle' },
+  );
   await page.waitForFunction(() => window.__barrio?.ready === true);
   await page.waitForFunction(() => window.__barrio.metrics().renderFrames > 0);
   const readyMilliseconds = performance.now() - loadStart;

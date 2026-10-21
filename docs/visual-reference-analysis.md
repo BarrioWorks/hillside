@@ -1,6 +1,6 @@
 # Visual reference analysis
 
-Research date 2026-10-21. This document informs the visual overhaul of the renderer in `web/src/render/` and the interface in `web/src/ui.ts`. Its research entries are tracked in [visual-research-ledger.md](visual-research-ledger.md).
+Research date 2026-10-21, written before implementation. Each technique now carries an **Implemented:** line describing what shipped at commit 935c8ba. This document informs the visual overhaul of the renderer in `web/src/render/` and the interface in `web/src/ui.ts`. Its research entries are tracked in [visual-research-ledger.md](visual-research-ledger.md).
 
 Evidence labels:
 
@@ -32,6 +32,7 @@ Sources: Steam page <https://store.steampowered.com/app/1291340/Townscaper/>. Ta
 - **Fit.** Partial. A WFC solver is rejected for this project (see `docs/open-source-research.md`). A deterministic neighbor mask gives the useful part: shared party walls, suppressed side windows, and joined parapets.
 - **Three.js.** Compute a 4-bit mask per placement from `Snapshot.structures` (occupied N, E, S, W cells at the same terrace height). Key cached geometry by `kind/variant/mask`. Build with the existing `Shapes` merge.
 - **Barrio systems.** `ModelLibrary.create()` and its `geometries` map key in `models.ts`. `architecture()` takes the mask. `World.reconcile()` must add the mask to `signature` and rebuild the four neighbors of any changed placement.
+- **Implemented:** No, for buildings. A 4-side context (`link`, `open`, `drop`, `rise`) is computed for street pieces only in `World.context()` (`web/src/render/world.ts`) and keys path geometry in `ModelLibrary.geometry()`. Building masks were skipped to avoid multiplying 16 cached variants per kind by up to 16 masks and rebuilding neighbors on every edit.
 
 ### T2. Detail where things meet
 
@@ -40,6 +41,7 @@ Sources: Steam page <https://store.steampowered.com/app/1291340/Townscaper/>. Ta
 - **Fit.** Yes. Terrace edges, building bases, slab edges, and roof edges are the Barrio boundaries.
 - **Three.js.** Add base plinths, slab-edge bands, parapet caps, and terrace retaining-wall faces as merged boxes with vertex colors. Darken the bottom 0.1 to 0.15 units of each wall in vertex color (contact shadow).
 - **Barrio systems.** `architecture()` adds a plinth and slab bands per storey. `Terrain` constructor in `terrain.ts` adds retaining-wall faces where neighboring cell heights differ by one `STEP`.
+- **Implemented:** Yes. Slab bands, plinths, lintels, sills, roof coping, and parapet caps in `mass()` and `roof()` (`web/src/render/architecture.ts`). Stone retaining walls with a concrete coping on every terrace edge in the `Terrain` constructor (`web/src/render/terrain.ts`). Baked base darkening in `Builder.finish()` (`web/src/render/builder.ts`).
 
 ### T3. Small fixed palette
 
@@ -48,6 +50,7 @@ Sources: Steam page <https://store.steampowered.com/app/1291340/Townscaper/>. Ta
 - **Fit.** Yes. Barrio already uses three variants per type. Draw all of them from one named palette (see "Medellín palette" below).
 - **Three.js.** One `palette.ts` module of sRGB hex strings. `new THREE.Color(hex)` converts sRGB to the Linear-sRGB working space when `ColorManagement` is enabled, which matches the manual's rule that vertex colors are stored in Linear-sRGB (<https://raw.githubusercontent.com/mrdoob/three.js/r180/manual/en/color-management.html>). The existing `Shapes.add()` path is therefore correct. Keep it.
 - **Barrio systems.** Replace the local constants and the `variants` record in `models.ts`. Replace hard-coded HSL in `Terrain` and `landscape()`. Keep `DESIGN.md` world colors in sync.
+- **Implemented:** Yes. `web/src/render/palette.ts` (`PALETTE`, `PLASTER`, `TRIM`). `DESIGN.md` world tokens match it.
 
 ### T4. Irregular grid
 
@@ -56,6 +59,7 @@ Sources: Steam page <https://store.steampowered.com/app/1291340/Townscaper/>. Ta
 - **Fit.** No for the grid. Rust owns an integer 32 by 32 board and its placement rules. Partial for the goal. Break repetition with small seeded offsets on non-structural parts (tank position, setback of upper storey, planter count).
 - **Three.js.** Hash `(structure.id, seed)` into a deterministic PRNG in TypeScript. Do not add a new Rust field.
 - **Barrio systems.** `ModelLibrary.create()` receives a detail seed. `World.reconcile()` passes `structure.id`.
+- **Implemented:** Yes, as seeded variation, not as an irregular grid. Rust stores a 16-way variation per placement; `style()` in `architecture.ts` derives finish, colors, cantilever, and roof additions from it.
 
 ### T5. Mass first, detail after
 
@@ -64,6 +68,7 @@ Sources: Steam page <https://store.steampowered.com/app/1291340/Townscaper/>. Ta
 - **Fit.** Yes, within 300 ms total. Townscaper's delay is a compute cost. Ours is a deliberate stagger.
 - **Three.js.** Build two geometries per variant: mass and detail. Animate mass scale first, then reveal detail 90 to 120 ms later. With `StructureBatches`, add the detail mesh as a child, matching how `create()` already adds the awning wrapper.
 - **Barrio systems.** `architecture()` returns `{ mass, detail }`. `World.frame()` handles two phases. `StructureBatches.update()` is already called per animated placement.
+- **Implemented:** No. Placement animates the whole mass as one drop-and-settle (`World.animate()`); there is no separate detail geometry.
 
 ## Dorfromantik
 
@@ -76,6 +81,7 @@ Sources: Steam page <https://store.steampowered.com/app/1455840/Dorfromantik/>. 
 - **Fit.** Yes. Medellín is the subject, but the rendering is a calm miniature. Show construction honestly (brick, slabs, tanks) without dirt, trash, or decay textures.
 - **Three.js.** Untextured vertex colors with low-frequency per-cell and per-building color jitter (plus or minus 3 percent lightness, never hue). No normal maps.
 - **Barrio systems.** `Terrain` already jitters lightness. Apply the same small jitter to building wall colors in `architecture()`.
+- **Implemented:** Yes. Untextured vertex colors with procedural micro-patterns (brick, stone, paving) in one shared material (`web/src/render/material.ts`). The planned per-building lightness jitter was not added.
 
 ### D2. Most frequent action gets the most polish
 
@@ -84,6 +90,7 @@ Sources: Steam page <https://store.steampowered.com/app/1455840/Dorfromantik/>. 
 - **Fit.** Yes.
 - **Three.js.** Replace the Y-only ease-out cubic with a short squash-and-settle: scale Y overshoot to about 1.06 with ease-out-back, scale XZ inverse by half the amount, settle to 1 by 260 ms. Add a ground dust ring (one instanced flat ring, opacity fade). Pair with `Sound.play()`.
 - **Barrio systems.** `World.frame()` placement animation. `World.reconcile()` sets `born`. `web/src/sound.ts`.
+- **Implemented:** Yes. Drop-and-settle squash over 280 ms, a pooled landing ring, and synthesized foley (`World.animate()`, `World.ring()`, `web/src/sound.ts`).
 
 ### D3. Calm feedback limits
 
@@ -92,6 +99,7 @@ Sources: Steam page <https://store.steampowered.com/app/1455840/Dorfromantik/>. 
 - **Fit.** Yes. No camera shake. Every effect under 300 ms. Honor `prefers-reduced-motion`, which `World.reducedMotion` already reads.
 - **Three.js.** No change in technique. This is a constraint on D2 and T5.
 - **Barrio systems.** `World.frame()`, `World.reducedMotion`.
+- **Implemented:** Yes. No shake or particles. `prefers-reduced-motion` disables placement, removal, ring, zoom, and orbit easing. Placement motion is 280 ms, within the 300 ms limit stated here; the ring fades over 520 ms.
 
 ### D4. Preview that shows fit before commit
 
@@ -100,6 +108,7 @@ Sources: Steam page <https://store.steampowered.com/app/1455840/Dorfromantik/>. 
 - **Fit.** Partial. Barrio rules are validity, not scoring. Stairs need a landing and paths connect. Show those relations on the ghost.
 - **Three.js.** Draw short edge bars on the marker (four thin boxes or a `LineSegments` with `LineBasicMaterial`) colored per side: connected, open, blocked. Add an arrow on the stairs ghost toward the uphill landing. The current `Preview` only has `valid`, `reason`, `height`, `width`, `depth`. Per-edge data can be computed in TypeScript from `Snapshot` for display only. Rust stays the authority on validity.
 - **Barrio systems.** `World.showGhost()` and `marker`. `previewSchema` in `web/src/domain.ts` if Rust later exposes edges. `#placement-feedback` in `UI`.
+- **Implemented:** Partly. The ghost is warm off-white when valid and coral when invalid, with a footprint marker and outline (`World.showGhost()`). The remove tool shows a coral volume and edge box around the target. Per-edge fit bars and the stair arrow were not implemented.
 
 ### D5. The board as a physical object
 
@@ -108,6 +117,7 @@ Sources: Steam page <https://store.steampowered.com/app/1455840/Dorfromantik/>. 
 - **Fit.** Yes. Barrio already has a 32 by 32 terraced block with soil columns.
 - **Three.js.** Give soil columns two vertex-colored strata (topsoil band 0.12 under the grass, darker earth below). Add a 0.04 grass lip overhang. Fade the 500 by 500 ground plane into fog rather than presenting it as a second floor.
 - **Barrio systems.** `Terrain` constructor (`soil`, `pickable`) and `landscape()` ground plane in `terrain.ts`. Fog in the `World` constructor.
+- **Implemented:** Yes. The board is a floating slab: grass top, soil sides, dark base, and a vegetation fringe on the 3-cell margin (`Terrain` constructor and `Terrain.margin()`). The ground plane and mountain ring were removed. Soil strata use a shader banding on the soil surface rather than a separate topsoil band.
 
 ## Tiny Glade
 
@@ -120,6 +130,7 @@ Sources: Steam page <https://store.steampowered.com/app/2198150/Tiny_Glade/>. 80
 - **Fit.** Yes. Two direct uses. A building's door faces an adjacent path or stair landing. A building at a terrace edge extends its plinth down to the lower terrace so it does not overhang air.
 - **Three.js.** Same neighbor mask as T1, extended with "path at side" bits and "drop at side" bits computed from `Snapshot.cells`. Door position becomes a parameter of `architecture()`.
 - **Barrio systems.** `architecture()`, `ModelLibrary.create()`, `World.reconcile()` signature. `heightAt()` in `terrain.ts`.
+- **Implemented:** Partly. Streets adapt: curbs on open sides, railings at drops, lamps on some pieces (`path()` in `web/src/render/models.ts`). Buildings do not move doors or extend plinths toward neighbors.
 
 ### G2. Nothing the player makes looks wrong
 
@@ -128,6 +139,7 @@ Sources: Steam page <https://store.steampowered.com/app/2198150/Tiny_Glade/>. 80
 - **Fit.** Partial. Barrio has real invalid placements. Every valid placement must look good next to any neighbor. Invalid feedback should inform, not alarm.
 - **Three.js.** Change the invalid ghost from saturated red `#b42336` at opacity 0.53 to a desaturated warm gray-red with a dashed marker outline. Keep the reason text.
 - **Barrio systems.** `World.showGhost()` and `ghostMaterial`. `UI` placement feedback text.
+- **Implemented:** Yes, for preview color: invalid is desaturated coral at opacity 0.4 instead of saturated red at 0.53; reason text remains. No dashed outline.
 
 ### G3. Weathering driven by distance to openings
 
@@ -136,6 +148,7 @@ Sources: Steam page <https://store.steampowered.com/app/2198150/Tiny_Glade/>. 80
 - **Fit.** Yes, and it maps onto Medellín construction. Plaster (pañete) is often partial. Exposed brick shows around openings, at the base, and on upper floors.
 - **Three.js.** Cheapest option: place a few seeded brick-colored patch boxes 0.004 proud of the plaster next to window frames and corners. Richer option: add a `float` attribute for distance to the nearest opening and threshold it in `material.onBeforeCompile` to mix plaster and brick vertex colors.
 - **Barrio systems.** `windowFront()` and `architecture()` in `models.ts`. `ModelLibrary.material`.
+- **Implemented:** Yes, by rule, not by distance field. Finish rules in `style()` and `wallFor()` paint the street facade and leave upper floors and side or back walls as exposed brick. No signed-distance weathering.
 
 ### G4. Stable shadows and soft lighting
 
@@ -144,6 +157,7 @@ Sources: Steam page <https://store.steampowered.com/app/2198150/Tiny_Glade/>. 80
 - **Fit.** Partial. Real-time GI and tilt-shift are out of scope for the WebGL budget. Stable, well-fitted sun shadows and soft hemisphere fill are in scope.
 - **Three.js.** Fit the orthographic shadow camera to the board bounds in light space and snap its center to whole shadow texels (technique documented by Microsoft, <https://learn.microsoft.com/en-us/windows/win32/dxtecharts/common-techniques-to-improve-shadow-depth-maps>). Either switch to `PCFShadowMap` so `shadow.radius` takes effect, or keep `PCFSoftShadowMap` and remove the dead `radius`. Optional ambient occlusion: `GTAOPass` supports orthographic cameras (its shader defines `PERSPECTIVE_CAMERA` from `camera.isPerspectiveCamera`). `N8AO` is CC0 and documents orthographic support (<https://github.com/N8python/n8ao>). Measure before adopting either.
 - **Barrio systems.** Sun setup in the `World` constructor. `World.graphics` quality gate.
+- **Implemented:** Yes. Fitted fixed shadow frustum, dead `radius` removed, PCF on the low tier and PCF soft on the high tier (`Lighting` constructor, `World` constructor). No screen-space AO.
 
 ### G5. Visible assembly
 
@@ -152,6 +166,7 @@ Sources: Steam page <https://store.steampowered.com/app/2198150/Tiny_Glade/>. 80
 - **Fit.** Partial. Full brick assembly is too slow and too costly for hundreds of placements. Storey-by-storey rise fits a vertical barrio and its incremental building culture.
 - **Three.js.** Split the mass geometry by storey. Reveal storeys with 40 ms offsets inside the 260 ms budget. Use one `InstancedMesh` matrix update per storey part.
 - **Barrio systems.** `architecture()` output grouping. `World.frame()`. `StructureBatches.add()` per part.
+- **Implemented:** No. No storey-by-storey reveal.
 
 ## Barrio Builder's own identity
 
@@ -170,6 +185,8 @@ Sources: Steam page <https://store.steampowered.com/app/2198150/Tiny_Glade/>. 80
 One cell is 1 unit. A storey is 0.8 units. A terrace step is 0.55 units. At 0.8 per storey, 1 unit corresponds to roughly 3 m, so real dimensions scale by about 0.32. Exact real-world scale is not a goal. Proportion between parts is.
 
 ### Rules
+
+Implemented with one change of scale: `STOREY` is 0.68 units and slabs are 0.07 (`web/src/render/architecture.ts`), not 0.8 and 0.06. Rules 2, 3, 5, 6, 7, 9, 10, 13 shipped in `architecture.ts` and `terrain.ts`. Rule 4 shipped as a shader pattern (`bbBond()` in `material.ts`). Rule 8 shipped as the volado in `building()` on two of three variants of casa and tienda. Rule 11 shipped with alternating off-white and stone treads and a mustard rail rather than colored risers. Rule 12 shipped as a procedural color-block mural surface on one side wall (`Surface.mural`). Rule 14 was dropped with the mountains.
 
 1. **Storey grid.** Residential heights are whole storeys plus one slab: `h = n * 0.8 + 0.05`. Casa n = 2 (1.65), esquina n = 3 (2.45), torre n = 4 (3.25). These match the current catalog. Terraza is n = 2 (1.65) plus a 0.2 pergola (1.85). Tienda is one tall commercial floor of 1.0 plus a 0.35 parapet and sign band (1.35). Taller is one double-height workshop floor of 1.2 plus a 0.25 roof structure (1.45). Interior floor lines follow 0.8 even when the total does not.
 2. **Slab bands.** Each floor line shows a concrete slab edge 0.06 tall, projecting 0.025 beyond the wall, in warm concrete. This is the strongest single cue for stacked, incremental construction.
@@ -238,3 +255,22 @@ Hue structure: the warm group spans CIELAB hue 36 to 94 degrees. The cool accent
 8. **Atmospheric perspective** (Dorfromantik D1, D5). Tighter fog tied to board distance, mountain colors mixed toward fog, ground plane faded. `World` fog and `Terrain.landscape()`.
 9. **Seeded detail variation** (Townscaper T4). Tank, plants, unfinished top, cantilever from a hash of `structure.id` and seed in `ModelLibrary.create()`.
 10. **Fit-aware ghost preview** (Dorfromantik D4, Tiny Glade G2). Edge bars, stair direction arrow, and a calmer invalid state in `World.showGhost()` and `UI`.
+
+## What shipped
+
+Mapping of the ranked list above to commits and files. Commits are on `main` after the prototype baseline 95b9f82. Details and evidence are in [visual-research-ledger.md](visual-research-ledger.md).
+
+| Rank | Technique | Status | Commits | Files |
+| --- | --- | --- | --- | --- |
+| 1 | Palette with value rules, Neutral tone mapping | Shipped | 46ae3cd, dbf3916 | `web/src/render/palette.ts`, `world.ts`, `thumbnails.ts`, `lighting.ts` |
+| 2 | Storey grammar, slab bands, brick and plaster by floor | Shipped | 46ae3cd, dbf3916, 60d2805, 8d72bbe, 6fbc65a | `web/src/render/architecture.ts`, `builder.ts`, `material.ts` |
+| 3 | Neighbor-aware party walls, parapets, doors | Streets only; buildings use finish rules | 46ae3cd | `web/src/render/world.ts` (`context()`), `models.ts` (`path()`), `architecture.ts` (`wallFor()`) |
+| 4 | Terrace retaining walls and base contact | Shipped | 46ae3cd, 60d2805 | `web/src/render/terrain.ts`, `builder.ts`, `crates/barrio-core/src/terrain.rs` |
+| 5 | Baked vertex AO | Shipped; screen-space AO not adopted | 46ae3cd | `web/src/render/builder.ts` (`finish()`), `terrain.ts` |
+| 6 | Squash-and-settle placement | Shipped without staggered detail | 46ae3cd, 3050177 | `web/src/render/world.ts` (`animate()`, `ring()`), `web/src/sound.ts` |
+| 7 | Fitted, stable sun shadows | Shipped without texel snapping | 46ae3cd | `web/src/render/lighting.ts`, `world.ts` |
+| 8 | Atmospheric perspective | Replaced by diorama framing and sky gradient | 46ae3cd | `web/src/render/lighting.ts`, `terrain.ts` |
+| 9 | Seeded detail variation | Shipped, 16 variants per kind | 46ae3cd | `crates/barrio-core/src/world.rs`, `web/src/render/architecture.ts`, `models.ts` |
+| 10 | Fit-aware ghost preview | Calmer colors and remove highlight; no edge bars | 46ae3cd, 57b4a79 | `web/src/render/world.ts` (`showGhost()`) |
+
+Work outside the ranked list: contour terrain v2 (`crates/barrio-core/src/terrain.rs`, 46ae3cd), environmental decor with grass, flowers, poles, and cables (`web/src/render/decor.ts`, 46ae3cd) and parked motorcycles (f51038b), three lighting presets (`web/src/render/lighting.ts`, 46ae3cd, dbf3916), the warm floating interface (`web/src/style.css`, `web/src/ui.ts`, 3a1fc8c), removal of runtime GLB models and the asset pipeline (60d2805), the pattern quality tier and render-cost probe (6fbc65a), and the capture harness (`tools/capture.mjs`, 2e8e4b0).

@@ -1,0 +1,71 @@
+{
+  "recordedAt": "2026-10-21T07:00:56.172Z",
+  "scene": "1,023-structure stress scene, 1440x900, SwiftShader",
+  "method": "Median of renderer.render + 1-pixel readPixels per frame over 10 s of continuous rendering",
+  "results": [
+    {
+      "round": 1,
+      "label": "high tier (patterns on)",
+      "renderMs": 3157.4000000059605,
+      "samples": 4,
+      "triangles": 1139397,
+      "drawCalls": 77
+    },
+    {
+      "round": 1,
+      "label": "low tier (patterns off)",
+      "renderMs": 1945.7999999821186,
+      "samples": 6,
+      "triangles": 1139397,
+      "drawCalls": 77
+    },
+    {
+      "round": 1,
+      "label": "high tier, structures hidden",
+      "renderMs": 377.40000000596046,
+      "samples": 27,
+      "triangles": 85991,
+      "drawCalls": 6
+    },
+    {
+      "round": 1,
+      "label": "high tier, unlit materials",
+      "renderMs": 930.0999999940395,
+      "samples": 12,
+      "triangles": 1139397,
+      "drawCalls": 77
+    },
+    {
+      "round": 2,
+      "label": "high tier (patterns on)",
+      "renderMs": 3221.800000011921,
+      "samples": 4,
+      "triangles": 1139397,
+      "drawCalls": 77
+    },
+    {
+      "round": 2,
+      "label": "low tier (patterns off)",
+      "renderMs": 2053.4000000059605,
+      "samples": 5,
+      "triangles": 1139397,
+      "drawCalls": 77
+    },
+    {
+      "round": 2,
+      "label": "high tier, structures hidden",
+      "renderMs": 382.90000000596046,
+      "samples": 26,
+      "triangles": 85991,
+      "drawCalls": 6
+    },
+    {
+      "round": 2,
+      "label": "high tier, unlit materials",
+      "renderMs": 807.3000000119209,
+      "samples": 12,
+      "triangles": 1139397,
+      "drawCalls": 77
+    }
+  ]
+}

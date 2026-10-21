@@ -29,7 +29,7 @@ const DIRECTIONS = [
   [0, -1],
   [-1, 0],
 ] as const;
-const PLACE_MS = 340;
+const PLACE_MS = 280;
 const REMOVE_MS = 170;
 const RING_POOL = 6;
 /** Edits larger than this (loads, resets, undoing a reset) appear at once instead of raining down. */
@@ -56,6 +56,7 @@ export class World {
   private readonly profile = new URLSearchParams(location.search).has('profile');
   private readonly probePixel = new Uint8Array(4);
   reconciled = 0;
+  reconcileMilliseconds = 0;
   private needsRender = true;
   private terrain: Terrain;
   private snapshot: Snapshot;
@@ -247,6 +248,7 @@ export class World {
   }
 
   reconcile(snapshot: Snapshot, animate = true): void {
+    const started = performance.now();
     if (snapshot.seed !== this.seed) {
       this.scene.remove(this.terrain.group);
       this.terrain.dispose();
@@ -313,6 +315,7 @@ export class World {
     this.decor.update(snapshot, lots);
     this.snapshot = snapshot;
     this.invalidateShadows();
+    this.reconcileMilliseconds = performance.now() - started;
   }
 
   private footprint(kind: string, rotation: number): [number, number] {
@@ -648,6 +651,7 @@ export class World {
       allocatedBatchCount: this.batches.allocatedBatchCount,
       renderObjectCount,
       reconciled: this.reconciled,
+      reconcileMs: this.reconcileMilliseconds,
       pixelRatio: this.renderer.getPixelRatio(),
       viewport: { width: this.canvas.width, height: this.canvas.height },
       renderer: this.graphics.renderer,

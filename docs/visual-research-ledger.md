@@ -1,85 +1,117 @@
 # Visual research ledger
 
-Initial version, 2026-10-21. One entry per research technique planned for the visual overhaul. Analysis and rationale are in [visual-reference-analysis.md](visual-reference-analysis.md). The earlier engineering ledger is [research-ledger.md](research-ledger.md).
+Initial version 2026-10-21, completed after implementation the same day. One entry per research technique planned for the visual overhaul, plus four techniques adopted during implementation (entries 11 to 14). Analysis and rationale are in [visual-reference-analysis.md](visual-reference-analysis.md). The earlier engineering ledger is [research-ledger.md](research-ledger.md).
 
-Every source below was opened or resolved during this research. DOIs were resolved through the Crossref API. The implementer fills in the TBD fields after implementation and measurement. A Result must state what was measured or compared, not what was intended.
+Every source below was opened or resolved during this research. DOIs were resolved through the Crossref API. Implementation fields refer to the code at commit 935c8ba. A Result states what was measured or compared. Measurements without a committed raw file are labeled as implementation measurements. Performance context is in [performance.md](performance.md).
 
 ## 1. Shape grammar facade splits
 
 - **Source.** Müller, Wonka, Haegler, Ulmer, Van Gool. "Procedural Modeling of Buildings." ACM Transactions on Graphics 25(3), 2006. <https://doi.org/10.1145/1141911.1141931>. Author copy read: <https://peterwonka.net/Publications/pdfs/2006.SG.Mueller.ProceduralModelingOfBuildings.final.pdf>. The paper builds a mass model first, then splits facades with rules such as `Subdiv("Y",3.5,0.3,3,3,3){ floor | ledge | floor | floor | floor }`, `Repeat("X",2){ B }`, and `Comp("faces"){ A }`, with relative sizes written as `1r`.
 - **Application in Barrio Builder.** Replace hand-placed boxes in `architecture()` (`web/src/render/models.ts`) with staged functions: mass, storey split at 0.8 with 0.06 slab bands, facade split into bays, then openings, grilles, and roof items. Material per storey follows the brick and plaster rule in the analysis document. No grammar interpreter.
-- **Implementation reference.** TBD: implementer fills in
-- **Before/after evidence.** TBD
-- **Result.** TBD
+- **Implementation reference.** `web/src/render/architecture.ts`: `building()` picks a mass per kind, `mass()` stacks storeys of height `STOREY` (0.68, not the planned 0.8) with 0.07 slab bands and splits each open face into bays of about 0.46 units, and a `BayRule` turns each bay into a terminal (`window`, `door`, `shutter`, `shop`, `balcony`, `blank`). `roof()` traces the parapet from the roof rectangle, then places additions into a shuffled slot grid so they never overlap. `style()` and `wallFor()` assign plaster or brick per storey and side. No grammar interpreter, as planned. Commits 46ae3cd, dbf3916, 8d72bbe.
+- **Before/after evidence.** `docs/screenshots/compare/01-single-house.jpg`, `02-six-buildings.jpg`, `07-low-angle.jpg`.
+- **Result.** Adopted. Every building now shows slab bands between storeys, framed windows with sills and lintels, a door on the ground floor, and a parapet or rail. The close-up in `01-single-house.jpg` shows two storeys, four framed windows, a door, roof tank, plants, and rebar stubs, where the prototype had a single painted box. Triangle cost is in the trimming note under entry 4.
 
 ## 2. Boundary and edge extraction for parapets and party walls
 
 - **Source.** Müller et al. 2006 (above), section 3.2: occlusion queries such as `tile : Shape.occ("noparent") == "none" ; window` avoid placing windows on intersecting volumes. Stålberg, Townscaper: "interesting things happen where different things meet" (<https://www.mcvuk.com/business-news/when-we-made-townscaper/>) and corner-segment tiles that re-evaluate when a neighbor changes (<https://www.gamedeveloper.com/game-platforms/how-townscaper-works-a-story-four-games-in-the-making>). Corner-mask tile selection explained by Boris the Brave: <https://boristhebrave.com/2018/04/15/marching-cubes-tutorial/>.
 - **Application in Barrio Builder.** Compute a per-placement edge mask from `Snapshot.structures` and `Snapshot.cells`: neighbor building, path or stair landing, or terrace drop on each side. Use it to suppress side windows on shared walls, render party walls as exposed brick, join parapets, face the door toward a path, and extend plinths down at terrace drops. Add the mask to the `World.reconcile()` signature and rebuild neighbors when a placement changes. Extract terrace height changes in `Terrain` to place retaining-wall faces.
-- **Implementation reference.** TBD: implementer fills in
-- **Before/after evidence.** TBD
-- **Result.** TBD
+- **Implementation reference.** Partial. Street pieces only: `World.context()` in `web/src/render/world.ts` classifies the four neighbors of each path as `link`, `open`, `drop`, or `rise`, and `path()` in `web/src/render/models.ts` adds a curb on open sides and a railing on drops. The context is part of the reconcile `signature`, so a path rebuilds when its neighbors change. Terrace edges are extracted in the `Terrain` constructor (`web/src/render/terrain.ts`): every side whose neighbor is lower emits a stone retaining-wall quad and a three-quad concrete coping. Buildings receive no neighbor mask. Party walls are approximated by rule in `wallFor()`: back walls are exposed brick unless the style paints all sides, and side walls are brick on most non-painted finishes. Doors stay on the local front facade; the Rust starter layout (`crates/barrio-core/src/world.rs`) orients homes toward the street instead.
+- **Before/after evidence.** `docs/screenshots/compare/03-dense-hillside.jpg` (retaining walls with coping, street curbs, railings at drops).
+- **Result.** Retaining walls and street edges adopted. Building neighbor masks not adopted: they would multiply cached geometries per kind and variant by up to 16 masks and force neighbor rebuilds on every edit. The visual cost is visible in dense blocks, where windows can face a wall that touches a neighbor.
 
 ## 3. Seeded variation
 
 - **Source.** Farrokhi Maleki and Zhao, AIIDE 2024, section 3 on reproducibility from seed and algorithm: <https://doi.org/10.1609/aiide.v20i1.31877> (read in the prior research round, see `open-source-research.md`). Shaker, Togelius, Nelson, *Procedural Content Generation in Games*: <http://pcgbook.com/>. Stålberg on Townscaper: "It will always be slightly different, which I like very much" (MCV link above).
 - **Application in Barrio Builder.** Derive a detail seed in TypeScript from `structure.id` and `snapshot.seed`. Use it for tank position and color, plant count, unfinished top, cantilever, brick versus painted upper floors, and plus or minus 3 percent wall lightness. Rust variation stays `variation % 3` for the main color. Saves stay deterministic because the inputs are saved.
-- **Implementation reference.** TBD: implementer fills in
-- **Before/after evidence.** TBD
-- **Result.** TBD
+- **Implementation reference.** Rust assigns `variation = mix(seed ^ x ^ z ^ rotation ^ kind_hash) % 16` (`World::add` in `crates/barrio-core/src/world.rs`). `ModelLibrary.geometry()` in `web/src/render/models.ts` keys geometry by `kind/variant` for 16 variants. `style()` in `architecture.ts` seeds a PRNG (`random()` in `web/src/render/builder.ts`) from the kind and variant and draws plaster color, finish, grilles, mural, painted sides, roof deck, cantilever, and roof features. The detail seed comes from the saved variation, not from `structure.id`. The planned plus or minus 3 percent wall lightness jitter was not implemented.
+- **Before/after evidence.** `docs/screenshots/compare/02-six-buildings.jpg`, `03-dense-hillside.jpg`; the 16-variant spread is visible in the palette thumbnails in `05-gameplay-ui.jpg`.
+- **Result.** Adopted with 16 cached variants per building kind instead of 3. Saves stay deterministic because the variation is saved. The larger variant count is the main reason draw calls rose from 25 to 62 in the 500-structure benchmark (`docs/benchmarks/ab/`); this attribution is an inference from the batching scheme, not a separate measurement.
 
 ## 4. Instanced and batched rendering
 
 - **Source.** Three.js `InstancedMesh` documentation: <https://threejs.org/docs/pages/InstancedMesh.html>. Three.js `BatchedMesh` documentation, "Use this class if you have to render a large number of objects with the same material but with different geometries or world transformations": <https://threejs.org/docs/pages/BatchedMesh.html>. `BatchedMesh` exists in the installed r180 package (`node_modules/three/src/objects/BatchedMesh.js`).
 - **Application in Barrio Builder.** `StructureBatches` already instances shared placement geometry. Neighbor masks and seeded details multiply unique geometries. Evaluate moving building geometry to one `BatchedMesh` per material, with `addGeometry` per `kind/variant/mask` and `addInstance` per placement, against the current `InstancedMesh` batches. Keep terrain and border trees on `InstancedMesh`.
-- **Implementation reference.** TBD: implementer fills in
-- **Before/after evidence.** TBD
-- **Result.** TBD
+- **Implementation reference.** `StructureBatches` in `web/src/render/batches.ts` is unchanged in design: one `InstancedMesh` per shared geometry and material. Decor (`web/src/render/decor.ts`) uses four more `InstancedMesh` objects for grass tufts, flowers, utility poles, and parked motorcycles, plus one `LineSegments` for cables. All opaque world geometry shares one material (`worldMaterial` in `material.ts`). `BatchedMesh` was not implemented or benchmarked. Geometry trimming in `Builder.finish()` (`builder.ts`): `mergeVertices` indexing, removal of downward faces (`keepUpward`), and lighter railings and grilles in `architecture.ts` (commit 6fbc65a).
+- **Before/after evidence.** 500-structure benchmark: prototype 25 draws and 475,469 triangles (`docs/benchmarks/ab/baseline-run1.json`); redesign 62 draws and 620,089 triangles (`redesign-low-run1.json`). Triangles per building before and after trimming, averaged over 16 variants (implementation measurement, no committed raw file): casa 1486 to 1136, tienda 1709 to 1365, torre 3099 to 2450, terraza 3794 to 2742, taller 948 to 783, esquina 3300 to 2611.
+- **Result.** Instancing retained; `BatchedMesh` not adopted (not evaluated). Trimming cut 17 to 28 percent of triangles per building kind. Scene triangles fell from 792,752 to 620,089 without a measurable change in render time on SwiftShader (implementation measurement, contended host), so triangle count was not the limiter there (see `docs/performance.md`).
 
 ## 5. Baked vertex ambient occlusion and contact shadows
 
 - **Source.** Mikola Lysenko, "Ambient occlusion for Minecraft-like worlds", 0fps, 2013: <https://0fps.net/2013/07/03/ambient-occlusion-for-minecraft-like-worlds/>. Per-vertex AO from two side neighbors and one corner, `3 - (side1 + side2 + corner)`, with quad diagonal flipping for consistent interpolation. Optional screen-space comparison: Three.js `GTAOPass` (<https://threejs.org/docs/pages/GTAOPass.html>), which sets `PERSPECTIVE_CAMERA` from the camera type and so supports orthographic cameras in r180. N8AO, CC0, documents orthographic support: <https://github.com/N8python/n8ao>.
 - **Application in Barrio Builder.** In `Shapes` (`models.ts`), darken vertex colors near building bases, under slab edges, and inside window reveals. In `Terrain`, darken soil and grass vertices at the foot of each terrace step and building footprint. Screen-space AO only on the high quality tier, and only if measured cost is acceptable.
-- **Implementation reference.** TBD: implementer fills in
-- **Before/after evidence.** TBD
-- **Result.** TBD
+- **Implementation reference.** `Builder.finish()` in `web/src/render/builder.ts` darkens vertical faces near local y = 0 by a smoothstep from 0.68 at the base to 1.0 at 0.42 units (baked contact occlusion; buildings only, props pass `groundOcclusion = false`). The `Terrain` constructor in `terrain.ts` computes corner occlusion per grass sub-quad from higher neighbors (down to 0.55 brightness at the foot of a terrace step) and shades retaining walls from 0.78 at the bottom to 1.0 at the top. The 0fps side-and-corner formula was not used; terrain uses a per-side weight instead.
+- **Before/after evidence.** `docs/screenshots/compare/01-single-house.jpg` (darker wall base and darker grass along the foot of each retaining wall), `07-low-angle.jpg`.
+- **Result.** Baked vertex occlusion adopted. Screen-space AO not adopted: baked vertex occlusion and terrain corner occlusion were used instead, and `GTAOPass`, SAO, and N8AO were not benchmarked. On SwiftShader, shading cost already dominates render time, so an extra full-screen pass was not tried.
 
 ## 6. Atmospheric perspective via fog
 
 - **Source.** O'Shea, Blackburn, Ono. "Contrast as a depth cue." Vision Research 34(12), 1994: <https://doi.org/10.1016/0042-6989(94)90116-3>. Lower contrast regions were judged farther away, and the authors relate the effect to aerial perspective. Three.js `Fog` and `FogExp2`: <https://threejs.org/docs/pages/Fog.html>, <https://threejs.org/docs/pages/FogExp2.html>. Observed in `tools/research/sources/santodomingo-reference.jpg`: hill layers sample `#37454F` near and `#4C5355` far.
 - **Application in Barrio Builder.** Tie `scene.fog` near and far to the board and mountain ring distances in the `World` constructor. Mix mountain instance colors in `Terrain.landscape()` toward the fog color by ring. Fade the 500 by 500 ground plane. Keep the playable board out of visible fog at all zoom levels.
-- **Implementation reference.** TBD: implementer fills in
-- **Before/after evidence.** TBD
-- **Result.** TBD
+- **Implementation reference.** `Lighting` in `web/src/render/lighting.ts` creates `Fog('#ffffff', 60, 140)` and sets its color to each preset's horizon color in `apply()`. The background is a vertical zenith-to-horizon gradient `CanvasTexture` per preset. The planned mountain ring and the 500 by 500 ground plane were removed. The board is now a floating diorama slab with soil sides and a dark base (`Terrain` constructor) and a vegetation fringe on the margin (`Terrain.margin()`).
+- **Before/after evidence.** `docs/screenshots/compare/04-full-diorama.jpg`: the prototype's pale ground plane and tree field are replaced by a bounded slab against a sky gradient.
+- **Result.** Partly adopted. Atmospheric perspective on distant mountains was not implemented because the mountains were removed in favor of diorama framing. Fog remains tinted to the horizon, but its visible contribution at the default camera distance was not measured.
 
 ## 7. Limited harmonious palette
 
 - **Source.** Schloss and Palmer. "Aesthetic response to color combinations: preference, harmony, and similarity." Attention, Perception, & Psychophysics, 2010: <https://doi.org/10.3758/s13414-010-0027-0>. Stålberg on Townscaper: "a rainbow palette plus two extra greys and white" (MCV link above). Wagemans et al., "A century of Gestalt psychology in visual perception: I." Psychological Bulletin, 2012, on grouping by similarity: <https://doi.org/10.1037/a0029333>. Three.js color management: hex colors convert from sRGB, vertex colors are stored in Linear-sRGB: <https://raw.githubusercontent.com/mrdoob/three.js/r180/manual/en/color-management.html>.
 - **Application in Barrio Builder.** One palette module with 13 named colors and 3 neutrals (see the analysis document). Replace constants and the `variants` record in `models.ts`, HSL values in `terrain.ts`, and world colors in `DESIGN.md`. Keep warm brick dominant and cool hues low chroma.
-- **Implementation reference.** TBD: implementer fills in
-- **Before/after evidence.** TBD
-- **Result.** TBD
+- **Implementation reference.** `web/src/render/palette.ts`: `PALETTE` holds the 13 named colors and 3 neutrals from the analysis plus material colors (brick, brickDark, tank colors, wood, leaf, grass, soil, stone, asphalt, zinc, shutter, lamp). `PLASTER` and `TRIM` lists drive facade selection in `architecture.ts`. Colors convert through `new THREE.Color(hex)` in `paint()` (`builder.ts`) and `color()`. `DESIGN.md` world tokens were updated to match.
+- **Before/after evidence.** `docs/screenshots/compare/00-starter.jpg`, `03-dense-hillside.jpg`, `06-reverse-angle.jpg`.
+- **Result.** Adopted. Exposed brick now dominates upper floors and side walls, with painted street facades in muted coral, turquoise, ochre, dusty blue, and teal. The prototype's pastel set with cream trim is gone. Brick is `#b8613f`, close to the planned terracotta `#B5603F`.
 
 ## 8. Tone mapping choice
 
 - **Source.** Three.js r180 tone mapping constants include `ACESFilmicToneMapping`, `AgXToneMapping`, and `NeutralToneMapping`: <https://threejs.org/docs/#api/en/constants/Renderer>. Comparison example: <https://threejs.org/examples/webgl_tonemapping.html>. Khronos PBR Neutral rationale, which states ACES and AgX lose saturation and that Neutral preserves hue and saturation of base color: <https://modelviewer.dev/examples/tone-mapping> and <https://www.khronos.org/news/press/khronos-pbr-neutral-tone-mapper-released-for-true-to-life-color-rendering-of-3d-products>. The installed shader cites the same model-viewer page above `NeutralToneMapping`.
 - **Application in Barrio Builder.** The `World` constructor uses `ACESFilmicToneMapping` at exposure 1.15. Compare ACES, AgX, and Neutral on the contact sheet (`/?contact-sheet`) and the default view. Pick the one that keeps palette hex values closest on screen while holding highlight detail on off-white trim. Re-tune exposure and light intensities after the switch. Apply the same choice in `thumbnails.ts`.
-- **Implementation reference.** TBD: implementer fills in
-- **Before/after evidence.** TBD
-- **Result.** TBD
+- **Implementation reference.** `World` constructor in `web/src/render/world.ts` and `thumbnails.ts` set `NeutralToneMapping`. Exposure is set per preset in `Lighting.apply()`: 1.0 afternoon, 1.0 daylight, 1.05 evening (prototype: ACES at 1.15).
+- **Before/after evidence.** `docs/screenshots/compare/lighting-presets.jpg` and every after image. No ACES versus AgX versus Neutral comparison images were saved.
+- **Result.** Adopted: Neutral. The choice followed the Khronos rationale; a side-by-side measurement of on-screen palette fidelity was not recorded.
 
 ## 9. Shadow-map fitting
 
 - **Source.** Microsoft, "Common Techniques to Improve Shadow Depth Maps": <https://learn.microsoft.com/en-us/windows/win32/dxtecharts/common-techniques-to-improve-shadow-depth-maps>. Tight orthographic fit, tight near and far planes, and moving the light projection in texel-sized increments to stop shimmering. Donnelly and Lauritzen, "Variance Shadow Maps", I3D 2006: <https://doi.org/10.1145/1111411.1111440>. Installed Three.js r180 `LightShadow.radius` documentation: "The property has no effect when the shadow map type is `PCFSoftShadowMap`".
 - **Application in Barrio Builder.** In the `World` constructor, compute the shadow camera bounds from the board's corners plus the tallest structure in light space, instead of fixed plus or minus 30. Fit near and far from the same bounds. Snap the light target to whole shadow texels. Resolve the current dead setting: `sun.shadow.radius = 3` with `PCFSoftShadowMap`. Either switch to `PCFShadowMap` with a radius, or remove the radius.
-- **Implementation reference.** TBD: implementer fills in
-- **Before/after evidence.** TBD
-- **Result.** TBD
+- **Implementation reference.** `Lighting` constructor in `lighting.ts`: the orthographic shadow camera spans plus or minus `radius`, where `radius = width / 2 + MARGIN + 4` = 23 units for the 32-cell board (prototype: plus or minus 30), near 1, far `radius * 4`. Bias -0.0004, normal bias 0.025. The dead `shadow.radius` was removed. The low tier uses `PCFShadowMap` at 1024 px; the high tier uses `PCFSoftShadowMap` at 2048 px (`World` constructor). No texel snapping: the sun and shadow camera are fixed per preset and do not follow the view camera, so camera movement cannot make the shadow map shimmer. Shadow maps re-render only on edits, preset changes, and animation completion (`invalidateShadows()`).
+- **Before/after evidence.** `docs/screenshots/compare/01-single-house.jpg` (crisp building and wall shadows at zoom 6), `docs/screenshots/after/13-low-quality.png` (low tier).
+- **Result.** Adopted except texel snapping, which is unnecessary with a fixed light frustum. The frustum was fitted by formula, not from light-space bounds of the tallest structure.
 
 ## 10. Easing and squash for placement feedback
 
 - **Source.** Lasseter, "Principles of traditional animation applied to 3D computer animation", SIGGRAPH 1987: <https://doi.org/10.1145/37402.37407> (squash and stretch, timing, follow-through). Robert Penner's easing equations: <http://robertpenner.com/easing/>. Curve reference: <https://easings.net/>. Pichlmair and Johansen, "Designing Game Feel: A Survey", IEEE Transactions on Games, 2022: <https://doi.org/10.1109/TG.2021.3072241>. Swink, *Game Feel*, Morgan Kaufmann, 2009, ISBN 978-0-12-374328-2: <https://shop.elsevier.com/books/game-feel/swink/978-0-12-374328-2>. Jonasson and Purho, "Juice it or lose it", 2012: <https://www.youtube.com/watch?v=Fy0aCDmgnxg>. Nijman, "The art of screenshake", INDIGO Classes 2013: <https://www.youtube.com/watch?v=AJdEqssNZ-U>. Barrio rejects screen shake, following Dorfromantik's stated limit that "no sound or animation would disrupt the calming atmosphere": <https://www.gamedeveloper.com/disciplines/sparking-joy-through-tile-placement-in-idyllic-village-builder-i-dorfromantik-i->.
 - **Application in Barrio Builder.** In `World.frame()`, replace the Y-only ease-out cubic with ease-out-back on Y (peak about 1.06) and an inverse half-amount XZ squash, settling by 260 ms. Reveal detail geometry 90 to 120 ms after the mass. Add a short ground ring fade. Pair timing with `Sound.play()` in `web/src/sound.ts`. Skip all of it when `World.reducedMotion` is true.
-- **Implementation reference.** TBD: implementer fills in
-- **Before/after evidence.** TBD
-- **Result.** TBD
+- **Implementation reference.** `World.animate()` in `web/src/render/world.ts`: a placed structure drops 0.6 units with ease-out cubic over the first 62 percent of `PLACE_MS` (280 ms), then squashes (Y down 7 percent, XZ out 3.5 percent) and settles on a half sine. On landing, a pooled ring (`ring()`, 6 meshes sharing one `RingGeometry`) expands and fades over 520 ms. Removal shrinks over `REMOVE_MS` (170 ms). Edits of more than `ANIMATED_EDIT_LIMIT` (4) structures appear without animation. `reducedMotion` skips all of it. `Sound.play()` in `web/src/sound.ts` plays a synthesized foley cue: a triangle-wave body with a falling pitch plus a band-passed noise click, pitch-jittered by plus or minus 8 percent.
+- **Before/after evidence.** Motion is not captured in stills. Ring leak fix measured: a bulk load previously created 1,029 GPU geometries (one ring mesh and geometry per landing); after pooling, the 500-structure scene holds 91 geometries (`docs/benchmarks/ab/redesign-low-run1.json`, `metrics.geometries`) and the benchmark's 10 add/remove cycles of 20 casas held 95 geometries after cycle 1 and after cycle 10 (same file, `memory`). A 40-cycle manual test held 86 geometries at every 5-cycle check (implementation measurement, no committed raw file).
+- **Result.** Adopted with a drop-and-settle instead of an ease-out-back rise. The staggered detail reveal (mass first, detail 90 to 120 ms later) was not implemented. Total placement motion is 280 ms, within the 300 ms limit in the analysis (D3); the ring adds a 520 ms fade.
+
+## 11. Arithmetic hash for shader noise
+
+- **Source.** David Hoskins, "Hash without Sine", Shadertoy, 2014: <https://www.shadertoy.com/view/4djSRW>. Shadertoy blocked automated fetching, so the title, author, URL, and constants (`.1031`, `33.33`, `31.32`) were verified in a verbatim attributed copy: <https://pyssv.readthedocs.io/en/latest/_modules/random.glsl.html>.
+- **Application in Barrio Builder.** Per-pixel hashes for brick unit tint, stone, paving, value noise, and lit-window selection, without `sin()`.
+- **Implementation reference.** `bbHash` and `bbHash3` in the fragment header of `web/src/render/material.ts` (commit 6fbc65a). `bbNoise` builds smooth value noise on `bbHash`.
+- **Before/after evidence.** The high-tier render cost in `docs/benchmarks/ab/redesign-high-run*.json` was measured before this change. No after measurement on the high tier was recorded.
+- **Result.** Adopted. Effect on render time not measured in isolation.
+
+## 12. Derivative-based pattern fading
+
+- **Source.** Inigo Quilez, "filterable procedurals": <https://iquilezles.org/articles/filterableprocedurals/>. Procedural patterns are antialiased analytically from the screen-space derivatives of their coordinates.
+- **Application in Barrio Builder.** Brick, stone, paving, tile, corrugated sheet, and mural patterns in an orthographic view that zooms from 0.55 to 6.
+- **Implementation reference.** `bbBond()` in `web/src/render/material.ts` widens the mortar `smoothstep` by `fwidth` of the pattern coordinates and returns a visibility term `1 - smoothstep(0.18, 0.42, max(w.x, w.y))` that fades the pattern to the base color as a brick approaches pixel size. Paving, corrugated, and mural branches use the same `fwidth` fade. This is a simplified form of the article's approach: a footprint-based fade, not an exact box-filtered integral.
+- **Before/after evidence.** `docs/screenshots/compare/01-single-house.jpg` (zoom 6, brick and stone coursing visible) against `04-full-diorama.jpg` (zoom 0.68, walls read as flat color without moiré).
+- **Result.** Adopted on the high tier. The low tier compiles without the patterns (`setPatterns(false)`), see `docs/screenshots/after/13-low-quality.png`.
+
+## 13. Render-cost profiling with a synchronous 1-pixel readback
+
+- **Source.** No external source cited. Measurement method developed during implementation.
+- **Application in Barrio Builder.** Frame intervals on SwiftShader include scheduling and idle time. A per-frame render cost was needed for A/B comparison.
+- **Implementation reference.** `World.frame()` in `web/src/render/world.ts`: with `?profile`, it times `renderer.render()` followed by `gl.readPixels(0, 0, 1, 1, ...)`. In Chrome `gl.finish()` returned in 1 to 2 ms and did not wait for the frame; the readback forces completion. `metrics().renderMs` reports the median. `tools/benchmark.mjs` loads `/?benchmark&profile`. The prototype was patched with the identical probe in a temporary worktree for the baseline.
+- **Before/after evidence.** `docs/benchmarks/ab/*.json`, `runs[].metrics.renderMs`.
+- **Result.** Adopted as the benchmark's primary metric. The readback stalls the pipeline, so the probe measures cost, not achievable frame rate.
+
+## 14. Contour terraces from quantized value noise
+
+- **Source.** No external source cited. Technique: a linear slope plus two octaves of smooth value noise, floored to integer terrace steps, then relaxed so neighboring cells differ by at most one step (a 1-step Lipschitz clamp).
+- **Application in Barrio Builder.** Replace the straight terrace bands with contour-following terraces while keeping every height change climbable by one stair piece.
+- **Implementation reference.** `contours()` in `crates/barrio-core/src/terrain.rs`: slope of 5.7 steps across the board, noise at scales 1/9 and 1/4.5 with amplitudes 2.2 and 0.5, heights clamped to 0 to 5, then repeated passes lowering any cell more than one step above a 4-neighbor until stable. `Generator::Contours` saves as `hillside-v2`; `Generator::Bands` (`hillside-v1`) still generates legacy saves, selected by `Generator::parse()` from the save's terrain id (`crates/barrio-core/src/lib.rs`).
+- **Before/after evidence.** `docs/screenshots/compare/02-six-buildings.jpg`, `03-dense-hillside.jpg`, `04-full-diorama.jpg`.
+- **Result.** Adopted. Terraces follow contours, but cells remain grid-aligned, so contour edges step diagonally in a staircase pattern.
