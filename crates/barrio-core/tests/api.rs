@@ -111,6 +111,10 @@ fn snapshot_matches_the_camel_case_contract() {
     ] {
         assert!(tile.get(key).is_some(), "tile is missing {key}");
     }
+    assert_eq!(tile["networks"].as_array().unwrap().len(), 6);
+    assert_eq!(tile["networks"][1], tile["networks"][0]);
+    assert_eq!(tile["networks"][2], tile["networks"][3]);
+    assert!(tile["networks"][1].is_u64());
     assert_eq!(state["rules"], "classic-2");
 }
 
@@ -432,4 +436,161 @@ fn every_region_appears_across_seeds() {
         regions,
         HashSet::from(["medellin", "salento", "cartagena", "bogota"].map(String::from))
     );
+}
+
+fn canonical_partition(ids: impl IntoIterator<Item = Option<u64>>) -> Vec<Option<usize>> {
+    let mut labels = std::collections::HashMap::new();
+    ids.into_iter()
+        .map(|id| {
+            id.map(|id| {
+                let next = labels.len();
+                *labels.entry(id).or_insert(next)
+            })
+        })
+        .collect()
+}
+
+fn snapshot_partition(state: &Value) -> Vec<Option<usize>> {
+    canonical_partition(state["tiles"].as_array().unwrap().iter().flat_map(|tile| {
+        tile["networks"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(Value::as_u64)
+    }))
+}
+
+#[test]
+fn save_load_preserves_network_partitions_and_connected_homes() {
+    let mut game = Game::new(77);
+    assert_eq!(
+        command(&mut game, json!({"type": "autoplay", "count": 40}))["ok"],
+        true
+    );
+    let before = snapshot(&game);
+    let mut loaded = Game::new(1);
+    assert_eq!(parse(loaded.load(&game.save()))["ok"], true);
+    let after = snapshot(&loaded);
+    let positions = |state: &Value| {
+        state["tiles"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|tile| (tile["q"].clone(), tile["r"].clone()))
+            .collect::<Vec<_>>()
+    };
+    assert_eq!(positions(&before), positions(&after));
+    assert_eq!(snapshot_partition(&before), snapshot_partition(&after));
+    assert_eq!(
+        before["stats"]["homesConnected"],
+        after["stats"]["homesConnected"]
+    );
+}
+
+#[test]
+fn seeded_walk_and_entrance_partitions_match_an_independent_bfs() {
+    use std::collections::{HashMap, VecDeque};
+
+    for seed in 1..=10 {
+        let mut game = Game::new(seed);
+        assert_eq!(
+            command(&mut game, json!({"type": "autoplay", "count": 40}))["ok"],
+            true
+        );
+        let state = snapshot(&game);
+        let tiles = state["tiles"].as_array().unwrap();
+        let positions: HashMap<_, _> = tiles
+            .iter()
+            .enumerate()
+            .map(|(slot, tile)| {
+                (
+                    (tile["q"].as_i64().unwrap(), tile["r"].as_i64().unwrap()),
+                    slot,
+                )
+            })
+            .collect();
+        let mut graph = HashMap::<(usize, u64), Vec<(usize, u64)>>::new();
+        for (slot, tile) in tiles.iter().enumerate() {
+            for (side, direction) in barrio_core::DIRECTIONS.iter().enumerate() {
+                if tile["edges"][side] != "path" {
+                    continue;
+                }
+                let own = (slot, tile["paths"][side].as_u64().unwrap());
+                graph.entry(own).or_default();
+                let neighbor = (
+                    tile["q"].as_i64().unwrap() + i64::from(direction.q),
+                    tile["r"].as_i64().unwrap() + i64::from(direction.r),
+                );
+                let Some(&other_slot) = positions.get(&neighbor) else {
+                    continue;
+                };
+                let other = &tiles[other_slot];
+                let facing = (side + 3) % 6;
+                let rise = tile["elevation"]
+                    .as_u64()
+                    .unwrap()
+                    .abs_diff(other["elevation"].as_u64().unwrap());
+                if other["edges"][facing] == "path" && rise <= 1 {
+                    graph
+                        .entry(own)
+                        .or_default()
+                        .push((other_slot, other["paths"][facing].as_u64().unwrap()));
+                    assert_eq!(tile["meets"][side], "match");
+                    assert!(tile["networks"][side].is_u64());
+                    assert_eq!(
+                        tile["networks"][side], other["networks"][facing],
+                        "seed {seed}, tile {slot}, side {side}"
+                    );
+                }
+            }
+        }
+        let mut components = HashMap::new();
+        for &start in graph.keys() {
+            if components.contains_key(&start) {
+                continue;
+            }
+            let label = components.len() as u64;
+            components.insert(start, label);
+            let mut queue = VecDeque::from([start]);
+            while let Some(node) = queue.pop_front() {
+                for &next in &graph[&node] {
+                    if let std::collections::hash_map::Entry::Vacant(entry) = components.entry(next)
+                    {
+                        entry.insert(label);
+                        queue.push_back(next);
+                    }
+                }
+            }
+        }
+        let mut expected = Vec::new();
+        let mut observed = Vec::new();
+        let mut homes = HashMap::<u64, u64>::new();
+        for (slot, tile) in tiles.iter().enumerate() {
+            for side in 0..6 {
+                let group = match tile["edges"][side].as_str().unwrap() {
+                    "path" => tile["paths"][side].as_u64(),
+                    "homes" => tile["entrances"][side].as_u64(),
+                    _ => continue,
+                };
+                let component = group.map(|group| components[&(slot, group)]);
+                expected.push(component);
+                observed.push(tile["networks"][side].as_u64());
+                if tile["edges"][side] == "homes" {
+                    if let Some(component) = component {
+                        *homes.entry(component).or_default() += 1;
+                    }
+                }
+            }
+        }
+        assert_eq!(
+            canonical_partition(observed),
+            canonical_partition(expected),
+            "seed {seed}"
+        );
+        assert_eq!(
+            state["stats"]["homesConnected"].as_u64().unwrap(),
+            homes.values().copied().max().unwrap_or(0),
+            "seed {seed}"
+        );
+    }
 }

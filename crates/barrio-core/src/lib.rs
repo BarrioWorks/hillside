@@ -50,7 +50,8 @@ struct TileView {
     paths: [u8; SIDES],
     /// The path group each home's entrance opens onto, per side, rotated.
     entrances: [Option<u8>; SIDES],
-    /// Network id per side for path, nature and water edges.
+    /// Network id per side: path, nature and water edges, and for homes the walk their entrance
+    /// opens onto; None for a home with no entrance path.
     networks: [Option<u32>; SIDES],
     /// How each side meets its neighbor now; the renderer draws joins, stairs and path ends from this.
     meets: [Meet; SIDES],
@@ -333,6 +334,8 @@ impl Game {
                     let spec = tile.spec();
                     let edges = spec.rotated(tile.rotation);
                     let paths = spec.rotated_paths(tile.rotation);
+                    let entrances = entrances(&edges, &paths);
+                    let nodes = board.nodes(slot);
                     TileView {
                         q: tile.q,
                         r: tile.r,
@@ -340,10 +343,16 @@ impl Game {
                         family: tile.kind.family(),
                         edges,
                         paths,
-                        entrances: entrances(&edges, &paths),
-                        networks: board
-                            .nodes(slot)
-                            .map(|node| node.map(|node| networks.network(node))),
+                        entrances,
+                        networks: std::array::from_fn(|side| {
+                            let node = nodes[side].or_else(|| {
+                                let group = entrances[side]?;
+                                (0..SIDES)
+                                    .find(|&path| edges[path] == Edge::Path && paths[path] == group)
+                                    .and_then(|path| nodes[path])
+                            });
+                            node.map(|node| networks.network(node))
+                        }),
                         meets: board.meets(slot),
                         rotation: tile.rotation,
                         variation: tile.variation,
@@ -555,4 +564,92 @@ fn replay(input: &str) -> Result<Run, String> {
         })?;
     }
     Ok(run)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::terrain::Terrain;
+
+    fn insert(game: &mut Game, hex: Hex, edges: &str, paths: &str, rotation: u32) {
+        let spec = TileSpec::parse(Kind::Casas, edges, paths);
+        game.run.board.insert(Placed {
+            q: hex.q,
+            r: hex.r,
+            kind: spec.kind,
+            edges: spec.edges,
+            paths: spec.paths,
+            rotation,
+            variation: 0,
+        });
+    }
+
+    #[test]
+    fn home_snapshot_networks_follow_entrances_and_later_merges() {
+        for rotation in 0..6 {
+            let mut game = Game::new(1);
+            game.run.board = Board::new(Terrain::flat(2));
+            insert(
+                &mut game,
+                Hex::new(-1, 0).rotate(rotation),
+                "PHHPHN",
+                "100100",
+                rotation,
+            );
+            insert(
+                &mut game,
+                Hex::new(1, 0).rotate(rotation),
+                "PHHPHN",
+                "100100",
+                rotation,
+            );
+            insert(
+                &mut game,
+                Hex::new(0, 2).rotate(rotation),
+                "HHHHHH",
+                "000000",
+                rotation,
+            );
+            let state = game.snapshot_value();
+            let side = |side: usize| (side + rotation as usize) % SIDES;
+            let main = state.tiles[0].networks[side(0)];
+            let isolated = state.tiles[1].networks[side(3)];
+            assert!(main.is_some());
+            assert!(isolated.is_some());
+            assert_ne!(main, isolated);
+            for tile in &state.tiles[..2] {
+                for home in [1, 2, 4] {
+                    assert_eq!(tile.networks[side(home)], tile.networks[side(0)]);
+                }
+            }
+            assert_eq!(state.tiles[2].networks, [None; SIDES]);
+            assert_eq!(state.stats.homes_connected, 3);
+            insert(&mut game, Hex::ORIGIN, "PNNPNN", "100100", rotation);
+            let state = game.snapshot_value();
+            let joined = state.tiles[3].networks[side(0)];
+            for tile in &state.tiles[..2] {
+                for home in [1, 2, 4] {
+                    assert_eq!(tile.networks[side(home)], joined);
+                }
+            }
+            assert_eq!(state.tiles[2].networks, [None; SIDES]);
+            assert_eq!(state.stats.homes_connected, 6);
+        }
+    }
+
+    #[test]
+    fn home_snapshot_networks_distinguish_two_walks_on_one_tile() {
+        for rotation in 0..6 {
+            let mut game = Game::new(1);
+            game.run.board = Board::new(Terrain::flat(2));
+            insert(&mut game, Hex::ORIGIN, "PHHPHH", "100200", rotation);
+            let state = game.snapshot_value();
+            let tile = &state.tiles[0];
+            let side = |side: usize| (side + rotation as usize) % SIDES;
+            assert_ne!(tile.networks[side(0)], tile.networks[side(3)]);
+            for (home, path) in [(1, 0), (2, 3), (4, 3), (5, 0)] {
+                assert_eq!(tile.networks[side(home)], tile.networks[side(path)]);
+            }
+        }
+    }
 }

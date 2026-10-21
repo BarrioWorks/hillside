@@ -554,6 +554,7 @@ mod tests {
         let step = board.evaluate(&lane, Hex::new(1, 0), 0);
         assert!(step.valid);
         assert_eq!(step.sides[3].rise, -1);
+        assert_eq!(step.sides[3].meet, Meet::Match);
         assert!(step.sides[3].stairs);
         assert_eq!(
             (step.paths.joined, step.paths.stairs, step.paths.open),
@@ -642,6 +643,170 @@ mod tests {
         );
         let stats = board.stats();
         assert_eq!((stats.homes, stats.homes_connected), (1, 0));
+    }
+
+    fn network(board: &Board, slot: usize, side: usize) -> u32 {
+        board.networks().network(board.nodes(slot)[side].unwrap())
+    }
+
+    #[test]
+    fn adjacent_paths_join_in_every_rotated_layout() {
+        for rotation in 0..6 {
+            let mut board = flat();
+            put(
+                &mut board,
+                Hex::ORIGIN,
+                tile(Kind::Sendero, "PNNNNN", "100000"),
+                rotation,
+            );
+            let next = Hex::ORIGIN.neighbor(rotation as usize);
+            put(
+                &mut board,
+                next,
+                tile(Kind::Sendero, "NNNPNN", "000100"),
+                rotation,
+            );
+            assert_eq!(
+                network(&board, 0, rotation as usize),
+                network(&board, 1, opposite(rotation as usize))
+            );
+            assert_eq!(board.stats().walks, 1);
+        }
+    }
+
+    #[test]
+    fn rotating_one_tile_joins_only_when_its_path_faces_the_street() {
+        for rotation in 0..6 {
+            let mut board = flat();
+            put(
+                &mut board,
+                Hex::ORIGIN,
+                tile(Kind::Sendero, "PNNNNN", "100000"),
+                0,
+            );
+            let street = tile(Kind::Sendero, "PNNPNN", "100100");
+            let preview = board.evaluate(&street, Hex::new(1, 0), rotation);
+            let joins = rotation % 3 == 0;
+            assert_eq!(preview.sides[3].meet == Meet::Match, joins);
+            put(&mut board, Hex::new(1, 0), street, rotation);
+            assert_eq!(
+                network(&board, 0, 0) == network(&board, 1, rotation as usize),
+                joins
+            );
+            assert_eq!(board.stats().walks, if joins { 1 } else { 2 });
+        }
+    }
+
+    #[test]
+    fn three_and_four_way_intersections_merge_every_neighbor() {
+        for (edges, paths, sides) in [
+            ("PNPNPN", "101010", vec![0, 2, 4]),
+            ("PPNPPN", "110110", vec![0, 1, 3, 4]),
+        ] {
+            let mut board = flat();
+            for &side in &sides {
+                force(
+                    &mut board,
+                    Hex::ORIGIN.neighbor(side),
+                    tile(Kind::Casas, "PHHHHH", "100000"),
+                    opposite(side) as u32,
+                );
+            }
+            assert_eq!(board.stats().walks, sides.len() as u32);
+            put(&mut board, Hex::ORIGIN, tile(Kind::Plaza, edges, paths), 0);
+            let root = network(&board, sides.len(), sides[0]);
+            for (slot, &side) in sides.iter().enumerate() {
+                assert_eq!(network(&board, slot, opposite(side)), root);
+            }
+            assert_eq!(board.stats().walks, 1);
+            assert_eq!(board.stats().homes_connected, 5 * sides.len() as u32);
+        }
+    }
+
+    #[test]
+    fn isolated_walk_joins_a_larger_network_and_counts_homes_once() {
+        let mut board = flat();
+        let street = tile(Kind::Casas, "PHHPHN", "100100");
+        put(&mut board, Hex::new(-2, 0), street, 0);
+        put(&mut board, Hex::new(-1, 0), street, 0);
+        force(&mut board, Hex::new(1, 0), street, 0);
+        let main = network(&board, 0, 0);
+        let isolated = network(&board, 2, 3);
+        assert_ne!(main, isolated);
+        assert_eq!(board.stats().homes_connected, 6);
+        put(
+            &mut board,
+            Hex::ORIGIN,
+            tile(Kind::Sendero, "PNNPNN", "100100"),
+            0,
+        );
+        assert_eq!(network(&board, 2, 3), main);
+        assert_eq!(board.networks().network(isolated), main);
+        assert_eq!(board.networks().homes(main), 9);
+        assert_eq!(board.stats().homes_connected, 9);
+        assert_eq!(board.stats().walks, 1);
+    }
+
+    #[test]
+    fn multiple_seams_into_one_network_add_homes_once() {
+        let mut board = flat();
+        let street = tile(Kind::Casas, "HPPPPP", "011111");
+        put(&mut board, Hex::ORIGIN, street, 2);
+        put(&mut board, Hex::new(1, 0), street, 1);
+        let root = network(&board, 0, 0);
+        assert_eq!(board.stats().homes_connected, 2);
+        let preview = board.evaluate(&street, Hex::new(0, 1), 0);
+        assert_eq!(preview.paths.joined, 2);
+        put(&mut board, Hex::new(0, 1), street, 0);
+        assert_eq!(network(&board, 2, 4), root);
+        assert_eq!(board.networks().homes(root), 3);
+        assert_eq!(board.stats().homes_connected, 3);
+        assert_eq!(board.stats().walks, 1);
+    }
+
+    #[test]
+    fn incompatible_seams_never_merge_walks() {
+        for rise in 0..=3 {
+            for (edges, paths, facing) in [
+                ("PNNHNN", "100000", Homes),
+                ("PNNNNN", "100000", Nature),
+                ("PNNPNN", "100100", Path),
+            ] {
+                let mut terrain = Terrain::flat(2);
+                terrain.set(Hex::new(1, 0), 2 + rise);
+                let mut board = Board::new(terrain);
+                put(
+                    &mut board,
+                    Hex::ORIGIN,
+                    tile(Kind::Sendero, "PNNNNN", "100000"),
+                    0,
+                );
+                let other = tile(Kind::Casas, edges, paths);
+                let preview = board.evaluate(&other, Hex::new(1, 0), 0);
+                let joins = facing == Path && rise <= 1;
+                assert_eq!(
+                    preview.sides[3].meet,
+                    if joins {
+                        Meet::Match
+                    } else if facing == Path {
+                        Meet::Steep
+                    } else {
+                        Meet::Differ
+                    }
+                );
+                assert_eq!(preview.sides[3].stairs, joins && rise == 1);
+                put(&mut board, Hex::new(1, 0), other, 0);
+                assert_eq!(
+                    network(&board, 0, 0) == network(&board, 1, 0),
+                    joins,
+                    "{facing:?}, rise {rise}"
+                );
+                assert_eq!(board.stats().walks, if joins { 1 } else { 2 });
+                if facing == Nature {
+                    assert_ne!(network(&board, 0, 0), network(&board, 1, 3));
+                }
+            }
+        }
     }
 
     #[test]
