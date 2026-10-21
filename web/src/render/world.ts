@@ -116,6 +116,32 @@ export class World {
   private frameRequest = 0;
   private disposed = false;
   private span = 27;
+  private debugModule: typeof import('./debug') | undefined;
+  private debugRoot: THREE.Group | undefined;
+  private debugOn = false;
+
+  async enableDebug(): Promise<void> {
+    this.debugModule = await import('./debug');
+  }
+
+  debug(on = !this.debugOn): boolean {
+    if (!this.debugModule || this.disposed) return false;
+    this.debugOn = on;
+    this.rebuildDebug();
+    return this.debugOn;
+  }
+
+  private rebuildDebug(): void {
+    if (this.debugRoot) this.debugModule?.disposeDebug(this.debugRoot);
+    this.debugRoot = undefined;
+    if (this.debugOn && this.debugModule) {
+      this.debugRoot = this.debugModule.buildDebug(this.snapshot, (site, sides) =>
+        this.kit.plan(site, sides),
+      );
+      this.scene.add(this.debugRoot);
+    }
+    this.needsRender = true;
+  }
 
   constructor(
     readonly canvas: HTMLCanvasElement,
@@ -370,6 +396,7 @@ export class World {
     this.lights.frame(this.bounds.center, this.bounds.radius + 6);
     this.ghostKey = '';
     this.invalidateShadows();
+    this.rebuildDebug();
     this.reconcileMilliseconds = performance.now() - started;
   }
 
@@ -785,6 +812,7 @@ export class World {
   }
 
   dispose(): void {
+    if (this.debugRoot) this.debugModule?.disposeDebug(this.debugRoot);
     this.disposed = true;
     cancelAnimationFrame(this.frameRequest);
     this.resizeObserver.disconnect();

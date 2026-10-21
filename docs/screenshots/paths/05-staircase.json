@@ -1,0 +1,134 @@
+{
+  "found": {
+    "seed": 1,
+    "step": 3,
+    "q": 0,
+    "r": 1
+  },
+  "frames": 214,
+  "renderFrames": 23,
+  "continuousRendering": false,
+  "graphics": {
+    "quality": "high",
+    "software": true,
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "shadowSize": 2048
+  },
+  "lighting": "afternoon",
+  "shadowUpdates": 4,
+  "shadowAutoUpdate": false,
+  "shadowNeedsUpdate": false,
+  "frameMs": 16.700000000000045,
+  "p95FrameMs": 216.70000000000005,
+  "frameSamples": 21,
+  "renderMs": 0,
+  "renderSamples": 0,
+  "drawCalls": 36,
+  "triangles": 13048,
+  "geometries": 36,
+  "textures": 2,
+  "tiles": 5,
+  "tileParts": 47,
+  "cachedGeometries": 35,
+  "batchCount": 28,
+  "allocatedBatchCount": 35,
+  "groundTriangles": 200,
+  "renderObjectCount": 33,
+  "reconciled": 24,
+  "reconcileMs": 4.5999999940395355,
+  "pixelRatio": 1,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "coreMilliseconds": 0.5999999940395355,
+  "revision": 10,
+  "networks": [
+    {
+      "id": 1,
+      "pathSides": 3,
+      "homes": 1,
+      "homeTiles": [
+        {
+          "q": 0,
+          "r": 0
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "pathSides": 0,
+      "homes": 0,
+      "homeTiles": []
+    },
+    {
+      "id": 2,
+      "pathSides": 0,
+      "homes": 0,
+      "homeTiles": []
+    },
+    {
+      "id": 6,
+      "pathSides": 3,
+      "homes": 3,
+      "homeTiles": [
+        {
+          "q": 1,
+          "r": 0
+        }
+      ]
+    }
+  ],
+  "disconnectedHomes": 0,
+  "run": {
+    "seed": 1,
+    "region": "salento",
+    "score": 330,
+    "placements": 4,
+    "remaining": 29,
+    "finished": false,
+    "last": {
+      "q": 0,
+      "r": 1,
+      "points": {
+        "base": 10,
+        "matches": 2,
+        "matchPoints": 40,
+        "perfect": false,
+        "perfectBonus": 0,
+        "total": 50
+      },
+      "label": null,
+      "completed": [
+        {
+          "quest": {
+            "id": "nature-small",
+            "family": "nature",
+            "tier": "small",
+            "target": 5,
+            "points": 150,
+            "tiles": 3,
+            "progress": 5,
+            "state": "completed",
+            "completedAt": 4
+          },
+          "tilesAdded": 3,
+          "tilesDiscarded": 0
+        }
+      ],
+      "questPoints": 150,
+      "milestone": null,
+      "victory": false
+    },
+    "stats": {
+      "tiles": 5,
+      "homes": 4,
+      "homesConnected": 3,
+      "walks": 2,
+      "largestNature": 5,
+      "largestWater": 1,
+      "levels": 2
+    }
+  }
+}

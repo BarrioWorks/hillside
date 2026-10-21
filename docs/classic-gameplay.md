@@ -739,3 +739,37 @@ Renderer memory was unchanged across ten regrown runs at every size. These rende
 2. Run a clean render A/B on a quiet host or a GPU device, and set frame-rate targets.
 3. Finish the per-region palette for paths, water and materials, and add more regional start-tile variety.
 4. Commit in reviewable steps: Phase 1 hex, then the Classic rules core, then the client, then balance.
+
+### Path connectivity fix (2026-10-21)
+
+The connectivity rules were sound: edge indexing, rotation, path groups, stairs and the union-find all
+agreed with an independent breadth-first search over seeds 1 to 10. Seams between matched paths already
+met at shared edge midpoints. The broken look came from how the renderer used that graph:
+
+- Houses declared no entrance. The door sat on a facade bay chosen by the variation, while the access
+  walk aimed at the facade center, so walks missed doors.
+- House placement checked the building center against walk centerlines, so 24 of 627 houses stood on
+  walkways. Tree placement ignored crown size, so 135 of 1851 crowns covered walkways (seeds 1 to 10,
+  40 tiles each).
+- The higher terrace's stone coping ran across the top of every staircase.
+
+Each house model now declares its door. A per-tile plan, shared by the renderer and the debug overlay,
+places houses by footprint, runs each access walk from the door to its entrance walk, and keeps
+decoration off walkways. The coping opens across stair seams. Homes report their walk's network id
+in the snapshot, or none when they have no entrance path.
+
+### Path connectivity captures
+
+Run `node tools/capture.mjs paths` against the Vite server (`BARRIO_URL` overrides
+`http://127.0.0.1:5173`). Set `BARRIO_BROWSER_PATH` to an installed Chromium executable
+when needed. This writes six seeded scenes and their debug variants to
+`docs/screenshots/paths/`, with PNGs and JSON network summaries. Scene searches
+replay one autoplay placement at a time; the neighborhood uses seed 2026 and 24 placements.
+
+In development, press `g` or call `window.__barrio.debug(true)` to show connectivity;
+`debug()` toggles and returns the state. `?debug` starts it on and also enables it
+in production. Production without that parameter does not load the overlay.
+Network hues identify walks; white dots identify doors, green rings connected
+homes, and red crosses disconnected homes. Path endpoints have orange markers
+for differing edges, red for steep edges, grey for open edges. A magenta marker
+and `MISMATCH` label identify a matched seam with inconsistent network ids.

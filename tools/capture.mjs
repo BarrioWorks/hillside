@@ -5,7 +5,8 @@ import { chromium } from '@playwright/test';
 // file with renderer metrics and the run state it shows. Scenario shots search seeded runs for the
 // situation they document (a staircase, a three-way crossing, two walks about to join) instead of faking it.
 const baseURL = process.env.BARRIO_URL ?? 'http://127.0.0.1:5173';
-const out = process.argv[2] ?? 'docs/screenshots/classic';
+const paths = process.argv[2] === 'paths';
+const out = paths ? 'docs/screenshots/paths' : process.argv[2] ?? 'docs/screenshots/classic';
 const only = process.argv[3]?.split(',');
 await mkdir(out, { recursive: true });
 
@@ -84,6 +85,54 @@ function findTile(want) {
   return null;
 }
 
+/** In the page: finds placed connectivity scenarios without changing the camera angle. */
+function findPaths(want) {
+  const api = window.__barrio;
+  const dirs = [[1, 0], [0, 1], [-1, 1], [-1, 0], [0, -1], [1, -1]];
+  let fallback = null;
+  for (let seed = 1; seed <= 100; seed++) {
+    api.command({ type: 'newGame', seed });
+    for (let step = 0; step < 35; step++) {
+      api.command({ type: 'autoplay', count: 1 });
+      const snapshot = api.snapshot();
+      if (want === 'seam' && snapshot.tiles.length > 2) break;
+      const byKey = new Map(snapshot.tiles.map((t) => [`${t.q},${t.r}`, t]));
+      for (const tile of snapshot.tiles) {
+        const matched = tile.edges.flatMap((edge, side) => {
+          const [dq, dr] = dirs[side];
+          const other = byKey.get(`${tile.q + dq},${tile.r + dr}`);
+          return edge === 'path' && tile.meets[side] === 'match' && other?.edges[(side + 3) % 6] === 'path' ? [{ side, other }] : [];
+        });
+        const found = { seed, step, q: tile.q, r: tile.r, edges: tile.edges, paths: tile.paths, meets: tile.meets, elevation: tile.elevation };
+        if (want === 'seam' && snapshot.tiles.length === 2 && matched.length) {
+          const other = matched[0].other;
+          return { ...found, q: (tile.q + other.q) / 2, r: (tile.r + other.r) / 2 };
+        }
+        if (want === 'stair' && matched.some(({ other }) => other.elevation - tile.elevation === 1)) return found;
+        const groups = new Map();
+        tile.edges.forEach((edge, side) => {
+          if (edge === 'path') groups.set(tile.paths[side], [...(groups.get(tile.paths[side]) ?? []), side]);
+        });
+        if (want === 'three' || want === 'four') {
+          const count = want === 'three' ? 3 : 4;
+          for (const sides of groups.values()) if (sides.length === count) {
+            if (sides.every((side) => matched.some((m) => m.side === side))) return found;
+            if (want === 'four') return found;
+            fallback ??= found;
+          }
+        }
+        if (want === 'homes') {
+          for (const id of tile.networks.filter((id, side) => tile.edges[side] === 'homes' && id !== null)) {
+            const homes = snapshot.tiles.filter((t) => t.edges.some((edge, side) => edge === 'homes' && t.networks[side] === id));
+            if (homes.length >= 3) return { ...found, q: homes.reduce((sum, t) => sum + t.q, 0) / homes.length, r: homes.reduce((sum, t) => sum + t.r, 0) / homes.length, network: id };
+          }
+        }
+      }
+    }
+  }
+  return fallback;
+}
+
 /**
  * In the page: plays seeds with the planner, one tile at a time, until a single placement can reach `goal`
  * (a quest completion, or victory). Returns that placement without making it, so the capture can place it
@@ -114,7 +163,15 @@ function findMoment(goal) {
   return null;
 }
 
-const shots = [
+const pathShots = [
+  { name: '01-connected-pair', pathScenario: 'seam', zoom: 3 },
+  { name: '02-three-way', pathScenario: 'three', zoom: 2.8 },
+  { name: '03-four-way', pathScenario: 'four', zoom: 2.8 },
+  { name: '04-connected-houses', pathScenario: 'homes', zoom: 2.4 },
+  { name: '05-staircase', pathScenario: 'stair', zoom: 3 },
+  { name: '06-neighborhood', seed: 2026, grow: 24 },
+].flatMap((shot) => [ { ...shot, ui: false }, { ...shot, name: `${shot.name}-debug`, ui: false, debug: true } ]);
+const shots = (paths ? pathShots : [
   { name: '01-start-medellin', seed: 2, zoom: 3.2, ui: false },
   { name: '02-start-salento', seed: 1, zoom: 3.2, ui: false },
   { name: '03-start-bogota', seed: 4, zoom: 3.2, ui: false },
@@ -135,7 +192,7 @@ const shots = [
   { name: '18-quest-complete', moment: 'quest', ui: true },
   { name: '19-victory', moment: 'victory', ui: true },
   { name: '20-results-after-victory', moment: 'victory', ui: true, finish: true },
-].filter((shot) => !only || only.includes(shot.name));
+]).filter((shot) => !only || only.includes(shot.name));
 
 const browser = await chromium.launch({
   headless: true,
@@ -153,6 +210,15 @@ for (const shot of shots) {
   await page.goto(`${baseURL}/?quality=high&seed=${shot.seed ?? 1}`);
   await page.waitForFunction(() => window.__barrio?.ready, null, { timeout: 60000 });
   let found = null;
+  if (shot.pathScenario) {
+    found = await page.evaluate(findPaths, shot.pathScenario);
+    if (!found) throw new Error(`${shot.name}: no seed showed ${shot.pathScenario}`);
+    await page.evaluate(({ seed, step }) => {
+      const api = window.__barrio;
+      api.command({ type: 'newGame', seed });
+      for (let i = 0; i <= step; i++) api.command({ type: 'autoplay', count: 1 });
+    }, found);
+  }
   if (shot.moment) {
     found = await page.evaluate(findMoment, shot.moment);
     if (!found) {
@@ -225,6 +291,7 @@ for (const shot of shots) {
     }
   }
   if (shot.scenario === 'pair') await page.evaluate(({ q, r, zoom }) => window.__barrio.focus(q / 2, r / 2, zoom), { ...found, zoom: shot.zoom });
+  if (shot.debug) await page.evaluate(() => window.__barrio.debug(true));
   await page.evaluate(() => window.__barrio.updateShadows());
   await page.waitForTimeout(shot.place ? 120 : 1500);
   await page.screenshot({ path: `${out}/${shot.name}.png` });
@@ -232,6 +299,13 @@ for (const shot of shots) {
     const snapshot = window.__barrio.snapshot();
     return {
       ...window.__barrio.metrics(),
+      networks: [...new Set(snapshot.tiles.flatMap((tile) => tile.networks).filter((id) => id !== null))].map((id) => ({
+        id,
+        pathSides: snapshot.tiles.flatMap((tile) => tile.edges.filter((edge, side) => edge === 'path' && tile.networks[side] === id)).length,
+        homes: snapshot.tiles.flatMap((tile) => tile.edges.filter((edge, side) => edge === 'homes' && tile.networks[side] === id)).length,
+        homeTiles: snapshot.tiles.filter((tile) => tile.edges.some((edge, side) => edge === 'homes' && tile.networks[side] === id)).map(({ q, r }) => ({ q, r })),
+      })),
+      disconnectedHomes: snapshot.tiles.flatMap((tile) => tile.edges.filter((edge, side) => edge === 'homes' && tile.networks[side] === null)).length,
       run: {
         seed: snapshot.seed,
         region: snapshot.region,

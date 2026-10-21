@@ -10,6 +10,7 @@ import { Sound } from './sound';
 import { element, UI } from './ui';
 
 interface BarrioDebug {
+  debug(on?: boolean): boolean;
   snapshot(): Snapshot;
   hexToScreen(q: number, r: number, elevation?: number): { x: number; y: number };
   metrics(): object;
@@ -339,6 +340,11 @@ async function start(): Promise<void> {
       newGame(freshSeed());
     }
   });
+  const debugEnabled = import.meta.env.DEV || params.has('debug');
+  if (debugEnabled) {
+    await world.enableDebug();
+    if (params.has('debug')) world.debug(true);
+  }
   window.addEventListener('keydown', (event) => {
     if (
       event.target instanceof HTMLInputElement ||
@@ -356,6 +362,7 @@ async function start(): Promise<void> {
         if (key === 'escape') ui.hideVictory();
         return;
       }
+      if (key === 'g' && debugEnabled) world.debug();
       if (key === 'r') controller.rotate(event.shiftKey ? -1 : 1);
       const arrows: Record<string, [number, number]> = {
         arrowleft: [-1, 0],
@@ -385,6 +392,7 @@ async function start(): Promise<void> {
   });
   window.__barrio = {
     ready: true,
+    debug: (on) => world.debug(on),
     snapshot: () => controller.snapshot,
     hexToScreen: (q, r, elevation) => world.hexToScreen(q, r, elevation),
     metrics: () => ({
