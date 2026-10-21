@@ -215,6 +215,7 @@ async function start(): Promise<void> {
     renderContinuously: (enabled) => {
       world.continuousRendering = enabled;
       world.frameMilliseconds = [];
+      world.renderMilliseconds = [];
     },
     updateShadows: () => world.invalidateShadows(),
     view: (view) => world.setView(view),
@@ -230,6 +231,7 @@ async function start(): Promise<void> {
       return { milliseconds: performance.now() - start, structures: controller.snapshot.structures.length };
     },
   };
+  if (params.has('profile')) (window as unknown as { __world: World }).__world = world;
   if (params.has('benchmark')) window.__barrio.benchmark();
   window.addEventListener('pagehide', () => world.dispose(), { once: true });
 }

@@ -4,6 +4,7 @@ import type { BuildingDefinition, CellPoint, Preview, Snapshot, Structure, Tool 
 import { StructureBatches } from './batches';
 import { Decor, type Lot } from './decor';
 import { Lighting, type LightingPreset } from './lighting';
+import { setPatterns } from './material';
 import { type Context, type Edge, type ModelLibrary, OPEN } from './models';
 import { PALETTE } from './palette';
 import { heightAt, MARGIN, Terrain } from './terrain';
@@ -51,6 +52,9 @@ export class World {
   continuousRendering = false;
   readonly graphics: { quality: 'low' | 'high'; software: boolean; renderer: string; shadowSize: number };
   frameMilliseconds: number[] = [];
+  renderMilliseconds: number[] = [];
+  private readonly profile = new URLSearchParams(location.search).has('profile');
+  private readonly probePixel = new Uint8Array(4);
   reconciled = 0;
   private needsRender = true;
   private terrain: Terrain;
@@ -110,6 +114,7 @@ export class World {
       shadowSize: low ? 1024 : 2048,
     };
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, low ? 1 : 2));
+    setPatterns(!low);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.NeutralToneMapping;
     this.renderer.shadowMap.enabled = true;
@@ -174,11 +179,21 @@ export class World {
     const unit = new THREE.BoxGeometry(1, 1, 1).translate(0, 0.5, 0);
     const volume = new THREE.Mesh(
       unit,
-      new THREE.MeshBasicMaterial({ color: PALETTE.coral, transparent: true, opacity: 0.34, depthWrite: false }),
+      new THREE.MeshBasicMaterial({
+        color: PALETTE.coral,
+        transparent: true,
+        opacity: 0.34,
+        depthWrite: false,
+      }),
     );
     const edges = new THREE.LineSegments(
       new THREE.EdgesGeometry(unit),
-      new THREE.LineBasicMaterial({ color: PALETTE.coral, transparent: true, opacity: 0.95, depthTest: false }),
+      new THREE.LineBasicMaterial({
+        color: PALETTE.coral,
+        transparent: true,
+        opacity: 0.95,
+        depthTest: false,
+      }),
     );
     volume.renderOrder = 3;
     edges.renderOrder = 5;
@@ -348,7 +363,11 @@ export class World {
         [w, d] = this.footprint(target.kind, target.rotation);
         const height = (this.structures.get(target.id)?.mesh.geometry.boundingBox?.max.y ?? 0.5) + 0.06;
         this.doomed.visible = true;
-        this.doomed.position.set(origin.x + w / 2, heightAt(this.snapshot, origin.x, origin.z), origin.z + d / 2);
+        this.doomed.position.set(
+          origin.x + w / 2,
+          heightAt(this.snapshot, origin.x, origin.z),
+          origin.z + d / 2,
+        );
         this.doomed.scale.set(w + 0.06, height, d + 0.06);
         this.marker.visible = this.outline.visible = false;
       }
@@ -577,7 +596,15 @@ export class World {
       }
       this.lastFrame = time;
       if (this.renderer.shadowMap.needsUpdate) this.shadowUpdates++;
+      const start = this.profile ? performance.now() : 0;
       this.renderer.render(this.scene, this.camera);
+      if (this.profile) {
+        // Reading one pixel waits for the GPU process to finish the frame; finish() alone returns early in Chrome.
+        const gl = this.renderer.getContext();
+        gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, this.probePixel);
+        if (this.renderMilliseconds.length >= 600) this.renderMilliseconds.shift();
+        this.renderMilliseconds.push(performance.now() - start);
+      }
       this.renderFrames++;
       this.needsRender = false;
     } else {
@@ -606,6 +633,11 @@ export class World {
       frameMs: sorted.length ? sorted[Math.floor(sorted.length * 0.5)] : 0,
       p95FrameMs: sorted.length ? sorted[Math.floor(sorted.length * 0.95)] : 0,
       frameSamples: sorted.length,
+      renderMs: (() => {
+        const r = [...this.renderMilliseconds].sort((a, b) => a - b);
+        return r.length ? r[Math.floor(r.length / 2)] : 0;
+      })(),
+      renderSamples: this.renderMilliseconds.length,
       drawCalls: this.renderer.info.render.calls,
       triangles: this.renderer.info.render.triangles,
       geometries: this.renderer.info.memory.geometries,

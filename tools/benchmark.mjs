@@ -16,7 +16,11 @@ const browser = await chromium.launch({
   executablePath: process.env.BARRIO_BROWSER_PATH,
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'],
 });
-const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
+const [viewWidth, viewHeight] = (process.env.BARRIO_VIEWPORT ?? '1440x900').split('x').map(Number);
+const page = await browser.newPage({
+  viewport: { width: viewWidth, height: viewHeight },
+  deviceScaleFactor: 1,
+});
 const failures = [];
 page.on('pageerror', (error) => failures.push(error.message));
 page.on('requestfailed', (request) => failures.push(`${request.url()} ${request.failure()?.errorText}`));
@@ -26,7 +30,7 @@ page.on('response', (response) => {
 
 try {
   const loadStart = performance.now();
-  await page.goto(`${baseURL}/?benchmark`, { waitUntil: 'networkidle' });
+  await page.goto(`${baseURL}/?benchmark&profile`, { waitUntil: 'networkidle' });
   await page.waitForFunction(() => window.__barrio?.ready === true);
   await page.waitForFunction(() => window.__barrio.metrics().renderFrames > 0);
   const readyMilliseconds = performance.now() - loadStart;

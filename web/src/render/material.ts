@@ -34,8 +34,9 @@ varying vec3 vPatternPosition;
 varying vec3 vPatternNormal;
 uniform float uGlow;
 uniform vec3 uMural[6];
-float bbHash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-float bbHash3(vec3 p) { return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453); }
+// Arithmetic hashes (Dave Hoskins, "Hash without Sine"): no transcendental calls per pixel.
+float bbHash(vec2 p) { vec3 q = fract(vec3(p.xyx) * 0.1031); q += dot(q, q.yzx + 33.33); return fract((q.x + q.y) * q.z); }
+float bbHash3(vec3 p) { p = fract(p * 0.1031); p += dot(p, p.zyx + 31.32); return fract((p.x + p.y) * p.z); }
 float bbNoise(vec2 p) {
   vec2 i = floor(p), f = fract(p);
   f = f * f * (3.0 - 2.0 * f);
@@ -138,17 +139,29 @@ function patch(shader: THREE.WebGLProgramParametersWithUniforms): void {
     .replace('#include <project_vertex>', `#include <project_vertex>\n${vertexBody}`);
   shader.fragmentShader = shader.fragmentShader
     .replace('#include <common>', `#include <common>\n${fragmentHeader}`)
-    .replace('#include <color_fragment>', `#include <color_fragment>\n${fragmentBody}`)
+    .replace(
+      '#include <color_fragment>',
+      `#include <color_fragment>\n#ifdef BARRIO_PATTERNS\n${fragmentBody}\n#endif`,
+    )
     .replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>\n${roughnessBody}`)
     .replace('#include <metalnessmap_fragment>', `#include <metalnessmap_fragment>\n${metalnessBody}`)
     .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>\n${emissiveBody}`);
 }
 
+type WithDefines = THREE.Material & { defines?: Record<string, string> };
+
 export function createWorldMaterial(): THREE.MeshStandardMaterial {
   const material = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, metalness: 0 });
+  (material as WithDefines).defines = { BARRIO_PATTERNS: '' };
   material.onBeforeCompile = patch;
-  material.customProgramCacheKey = () => 'barrio-world-v1';
+  material.customProgramCacheKey = () => 'barrio-world-v2';
   return material;
+}
+
+/** Procedural micro-patterns cost about a third of render time on software rasterizers; the low tier skips them. */
+export function setPatterns(enabled: boolean): void {
+  (worldMaterial as WithDefines).defines = enabled ? { BARRIO_PATTERNS: '' } : {};
+  worldMaterial.needsUpdate = true;
 }
 
 export const worldMaterial = createWorldMaterial();

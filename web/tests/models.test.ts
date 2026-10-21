@@ -11,7 +11,6 @@ describe('catalog model assembly', () => {
         const mesh = library.create(def.id, variation);
         const position = mesh.geometry.getAttribute('position');
         expect(position.count).toBeGreaterThan(0);
-        expect(mesh.geometry.index).toBeNull();
         expect(mesh.geometry.getAttribute('color').count).toBe(position.count);
         expect(mesh.geometry.getAttribute('surface').count).toBe(position.count);
         expect(Array.from(position.array).every(Number.isFinite)).toBe(true);

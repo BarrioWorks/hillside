@@ -180,13 +180,24 @@ function shop(b: Builder, s: Style, side: Side, m: Mass, u: number, y0: number, 
 function balcony(b: Builder, s: Style, side: Side, m: Mass, u: number, y: number, w: number): void {
   const [x, z, r] = facePoint(side, m.w / 2, m.d / 2, u, 0.12);
   b.box(w, 0.045, 0.24, m.x + x, y, m.z + z, 'concrete', Surface.concrete, r);
+  // A low solid parapet with a light rail above: how most barrio balconies are built, and far fewer parts than bars.
+  const [px, pz] = facePoint(side, m.w / 2, m.d / 2, u, 0.225);
+  b.box(
+    w,
+    0.1,
+    0.03,
+    m.x + px,
+    y + 0.07,
+    m.z + pz,
+    s.finish === 'painted' ? s.plaster : 'brick',
+    s.finish === 'painted' ? Surface.plaster : Surface.brick,
+    r,
+  );
   const [rx, rz] = facePoint(side, m.w / 2, m.d / 2, u, 0.23);
   b.box(w, 0.02, 0.02, m.x + rx, y + 0.24, m.z + rz, s.trim, Surface.metal, r);
-  b.box(w, 0.012, 0.012, m.x + rx, y + 0.06, m.z + rz, s.trim, Surface.metal, r);
-  const posts = Math.max(3, Math.round(w / 0.1));
-  for (let i = 0; i <= posts; i++) {
-    const [px, pz] = facePoint(side, m.w / 2, m.d / 2, u - w / 2 + (i * w) / posts, 0.23);
-    b.box(0.011, 0.22, 0.011, m.x + px, y + 0.13, m.z + pz, 'metal', Surface.metal, r);
+  for (const t of [-0.5, -1 / 6, 1 / 6, 0.5]) {
+    const [qx, qz] = facePoint(side, m.w / 2, m.d / 2, u + t * w, 0.23);
+    b.box(0.014, 0.12, 0.014, m.x + qx, y + 0.18, m.z + qz, s.trim, Surface.metal, r);
   }
   for (const edge of [-1, 1]) {
     const [ex, ez] = facePoint(side, m.w / 2, m.d / 2, u + (edge * w) / 2, 0.12);
@@ -303,7 +314,7 @@ function roof(
       [0.018, r.d, r.x - r.w / 2 + 0.02, r.z],
     ] as const) {
       b.block(w, 0.02, d, x, r.y + 0.26, z, s.trim, Surface.metal);
-      const posts = Math.round(Math.max(w, d) / 0.12);
+      const posts = Math.max(2, Math.round(Math.max(w, d) / 0.3));
       for (let i = 0; i <= posts; i++) {
         const t = -0.5 + i / posts;
         b.block(

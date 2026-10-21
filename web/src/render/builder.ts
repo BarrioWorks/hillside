@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { mergeGeometries, mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 import { PALETTE, type PaletteName, type SurfaceId } from './palette';
 
 /** Height of one terrace step in world units. */
@@ -53,7 +53,8 @@ export class Builder {
 
   /** Adds prebuilt Builder output, keeping its colors and surfaces. */
   merge(geometry: THREE.BufferGeometry, matrix: THREE.Matrix4): void {
-    this.parts.push(geometry.clone().applyMatrix4(matrix));
+    const part = geometry.index ? geometry.toNonIndexed() : geometry.clone();
+    this.parts.push(part.applyMatrix4(matrix));
   }
 
   /** Axis-aligned box centered at (x, y, z), optionally rotated about Y around its own center. */
@@ -131,6 +132,12 @@ export class Builder {
     this.add(geometry, color, surface, matrix);
   }
 
+  private dropUndersides(geometry: THREE.BufferGeometry): THREE.BufferGeometry {
+    const result = keepUpward(geometry);
+    geometry.dispose();
+    return result;
+  }
+
   get empty(): boolean {
     return this.parts.length === 0;
   }
@@ -152,10 +159,34 @@ export class Builder {
         colors.setXYZ(i, colors.getX(i) * shade, colors.getY(i) * shade, colors.getZ(i) * shade);
       }
     }
-    result.computeBoundingBox();
-    result.computeBoundingSphere();
-    return result;
+    // The camera never drops below the horizon, so downward faces are always back-facing; drop them.
+    const visible = this.dropUndersides(result);
+    // Shared corners are welded so each box face shades 4 vertices instead of 6.
+    const indexed = mergeVertices(visible);
+    visible.dispose();
+    result.dispose();
+    indexed.computeBoundingBox();
+    indexed.computeBoundingSphere();
+    return indexed;
   }
+}
+
+/** Keeps triangles whose normal is not pointing down. */
+function keepUpward(geometry: THREE.BufferGeometry): THREE.BufferGeometry {
+  const normal = geometry.getAttribute('normal');
+  const keep: number[] = [];
+  for (let t = 0; t < normal.count; t += 3)
+    if (normal.getY(t) + normal.getY(t + 1) + normal.getY(t + 2) > -1.5) keep.push(t, t + 1, t + 2);
+  const result = new THREE.BufferGeometry();
+  for (const [name, attribute] of Object.entries(geometry.attributes)) {
+    const size = attribute.itemSize;
+    const array = new Float32Array(keep.length * size);
+    keep.forEach((vertex, i) => {
+      for (let c = 0; c < size; c++) array[i * size + c] = attribute.array[vertex * size + c] as number;
+    });
+    result.setAttribute(name, new THREE.BufferAttribute(array, size));
+  }
+  return result;
 }
 
 /** Maps facade coordinates (u along the face, v up, out from the face) into building space. */
