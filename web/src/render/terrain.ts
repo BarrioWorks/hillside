@@ -77,7 +77,7 @@ export class Terrain {
       for (let x = -MARGIN; x < width + MARGIN; x++) {
         const top = level(x, z);
         const playable = x >= 0 && z >= 0 && x < width && z < depth;
-        const tint = (playable ? grass : wild).clone().multiplyScalar(0.97 + rng() * 0.04);
+        const tint = (playable ? grass : wild).clone();
         const higher = DIRECTIONS.map(([dx, dz]) => inside(x + dx, z + dz) && level(x + dx, z + dz) > top + 0.01);
         const occlusion = (fx: number, fz: number): number => {
           const weight = (f: number) => (f === 0 ? 1 : f < 0.5 ? 0.35 : 0);

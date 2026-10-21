@@ -19,6 +19,7 @@ interface BarrioDebug {
   preview(kind: string, x: number, z: number, rotation?: number): unknown;
   renderContinuously(enabled: boolean): void;
   view(view: { zoom?: number; azimuth?: number; polar?: number; target?: [number, number, number] }): void;
+  light(preset: LightingPreset): void;
   updateShadows(): void;
   readonly ready: boolean;
 }
@@ -216,6 +217,10 @@ async function start(): Promise<void> {
     },
     updateShadows: () => world.invalidateShadows(),
     view: (view) => world.setView(view),
+    light: (preset) => {
+      world.setLighting(preset);
+      ui.lighting(preset);
+    },
     benchmark: () => {
       world.continuousRendering = true;
       world.frameMilliseconds = [];

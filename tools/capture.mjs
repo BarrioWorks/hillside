@@ -93,7 +93,7 @@ function buildNeighborhood(size) {
 const center = [16, 1.2, 16];
 const shots = [
   { name: '00-starter', scene: 'starter', view: {}, ui: false },
-  { name: '01-single-house', scene: 'single', view: { zoom: 3.4, target: [15.5, 1.5, 15.5] }, ui: false },
+  { name: '01-single-house', scene: 'single', view: { zoom: 6, target: [15.5, 1.9, 15.5] }, ui: false },
   { name: '02-six-buildings', scene: 'six', view: { zoom: 2.2, target: [16, 1.8, 17] }, ui: false },
   { name: '03-dense-hillside', scene: 'dense', view: { zoom: 1.35, target: center }, ui: false },
   { name: '04-full-diorama', scene: 'dense', view: { zoom: 0.68, target: center }, ui: false },
@@ -101,6 +101,8 @@ const shots = [
   { name: '06-reverse-angle', scene: 'dense', view: { zoom: 1.35, azimuth: -0.9, target: center }, ui: false },
   { name: '07-low-angle', scene: 'dense', view: { zoom: 1.8, polar: 1.15, target: center }, ui: false },
   { name: '08-mobile', scene: 'dense', view: {}, ui: true, mobile: true },
+  { name: '09-evening', scene: 'dense', view: { zoom: 1.35, target: center }, ui: false, light: 'evening' },
+  { name: '10-daylight', scene: 'dense', view: { zoom: 1.35, target: center }, ui: false, light: 'daylight' },
 ].filter((shot) => !only || only.includes(shot.name));
 
 const browser = await chromium.launch({
@@ -120,6 +122,7 @@ for (const shot of shots) {
   await page.waitForFunction(() => window.__barrio?.ready, null, { timeout: 60000 });
   await page.evaluate(buildNeighborhood, shot.scene);
   await page.evaluate((view) => window.__barrio.view(view), shot.view);
+  if (shot.light) await page.evaluate((light) => window.__barrio.light(light), shot.light);
   if (!shot.ui)
     await page.addStyleTag({ content: '#app > :not(canvas){display:none!important}' });
   if (shot.hover) {

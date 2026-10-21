@@ -31,7 +31,7 @@ const DIRECTIONS = [
 const PLACE_MS = 340;
 const REMOVE_MS = 170;
 const MIN_ZOOM = 0.55;
-const MAX_ZOOM = 4;
+const MAX_ZOOM = 6;
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
 
 export class World {

@@ -24,7 +24,7 @@ export const PALETTE = {
   wood: '#8a5e3b',
   leaf: '#5f8c4a',
   leafDeep: '#3f6b3c',
-  grass: '#a3b483',
+  grass: '#96b47f',
   soil: '#a8643f',
   stone: '#b9ad99',
   asphalt: '#8e8a84',

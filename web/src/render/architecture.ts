@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Builder, facePoint, type Paint, random, type Side } from './builder';
-import { PLASTER, type PaletteName, Surface, TRIM } from './palette';
+import { PALETTE, PLASTER, type PaletteName, Surface, TRIM } from './palette';
 
 /**
  * Shape grammar for Medellín self-built houses, after Müller et al. 2006 (CGA): a lot becomes a mass of
@@ -33,6 +33,8 @@ interface Style {
   finish: Finish;
   grilles: boolean;
   mural: boolean;
+  /** Most houses paint only the street facade; side and back walls stay exposed brick. */
+  paintedSides: boolean;
 }
 
 function style(kind: string, variation: number): Style {
@@ -58,12 +60,15 @@ function style(kind: string, variation: number): Style {
     finish: pick(finishes[kind] ?? ['painted']),
     grilles: rng() < 0.6,
     mural: kind === 'esquina' ? variation % 3 !== 2 : variation % 7 === 3,
+    paintedSides: rng() < 0.6,
   };
 }
 
 function wallFor(s: Style, floor: number, side: Side): { color: Paint; surface: (typeof Surface)[keyof typeof Surface] } {
   const painted = { color: s.plaster, surface: Surface.plaster } as const;
   const brick = { color: 'brick', surface: Surface.brick } as const;
+  if (side !== 0 && (side === 2 || !s.paintedSides) && s.finish !== 'painted') return brick;
+  if (side === 2 && !s.paintedSides) return brick;
   if (s.finish === 'painted') return painted;
   if (s.finish === 'brick') return floor === 0 && side === 0 ? painted : brick;
   if (s.finish === 'brickUpper') return floor === 0 ? painted : brick;
@@ -82,6 +87,8 @@ function window(b: Builder, s: Style, side: Side, m: Mass, u: number, v: number,
   b.box(w, h, 0.02, gx, v, gz, 'windowDark', Surface.glass, r);
   const [sx, sz] = at(0.04);
   b.box(w + 0.1, 0.035, 0.07, sx, v - h / 2 - 0.035, sz, 'concrete', Surface.concrete, r);
+  const [lx, lz] = at(0.035);
+  b.box(w + 0.1, 0.035, 0.06, lx, v + h / 2 + 0.05, lz, 'concrete', Surface.concrete, r);
   const [mx, mz] = at(0.035);
   b.box(0.018, h, 0.02, mx, v, mz, s.finish === 'painted' ? 'offWhite' : s.trim, Surface.paint, r);
   if (s.grilles) {
@@ -166,6 +173,19 @@ function mass(b: Builder, s: Style, m: Mass, rule: BayRule): void {
     if (storey > 0 || m.y0 > 0) b.box(m.w + 0.03, SLAB, m.d + 0.03, m.x, y + SLAB / 2 - 0.01, m.z, 'concrete', Surface.concrete);
   }
   b.box(m.w - 0.2, 0.05, m.d - 0.2, m.x, m.y0 + 0.02, m.z, 'concrete', Surface.concrete);
+  if (level === 0 && m.y0 === 0)
+    for (const side of [0, 1, 2, 3] as const) {
+      const wall = wallFor(s, 0, side);
+      if (wall.surface !== Surface.plaster) continue;
+      const along = side % 2 ? m.d : m.w + 0.02;
+      const [x, z, r] = facePoint(side, m.w / 2, m.d / 2, 0, 0.006);
+      const tone = new THREE.Color(PALETTE[s.plaster]).multiplyScalar(0.72);
+      b.box(along, 0.17, 0.012, m.x + x, 0.085, m.z + z, tone, Surface.plaster, r);
+    }
+  if (level === 0 && m.y0 === 0 && s.rng() < 0.6) {
+    const [x, z] = facePoint(0, m.w / 2, m.d / 2, m.w / 2 - 0.03, 0.02);
+    b.block(0.025, m.floors * STOREY + 0.1, 0.025, m.x + x, 0, m.z + z, 'shutter', Surface.metal);
+  }
   if (s.finish === 'frame' || s.finish === 'brick')
     for (const cx of [-1, 1])
       for (const cz of [-1, 1])

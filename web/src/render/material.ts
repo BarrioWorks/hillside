@@ -105,7 +105,7 @@ if (bbSurface == 1 && bbWall) {
   float n = bbNoise(vPatternPosition.xz * 0.9) * 0.65 + bbNoise(vPatternPosition.xz * 6.0) * 0.35;
   float meadow = smoothstep(0.35, 0.8, bbNoise(vPatternPosition.xz * 0.16 + 3.7));
   diffuseColor.rgb *= 0.92 + 0.14 * n;
-  diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * vec3(1.1, 1.04, 0.78), meadow * 0.55);
+  diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * vec3(1.06, 1.05, 0.84), meadow * 0.4);
 } else if (bbSurface == 9 && bbWall) {
   float v = vPatternPosition.y * 7.0 + bbNoise(vec2(bbWallUV().x * 1.3, vPatternPosition.y)) * 2.2;
   diffuseColor.rgb *= 0.86 + 0.16 * (0.5 + 0.5 * sin(v));
