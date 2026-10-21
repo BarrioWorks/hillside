@@ -1,0 +1,49 @@
+{
+  "frames": 96,
+  "renderFrames": 3,
+  "continuousRendering": false,
+  "graphics": {
+    "quality": "high",
+    "software": true,
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "shadowSize": 2048
+  },
+  "lighting": "afternoon",
+  "shadowUpdates": 2,
+  "shadowAutoUpdate": false,
+  "shadowNeedsUpdate": false,
+  "frameMs": 533.3,
+  "p95FrameMs": 533.3,
+  "frameSamples": 2,
+  "renderMs": 0,
+  "renderSamples": 0,
+  "drawCalls": 48,
+  "triangles": 39226,
+  "geometries": 50,
+  "textures": 2,
+  "tiles": 11,
+  "tileParts": 68,
+  "cachedGeometries": 46,
+  "batchCount": 45,
+  "allocatedBatchCount": 46,
+  "groundTriangles": 368,
+  "renderObjectCount": 47,
+  "reconciled": 16,
+  "reconcileMs": 190.2999999821186,
+  "pixelRatio": 2,
+  "viewport": {
+    "width": 780,
+    "height": 1688
+  },
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "coreMilliseconds": 3.5999999940395355,
+  "revision": 1,
+  "stats": {
+    "tiles": 11,
+    "homes": 5,
+    "homesConnected": 3,
+    "networks": 4,
+    "largestNetwork": 5,
+    "levels": 2
+  }
+}

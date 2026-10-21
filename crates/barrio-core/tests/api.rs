@@ -3,67 +3,46 @@ use std::collections::HashSet;
 use barrio_core::Game;
 use serde_json::{json, Value};
 
+fn parse(text: String) -> Value {
+    serde_json::from_str(&text).unwrap()
+}
+
 fn snapshot(game: &Game) -> Value {
-    serde_json::from_str(&game.snapshot()).unwrap()
+    parse(game.snapshot())
 }
 
 fn command(game: &mut Game, command: Value) -> Value {
-    serde_json::from_str(&game.command(&command.to_string())).unwrap()
+    parse(game.command(&command.to_string()))
 }
 
-fn save(game: &Game) -> Value {
-    serde_json::from_str(&game.save()).unwrap()
+fn preview(game: &Game, q: i64, r: i64, rotation: u32) -> Value {
+    parse(game.preview(q as f64, r as f64, rotation.into()))
 }
 
-fn load(game: &mut Game, save: &Value) -> Value {
-    serde_json::from_str(&game.load(&save.to_string())).unwrap()
+/// The first valid frontier placement for the current tile.
+fn valid_move(game: &Game) -> (i64, i64, u32) {
+    let state = snapshot(game);
+    for spot in state["frontier"].as_array().unwrap() {
+        let (q, r) = (spot["q"].as_i64().unwrap(), spot["r"].as_i64().unwrap());
+        for rotation in 0..6 {
+            if preview(game, q, r, rotation)["valid"] == true {
+                return (q, r, rotation);
+            }
+        }
+    }
+    panic!("no valid move");
 }
 
-fn empty_save(seed: u32) -> Value {
-    json!({"version":1,"terrainId":"hillside-v1","seed":seed,"width":32,"depth":32,"nextId":1,"structures":[]})
-}
-
-fn empty(seed: u32) -> Game {
-    let mut game = Game::new(seed);
-    assert_eq!(load(&mut game, &empty_save(seed))["ok"], true);
-    game
-}
-
-fn preview(game: &Game, kind: &str, x: u32, z: u32, rotation: u32) -> Value {
-    serde_json::from_str(&game.preview(kind, x.into(), z.into(), rotation.into())).unwrap()
-}
-
-fn place(game: &mut Game, kind: &str, x: u32, z: u32, rotation: u32) -> Value {
-    let result = command(
+fn place(game: &mut Game, (q, r, rotation): (i64, i64, u32)) -> Value {
+    command(
         game,
-        json!({"type":"place","kind":kind,"x":x,"z":z,"rotation":rotation}),
-    );
-    assert_eq!(result["ok"], true, "{result}");
-    result
-}
-
-fn height(state: &Value, x: u32, z: u32) -> u64 {
-    state["cells"][(z * 32 + x) as usize]["height"]
-        .as_u64()
-        .unwrap()
-}
-
-fn stairs_location(state: &Value) -> (u32, u32) {
-    let x = 4;
-    let z = (2..30)
-        .find(|&z| {
-            height(state, x, z - 1) == height(state, x, z) + 1
-                && height(state, x, z + 2) == height(state, x, z)
-                && height(state, x, z - 2) == height(state, x, z - 1)
-        })
-        .unwrap();
-    (x, z)
+        json!({"type": "place", "q": q, "r": r, "rotation": rotation}),
+    )
 }
 
 #[test]
-fn api_matches_camel_case_contract_and_complete_catalog() {
-    let game = Game::new(42);
-    let state = snapshot(&game);
+fn snapshot_matches_the_camel_case_contract() {
+    let state = snapshot(&Game::new(42));
     let keys: HashSet<_> = state
         .as_object()
         .unwrap()
@@ -73,542 +52,384 @@ fn api_matches_camel_case_contract_and_complete_catalog() {
     assert_eq!(
         keys,
         HashSet::from([
+            "rules",
             "seed",
-            "width",
-            "depth",
-            "cells",
-            "structures",
-            "canUndo",
-            "canRedo",
-            "connected",
-            "revision"
+            "region",
+            "regionName",
+            "tiles",
+            "frontier",
+            "current",
+            "upcoming",
+            "remaining",
+            "canSkip",
+            "skipUsed",
+            "score",
+            "placements",
+            "finished",
+            "end",
+            "milestone",
+            "nextMilestone",
+            "victory",
+            "victoryAt",
+            "quests",
+            "rewards",
+            "discarded",
+            "cap",
+            "recoveries",
+            "recovery",
+            "last",
+            "stats",
+            "revision",
         ])
     );
-    assert_eq!(state["canUndo"], false);
-    assert_eq!(state["canRedo"], false);
-    let catalog: Value = serde_json::from_str(&game.catalog()).unwrap();
-    assert_eq!(catalog.as_array().unwrap().len(), 11);
-    let ids: HashSet<_> = catalog
+    let ids: Vec<_> = state["quests"]["current"]
         .as_array()
         .unwrap()
         .iter()
-        .map(|entry| entry["id"].as_str().unwrap())
+        .map(|quest| quest["id"].as_str().unwrap().to_owned())
         .collect();
+    assert_eq!(ids, ["residential-small", "nature-small", "water-small"]);
     assert_eq!(
-        ids,
-        HashSet::from([
-            "casa", "tienda", "torre", "terraza", "taller", "esquina", "path", "stairs", "tree",
-            "planter", "bench"
-        ])
+        state["nextMilestone"],
+        json!({"name": "Settlement", "score": 1000})
     );
-    assert_eq!(
-        catalog
+    assert_eq!(state["cap"], 60);
+    let tile = &state["tiles"][0];
+    for key in [
+        "q",
+        "r",
+        "kind",
+        "family",
+        "edges",
+        "paths",
+        "entrances",
+        "networks",
+        "meets",
+        "rotation",
+        "variation",
+        "elevation",
+    ] {
+        assert!(tile.get(key).is_some(), "tile is missing {key}");
+    }
+    assert_eq!(state["rules"], "classic-2");
+}
+
+#[test]
+fn a_new_game_shows_one_tile_six_spots_and_a_full_deck() {
+    for seed in [0, 1, 7, 2026, 99_999] {
+        let state = snapshot(&Game::new(seed));
+        assert_eq!(state["tiles"].as_array().unwrap().len(), 1);
+        assert_eq!(state["tiles"][0]["kind"], "inicio");
+        assert_eq!(state["frontier"].as_array().unwrap().len(), 6);
+        assert_eq!(state["remaining"], 30);
+        assert_eq!(state["upcoming"].as_array().unwrap().len(), 2);
+        assert_eq!(state["score"], 0);
+        assert!(state["frontier"]
             .as_array()
             .unwrap()
             .iter()
-            .filter(|entry| entry["category"] == "building")
-            .count(),
-        6
-    );
-    assert!(state["connected"].as_u64().unwrap() >= 10);
-}
-
-#[test]
-fn terrain_is_deterministic_seeded_terraced_and_bounded() {
-    let game = Game::new(123);
-    assert_eq!(game.snapshot(), Game::new(123).snapshot());
-    let state = snapshot(&game);
-    assert_eq!(state["width"], 32);
-    assert_eq!(state["depth"], 32);
-    assert_eq!(state["cells"].as_array().unwrap().len(), 1024);
-    let mut levels = HashSet::new();
-    let mut flat_squares = 0;
-    for z in 0..32 {
-        for x in 0..32 {
-            let h = height(&state, x, z);
-            levels.insert(h);
-            assert!(h <= 5);
-            if x < 31 {
-                assert!(h.abs_diff(height(&state, x + 1, z)) <= 1);
-            }
-            if z < 31 {
-                assert!(h.abs_diff(height(&state, x, z + 1)) <= 1);
-            }
-            if x < 31
-                && z < 31
-                && [(x + 1, z), (x, z + 1), (x + 1, z + 1)]
-                    .iter()
-                    .all(|&(x, z)| height(&state, x, z) == h)
-            {
-                flat_squares += 1;
-            }
-        }
-    }
-    assert_eq!(levels.len(), 6);
-    assert!(flat_squares > 500);
-    let maps: HashSet<_> = (0..64)
-        .map(|seed| snapshot(&Game::new(seed))["cells"].to_string())
-        .collect();
-    assert!(maps.len() > 20);
-}
-
-#[test]
-fn starters_have_all_buildings_valid_stairs_props_and_stable_variations() {
-    for seed in 0..48 {
-        let game = Game::new(seed);
-        let state = snapshot(&game);
-        let kinds: HashSet<_> = state["structures"]
-            .as_array()
-            .unwrap()
-            .iter()
-            .map(|item| item["kind"].as_str().unwrap())
-            .collect();
-        for kind in [
-            "casa", "tienda", "torre", "terraza", "taller", "esquina", "path", "stairs", "tree",
-            "planter", "bench",
-        ] {
-            assert!(kinds.contains(kind), "missing {kind} at seed {seed}");
-        }
-        let mut other = empty(seed);
-        assert_eq!(load(&mut other, &save(&game))["ok"], true);
-        assert_eq!(state["structures"], snapshot(&other)["structures"]);
-        assert_eq!(state["connected"], snapshot(&other)["connected"]);
-        assert_eq!(
-            state["structures"],
-            snapshot(&Game::new(seed))["structures"]
-        );
+            .any(|spot| spot["playable"] == true));
     }
 }
 
 #[test]
-fn footprints_rotate_collide_and_remove_from_every_occupied_cell() {
-    for (rotation, width, depth) in [(0, 2, 1), (1, 1, 2), (2, 2, 1), (3, 1, 2)] {
-        let mut game = empty(7);
-        let p = preview(&game, "tienda", 4, 10, rotation);
-        assert_eq!(p["width"], width);
-        assert_eq!(p["depth"], depth);
-        assert_eq!(p["valid"], true);
-        place(&mut game, "tienda", 4, 10, rotation);
-        for z in 10..10 + depth {
-            for x in 4..4 + width {
-                assert_eq!(preview(&game, "casa", x, z, 0)["valid"], false);
-            }
-        }
-        let removed = command(
-            &mut game,
-            json!({"type":"remove","x":4+width-1,"z":10+depth-1}),
-        );
-        assert_eq!(removed["ok"], true);
-        assert!(snapshot(&game)["structures"].as_array().unwrap().is_empty());
-        assert_eq!(preview(&game, "tienda", 4, 10, rotation)["valid"], true);
-    }
-    let mut game = empty(0);
-    place(&mut game, "terraza", 4, 10, 0);
-    assert_eq!(preview(&game, "torre", 5, 11, 0)["valid"], false);
-    assert_eq!(preview(&game, "tienda", 31, 10, 0)["valid"], false);
-    assert_eq!(preview(&game, "tienda", 31, 10, 1)["valid"], true);
-    assert_eq!(preview(&game, "esquina", 31, 10, 1)["valid"], false);
+fn the_same_seed_replays_the_same_run() {
+    let mut a = Game::new(31);
+    let mut b = Game::new(31);
+    assert_eq!(a.snapshot(), b.snapshot());
+    command(&mut a, json!({"type": "autoplay", "count": 12}));
+    command(&mut b, json!({"type": "autoplay", "count": 12}));
+    assert_eq!(a.snapshot(), b.snapshot());
+    assert_ne!(Game::new(31).snapshot(), Game::new(32).snapshot());
 }
 
 #[test]
-fn buildings_reject_slopes_and_previews_reject_invalid_numeric_input() {
-    let mut game = empty(11);
-    let state = snapshot(&game);
-    let (x, z) = stairs_location(&state);
-    let p = preview(&game, "terraza", x, z - 1, 0);
-    assert_eq!(p["valid"], false);
-    assert!(p["reason"].as_str().unwrap().contains("flat"));
-    for (x, z, r) in [
-        (-1.0, 0.0, 0.0),
-        (0.5, 0.0, 0.0),
-        (0.0, f64::NAN, 0.0),
-        (0.0, 0.0, 0.5),
-        (0.0, 0.0, 4.0),
-        (f64::INFINITY, 0.0, 0.0),
-        (f64::from(u32::MAX), 0.0, 0.0),
-    ] {
-        let p: Value = serde_json::from_str(&game.preview("casa", x, z, r)).unwrap();
-        assert_eq!(p["valid"], false);
-    }
+fn placing_awards_the_previewed_points_and_advances_the_deck() {
+    let mut game = Game::new(5);
+    let before = snapshot(&game);
+    let spot = valid_move(&game);
+    let expected = preview(&game, spot.0, spot.1, spot.2);
+    let result = place(&mut game, spot);
+    assert_eq!(result["ok"], true, "{}", result["message"]);
+    let after = &result["snapshot"];
+    assert_eq!(after["score"], expected["points"]["total"]);
+    assert_eq!(after["remaining"], 29);
+    assert_eq!(after["current"], before["upcoming"][0]);
+    assert_eq!(after["last"]["points"], expected["points"]);
+    assert!(result["message"].as_str().unwrap().starts_with('+'));
+}
+
+#[test]
+fn invalid_placements_explain_the_rule_and_change_nothing() {
+    let mut game = Game::new(8);
     let before = game.snapshot();
-    for action in [
-        json!({"type":"place","kind":"casa","x":-1,"z":0,"rotation":0}),
-        json!({"type":"place","kind":"casa","x":0.5,"z":0,"rotation":0}),
-        json!({"type":"place","kind":"unknown","x":0,"z":0,"rotation":0}),
-        json!({"type":"place","kind":"casa","x":4294967295_u32,"z":0,"rotation":0}),
-        json!({"type":"place","kind":"casa","x":0,"z":0,"rotation":4}),
-        json!({"type":"remove","x":4294967295_u32,"z":0}),
-        json!({"type":"fly"}),
-        json!({"type":"undo","extra":true}),
+    for (q, r, rotation, words) in [
+        (0, 0, 0, "already"),
+        (5, 5, 0, "touch"),
+        (1, 0, 6, "Rotation"),
     ] {
-        assert_eq!(command(&mut game, action)["ok"], false);
-        assert_eq!(game.snapshot(), before);
-    }
-}
-
-#[test]
-fn stairs_face_one_step_uphill_and_connect_path_networks_across_elevations() {
-    let mut game = empty(5);
-    let state = snapshot(&game);
-    let (x, z) = stairs_location(&state);
-    for rotation in 0..4 {
-        assert_eq!(
-            preview(&game, "stairs", x, z, rotation)["valid"],
-            rotation == 2
+        let result = place(&mut game, (q, r, rotation));
+        assert_eq!(result["ok"], false);
+        assert!(
+            result["message"].as_str().unwrap().contains(words),
+            "{}",
+            result["message"]
         );
-    }
-    assert_eq!(preview(&game, "stairs", x, 10, 0)["valid"], false);
-    place(&mut game, "path", x, z + 1, 0);
-    place(&mut game, "casa", x, z + 2, 0);
-    place(&mut game, "path", x, z - 1, 0);
-    place(&mut game, "casa", x, z - 2, 0);
-    assert_eq!(snapshot(&game)["connected"], 1);
-    place(&mut game, "path", x, z, 0);
-    assert_eq!(snapshot(&game)["connected"], 1);
-    command(&mut game, json!({"type":"remove","x":x,"z":z}));
-    place(&mut game, "stairs", x, z, 2);
-    assert_eq!(snapshot(&game)["connected"], 2);
-    command(&mut game, json!({"type":"remove","x":x,"z":z-1}));
-    assert_eq!(snapshot(&game)["connected"], 1);
-    command(&mut game, json!({"type":"undo"}));
-    assert_eq!(snapshot(&game)["connected"], 2);
-}
-
-#[test]
-fn connectivity_counts_each_multicell_building_once_and_excludes_props() {
-    let mut game = empty(0);
-    place(&mut game, "terraza", 4, 10, 0);
-    place(&mut game, "path", 4, 12, 0);
-    place(&mut game, "path", 5, 12, 0);
-    place(&mut game, "bench", 6, 12, 0);
-    assert_eq!(snapshot(&game)["connected"], 1);
-}
-
-#[test]
-fn save_load_roundtrip_is_versioned_and_atomic() {
-    let mut game = Game::new(888);
-    let serialized = game.save();
-    let original = snapshot(&game);
-    let result: Value = serde_json::from_str(&game.load(&serialized)).unwrap();
-    assert_eq!(result["ok"], true);
-    assert_eq!(game.save(), serialized);
-    assert_eq!(snapshot(&game)["structures"], original["structures"]);
-    assert_eq!(snapshot(&game)["cells"], original["cells"]);
-    assert_eq!(snapshot(&game)["connected"], original["connected"]);
-    assert_eq!(snapshot(&game)["revision"], 1);
-    assert_eq!(save(&game)["version"], 1);
-    assert_eq!(save(&game)["terrainId"], "hillside-v2");
-    let mut other = Game::new(33);
-    assert_eq!(load(&mut other, &save(&game))["ok"], true);
-    assert_eq!(
-        snapshot(&other)["structures"],
-        snapshot(&game)["structures"]
-    );
-    assert_eq!(snapshot(&other)["cells"], snapshot(&game)["cells"]);
-}
-
-#[test]
-fn legacy_banded_saves_keep_their_original_terrain() {
-    let mut legacy = Game::new(7);
-    assert_eq!(load(&mut legacy, &empty_save(7))["ok"], true);
-    assert_eq!(save(&legacy)["terrainId"], "hillside-v1");
-    let state = snapshot(&legacy);
-    for z in 0..32 {
-        for x in 0..32 {
-            assert_eq!(height(&state, x, z), height(&state, x - x % 8, z));
-        }
-    }
-    assert_ne!(state["cells"], snapshot(&Game::new(7))["cells"]);
-    command(&mut legacy, json!({"type":"reset","seed":7}));
-    assert_eq!(save(&legacy)["terrainId"], "hillside-v2");
-}
-
-#[test]
-fn unsupported_or_missing_terrain_is_rejected_atomically() {
-    let mut game = Game::new(2026);
-    command(&mut game, json!({"type":"benchmark"}));
-    command(&mut game, json!({"type":"undo"}));
-    let before_snapshot = game.snapshot();
-    let before_save = save(&game);
-    let mut unsupported = before_save.clone();
-    unsupported["terrainId"] = json!("hillside-v9");
-    let result = load(&mut game, &unsupported);
-    assert_eq!(result["ok"], false);
-    assert!(result["message"]
-        .as_str()
-        .unwrap()
-        .contains("unsupported terrain"));
-    assert_eq!(game.snapshot(), before_snapshot);
-    assert_eq!(save(&game), before_save);
-    let mut missing = before_save.clone();
-    missing.as_object_mut().unwrap().remove("terrainId");
-    assert_eq!(load(&mut game, &missing)["ok"], false);
-    assert_eq!(game.snapshot(), before_snapshot);
-    assert_eq!(save(&game), before_save);
-    assert_eq!(snapshot(&game)["canRedo"], true);
-}
-
-#[test]
-fn malformed_saves_never_change_world_history_allocator_or_revision() {
-    let mut game = Game::new(18);
-    place(&mut game, "casa", 4, 10, 0);
-    assert_eq!(command(&mut game, json!({"type":"undo"}))["ok"], true);
-    let valid = save(&game);
-    let before = game.snapshot();
-    let mut cases = Vec::new();
-    for (key, value) in [
-        ("version", json!(2)),
-        ("width", json!(31)),
-        ("depth", json!(64)),
-        ("nextId", json!(0)),
-        ("nextId", json!(-1)),
-        ("nextId", json!(0.5)),
-        ("nextId", json!(4294967296_u64)),
-        ("seed", json!(-1)),
-        ("seed", json!(0.5)),
-        ("seed", json!(4294967296_u64)),
-        ("cells", json!([])),
-    ] {
-        let mut bad = valid.clone();
-        bad[key] = value;
-        cases.push(bad);
-    }
-    for (key, value) in [
-        ("id", json!(0)),
-        ("id", valid["nextId"].clone()),
-        ("kind", json!("unknown")),
-        ("x", json!(32)),
-        ("x", json!(4294967295_u32)),
-        ("z", json!(-1)),
-        ("rotation", json!(4)),
-        ("variation", json!(16)),
-        ("height", json!(999)),
-    ] {
-        let mut bad = valid.clone();
-        bad["structures"][0][key] = value;
-        cases.push(bad);
-    }
-    let mut duplicate = valid.clone();
-    let item = duplicate["structures"][0].clone();
-    duplicate["structures"]
-        .as_array_mut()
-        .unwrap()
-        .push(item.clone());
-    cases.push(duplicate);
-    let mut overlap = valid.clone();
-    let mut item2 = item.clone();
-    item2["id"] = json!(100_000);
-    overlap["nextId"] = json!(100_001);
-    overlap["structures"].as_array_mut().unwrap().push(item2);
-    cases.push(overlap);
-    let mut crowded = valid.clone();
-    crowded["structures"] = json!(vec![item; 1025]);
-    cases.push(crowded);
-    for (id, next_id) in [(u32::MAX, u32::MAX), (u32::MAX - 1, u32::MAX - 1)] {
-        let mut bad = valid.clone();
-        bad["structures"][0]["id"] = json!(id);
-        bad["nextId"] = json!(next_id);
-        cases.push(bad);
-    }
-    for bad in cases {
-        assert_eq!(load(&mut game, &bad)["ok"], false, "accepted {bad}");
-        assert_eq!(game.snapshot(), before);
-        assert_eq!(save(&game), valid);
     }
     for bad in [
-        "".to_string(),
-        "{".to_string(),
-        "null".to_string(),
-        "[]".to_string(),
-        " ".repeat(256 * 1024 + 1),
+        json!({"type": "place", "q": 1.5, "r": 0, "rotation": 0}),
+        json!({"type": "undo"}),
+        json!({"type": "teleport"}),
     ] {
-        let result: Value = serde_json::from_str(&game.load(&bad)).unwrap();
-        assert_eq!(result["ok"], false);
-        assert_eq!(game.snapshot(), before);
+        assert_eq!(command(&mut game, bad)["ok"], false);
     }
-}
-
-#[test]
-fn undo_redo_restore_exact_placements_and_new_edits_clear_redo() {
-    let mut game = empty(77);
-    let first = place(&mut game, "tienda", 4, 10, 0)["snapshot"]["structures"].clone();
-    let first_id = first[0]["id"].as_u64().unwrap();
-    command(&mut game, json!({"type":"remove","x":5,"z":10}));
-    assert!(snapshot(&game)["structures"].as_array().unwrap().is_empty());
-    command(&mut game, json!({"type":"undo"}));
-    assert_eq!(snapshot(&game)["structures"], first);
-    assert_eq!(snapshot(&game)["canRedo"], true);
-    command(&mut game, json!({"type":"redo"}));
-    assert!(snapshot(&game)["structures"].as_array().unwrap().is_empty());
-    command(&mut game, json!({"type":"undo"}));
-    command(&mut game, json!({"type":"undo"}));
-    place(&mut game, "casa", 4, 10, 0);
-    assert!(snapshot(&game)["structures"][0]["id"].as_u64().unwrap() > first_id);
-    assert_eq!(snapshot(&game)["canRedo"], false);
-    assert_eq!(command(&mut game, json!({"type":"redo"}))["ok"], false);
-}
-
-#[test]
-fn reset_and_load_are_undoable_and_reset_regenerates_seeded_terrain() {
-    let mut game = Game::new(17);
-    let before = snapshot(&game);
-    assert_eq!(
-        command(&mut game, json!({"type":"reset","seed":123}))["ok"],
-        true
-    );
-    assert_eq!(snapshot(&game)["cells"], snapshot(&Game::new(123))["cells"]);
-    assert_eq!(snapshot(&game)["seed"], 123);
-    assert_ne!(snapshot(&game)["structures"], before["structures"]);
-    command(&mut game, json!({"type":"undo"}));
-    assert_eq!(snapshot(&game)["structures"], before["structures"]);
-    assert_eq!(snapshot(&game)["cells"], before["cells"]);
-    assert_eq!(load(&mut game, &empty_save(999))["ok"], true);
-    assert!(snapshot(&game)["structures"].as_array().unwrap().is_empty());
-    command(&mut game, json!({"type":"undo"}));
-    assert_eq!(snapshot(&game)["structures"], before["structures"]);
-    assert_eq!(snapshot(&game)["seed"], 17);
-}
-
-#[test]
-fn history_is_bounded_and_failed_edits_preserve_redo() {
-    let mut game = empty(2);
-    for _ in 0..40 {
-        place(&mut game, "casa", 4, 10, 0);
-        command(&mut game, json!({"type":"remove","x":4,"z":10}));
-    }
-    let mut count = 0;
-    while snapshot(&game)["canUndo"] == true {
-        assert_eq!(command(&mut game, json!({"type":"undo"}))["ok"], true);
-        count += 1;
-    }
-    assert_eq!(count, 64);
-    let before = game.snapshot();
-    assert_eq!(
-        command(&mut game, json!({"type":"remove","x":31,"z":31}))["ok"],
-        false
-    );
     assert_eq!(game.snapshot(), before);
-    assert_eq!(snapshot(&game)["canRedo"], true);
 }
 
 #[test]
-fn benchmark_generates_over_500_valid_deterministic_structures_and_can_be_undone() {
-    let mut game = Game::new(2026);
-    let before = snapshot(&game)["structures"].clone();
-    let result = command(&mut game, json!({"type":"benchmark"}));
-    assert_eq!(result["ok"], true);
-    let state = snapshot(&game);
-    let structures = state["structures"].as_array().unwrap();
-    assert!(structures.len() >= 1000);
-    let houses = structures
-        .iter()
-        .filter(|s| s["kind"] == "casa" || s["kind"] == "torre")
-        .count();
-    assert!(houses >= 500, "only {houses} buildings");
-    let mut other = Game::new(2026);
-    command(&mut other, json!({"type":"benchmark"}));
-    assert_eq!(snapshot(&other)["structures"], state["structures"]);
-    assert_eq!(load(&mut other, &save(&game))["ok"], true);
-    assert_eq!(snapshot(&other)["structures"], state["structures"]);
-    assert!(game.save().len() < 256 * 1024);
-    command(&mut game, json!({"type":"undo"}));
-    assert_eq!(snapshot(&game)["structures"], before);
-    command(&mut game, json!({"type":"redo"}));
-    assert_eq!(snapshot(&game)["structures"], state["structures"]);
-}
-
-#[test]
-fn imported_allocator_cannot_poison_edits_after_load_undo_or_clean_load() {
-    for next_id in [u32::MAX, u32::MAX - 1, u32::MAX - 1023, u32::MAX - 1024] {
-        for recovery in ["direct", "undo", "clean load"] {
-            for action in [
-                json!({"type":"place","kind":"casa","x":4,"z":10,"rotation":0}),
-                json!({"type":"reset","seed":4}),
-                json!({"type":"benchmark"}),
-            ] {
-                let mut game = Game::new(1);
-                let clean = save(&game);
-                let mut file = clean.clone();
-                file["nextId"] = json!(next_id);
-                assert_eq!(load(&mut game, &file)["ok"], true);
-                match recovery {
-                    "undo" => assert_eq!(command(&mut game, json!({"type":"undo"}))["ok"], true),
-                    "clean load" => assert_eq!(load(&mut game, &clean)["ok"], true),
-                    _ => {}
-                }
-                assert_eq!(snapshot(&game)["structures"], clean["structures"]);
-                let result = command(&mut game, action.clone());
-                assert_eq!(
-                    result["ok"], true,
-                    "{next_id}, {recovery}, {action}: {}",
-                    result["message"]
-                );
-                let structures = result["snapshot"]["structures"].as_array().unwrap();
-                let ids: HashSet<_> = structures
-                    .iter()
-                    .map(|item| item["id"].as_u64().unwrap())
-                    .collect();
-                assert_eq!(ids.len(), structures.len());
-                if action["type"] != "place" {
-                    for item in clean["structures"].as_array().unwrap() {
-                        assert!(!ids.contains(&item["id"].as_u64().unwrap()));
-                    }
-                }
-                let mut clone = Game::new(9);
-                assert_eq!(load(&mut clone, &save(&game))["ok"], true);
-                assert_eq!(
-                    snapshot(&clone)["structures"],
-                    snapshot(&game)["structures"]
-                );
-            }
-        }
+fn preview_reports_sides_points_paths_and_valid_rotations() {
+    let game = Game::new(12);
+    let spot = valid_move(&game);
+    let result = preview(&game, spot.0, spot.1, spot.2);
+    assert_eq!(result["sides"].as_array().unwrap().len(), 6);
+    assert!(result["validRotations"]
+        .as_array()
+        .unwrap()
+        .contains(&json!(spot.2)));
+    for key in [
+        "base",
+        "matches",
+        "matchPoints",
+        "perfect",
+        "perfectBonus",
+        "total",
+    ] {
+        assert!(result["points"].get(key).is_some());
     }
+    for key in ["joined", "open", "ended", "steep", "stairs", "homesGained"] {
+        assert!(result["paths"].get(key).is_some());
+    }
+    let odd = parse(game.preview(f64::NAN, 0.0, 0.0));
+    assert_eq!(odd["valid"], false);
+    let far = parse(game.preview(2_147_483_647.0, -2_147_483_648.0, 0.0));
+    assert_eq!(far["valid"], false);
 }
 
 #[test]
-fn allocator_wrap_preserves_boundary_ids_and_reserves_undo_and_redo_structures() {
-    let mut game = empty(1);
-    let starter_ids: HashSet<_> = snapshot(&Game::new(1))["structures"]
+fn the_skip_moves_one_tile_back_once() {
+    let mut game = Game::new(3);
+    let before = snapshot(&game);
+    let result = command(&mut game, json!({"type": "skip"}));
+    assert_eq!(result["ok"], true);
+    let after = &result["snapshot"];
+    assert_eq!(after["current"], before["upcoming"][0]);
+    assert_eq!(after["remaining"], 30);
+    assert_eq!(after["score"], 0);
+    assert_eq!(after["canSkip"], false);
+    assert_eq!(command(&mut game, json!({"type": "skip"}))["ok"], false);
+}
+
+#[test]
+fn a_run_finishes_when_the_deck_is_empty_and_refuses_more_tiles() {
+    let mut game = Game::new(2026);
+    let result = command(&mut game, json!({"type": "autoplay", "count": 400}));
+    assert_eq!(result["ok"], true);
+    let state = &result["snapshot"];
+    assert_eq!(state["finished"], true);
+    assert_eq!(state["remaining"], 0);
+    assert!(state["current"].is_null());
+    assert_eq!(state["end"], "deckEmpty");
+    let placements = state["placements"].as_u64().unwrap();
+    assert_eq!(
+        state["tiles"].as_array().unwrap().len() as u64,
+        placements + 1
+    );
+    // Every placement used a starting or reward tile, and every reward came from a completed quest.
+    let earned: u64 = state["quests"]["history"]
         .as_array()
         .unwrap()
         .iter()
-        .map(|item| item["id"].as_u64().unwrap())
-        .collect();
-    let mut file = empty_save(1);
-    file["nextId"] = json!(u32::MAX - 1);
-    file["structures"] = json!([
-        {"id":u32::MAX-2,"kind":"torre","x":6,"z":10,"rotation":0,"variation":3}
-    ]);
-    assert_eq!(load(&mut game, &file)["ok"], true);
-    let first = place(&mut game, "casa", 4, 10, 0)["snapshot"]["structures"].clone();
-    assert_eq!(first[1]["id"], u32::MAX - 1);
-    let wrapped = place(&mut game, "bench", 5, 10, 0)["snapshot"]["structures"].clone();
-    let wrapped_id = wrapped[2]["id"].as_u64().unwrap();
-    assert!(!starter_ids.contains(&wrapped_id));
-    assert!(wrapped_id < u64::from(u32::MAX - 2));
-    let mut clone = Game::new(99);
-    assert_eq!(load(&mut clone, &save(&game))["ok"], true);
-    assert_eq!(snapshot(&clone)["structures"], wrapped);
-    assert_eq!(command(&mut game, json!({"type":"undo"}))["ok"], true);
-    assert_eq!(snapshot(&game)["structures"], first);
-    assert_eq!(command(&mut game, json!({"type":"redo"}))["ok"], true);
-    assert_eq!(snapshot(&game)["structures"], wrapped);
-    assert_eq!(command(&mut game, json!({"type":"undo"}))["ok"], true);
-    let mut high_cursor = save(&game);
-    high_cursor["nextId"] = json!(u32::MAX);
-    high_cursor["structures"]
-        .as_array_mut()
+        .map(|quest| quest["tiles"].as_u64().unwrap())
+        .sum();
+    assert_eq!(
+        placements,
+        30 + earned - state["discarded"].as_u64().unwrap()
+    );
+    assert_eq!(state["rewards"].as_u64().unwrap(), earned);
+    let more = command(&mut game, json!({"type": "autoplay", "count": 1}));
+    assert_eq!(more["ok"], false);
+    assert_eq!(place(&mut game, (40, 0, 0))["ok"], false);
+}
+
+#[test]
+fn saves_replay_to_the_identical_state() {
+    let mut game = Game::new(77);
+    command(&mut game, json!({"type": "skip"}));
+    command(&mut game, json!({"type": "autoplay", "count": 17}));
+    let save = game.save();
+    let saved: Value = serde_json::from_str(&save).unwrap();
+    assert_eq!(saved["version"], 3);
+    assert_eq!(saved["actions"].as_array().unwrap().len(), 18);
+    let mut other = Game::new(1);
+    let loaded = parse(other.load(&save));
+    assert_eq!(loaded["ok"], true, "{}", loaded["message"]);
+    let strip = |mut state: Value| {
+        state.as_object_mut().unwrap().remove("revision");
+        state
+    };
+    assert_eq!(strip(snapshot(&other)), strip(snapshot(&game)));
+    assert_eq!(other.save(), save);
+}
+
+#[test]
+fn older_and_damaged_saves_are_refused_without_changing_the_run() {
+    let mut game = Game::new(4);
+    command(&mut game, json!({"type": "autoplay", "count": 3}));
+    let before = game.snapshot();
+    let square = json!({"version": 1, "seed": 1}).to_string();
+    let free =
+        json!({"version": 2, "generator": "hex-hillside-v1", "seed": 1, "draws": 0, "tiles": []})
+            .to_string();
+    assert!(parse(game.load(&square))["message"]
+        .as_str()
         .unwrap()
-        .push(wrapped[2].clone());
-    assert_eq!(load(&mut game, &high_cursor)["ok"], true);
-    assert_eq!(command(&mut game, json!({"type":"undo"}))["ok"], true);
-    assert_eq!(snapshot(&game)["structures"], first);
-    assert_eq!(snapshot(&game)["canRedo"], true);
-    let after = place(&mut game, "tree", 5, 10, 0)["snapshot"]["structures"].clone();
-    let new_id = after[2]["id"].as_u64().unwrap();
-    assert!(!starter_ids.contains(&new_id));
-    assert_ne!(new_id, wrapped_id);
-    assert_eq!(after[0], first[0]);
-    assert_eq!(after[1], first[1]);
-    assert_eq!(snapshot(&game)["canRedo"], false);
+        .contains("square"));
+    assert!(parse(game.load(&free))["message"]
+        .as_str()
+        .unwrap()
+        .contains("free-building"));
+    let other_rules =
+        json!({"version": 3, "rules": "classic-0", "seed": 4, "actions": []}).to_string();
+    assert!(parse(game.load(&other_rules))["message"]
+        .as_str()
+        .unwrap()
+        .contains("different rules"));
+    let illegal = json!({"version": 3, "rules": "classic-2", "seed": 4, "actions": [{"type": "place", "q": 9, "r": 9, "rotation": 0}]}).to_string();
+    assert!(parse(game.load(&illegal))["message"]
+        .as_str()
+        .unwrap()
+        .contains("move 1"));
+    let two_skips = json!({"version": 3, "rules": "classic-2", "seed": 4, "actions": [{"type": "skip"}, {"type": "skip"}]}).to_string();
+    assert_eq!(parse(game.load(&two_skips))["ok"], false);
+    for broken in ["", "{", "null", "[]", &"x".repeat(300_000)] {
+        assert_eq!(parse(game.load(broken))["ok"], false);
+    }
+    assert_eq!(game.snapshot(), before);
+}
+
+#[test]
+fn previews_list_the_quests_a_placement_would_complete() {
+    // Find a placement that completes a quest, check the preview names it, then place it.
+    for seed in 0..40 {
+        let mut game = Game::new(seed);
+        for _ in 0..30 {
+            let state = snapshot(&game);
+            if state["finished"] == true {
+                break;
+            }
+            for spot in state["frontier"].as_array().unwrap() {
+                let (q, r) = (spot["q"].as_i64().unwrap(), spot["r"].as_i64().unwrap());
+                for rotation in 0..6 {
+                    let preview = preview(&game, q, r, rotation);
+                    let completes = preview["completes"].as_array().unwrap().clone();
+                    if preview["valid"] != true || completes.is_empty() {
+                        continue;
+                    }
+                    let score = state["score"].as_u64().unwrap();
+                    let result = place(&mut game, (q, r, rotation));
+                    let last = &result["snapshot"]["last"];
+                    let completed: Vec<_> = last["completed"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .map(|done| done["quest"]["id"].clone())
+                        .collect();
+                    let expected: Vec<_> =
+                        completes.iter().map(|quest| quest["id"].clone()).collect();
+                    assert_eq!(completed, expected);
+                    let bonus: u64 = completes
+                        .iter()
+                        .map(|quest| quest["points"].as_u64().unwrap())
+                        .sum();
+                    assert_eq!(
+                        result["snapshot"]["score"].as_u64().unwrap(),
+                        score + preview["points"]["total"].as_u64().unwrap() + bonus
+                    );
+                    assert!(result["message"]
+                        .as_str()
+                        .unwrap()
+                        .contains("Quest complete"));
+                    return;
+                }
+            }
+            command(&mut game, json!({"type": "autoplay", "count": 1}));
+        }
+    }
+    panic!("no seed offered a quest-completing placement");
+}
+
+#[test]
+fn a_finished_run_previews_as_over_and_never_aborts() {
+    // Play with the planner until victory, finish, then preview every open spot.
+    for seed in 0..20 {
+        let mut game = Game::new(seed);
+        loop {
+            let state = command(
+                &mut game,
+                json!({"type": "autoplay", "count": 1, "policy": "planner"}),
+            );
+            if state["snapshot"]["victory"] == true || state["ok"] == false {
+                break;
+            }
+        }
+        if snapshot(&game)["victory"] != true {
+            continue;
+        }
+        assert_eq!(command(&mut game, json!({"type": "finish"}))["ok"], true);
+        let state = snapshot(&game);
+        assert_eq!(state["end"], "finished");
+        for spot in state["frontier"].as_array().unwrap() {
+            for rotation in 0..6 {
+                let result = preview(
+                    &game,
+                    spot["q"].as_i64().unwrap(),
+                    spot["r"].as_i64().unwrap(),
+                    rotation,
+                );
+                assert_eq!(result["valid"], false);
+                assert!(result["reason"].as_str().unwrap().contains("over"));
+            }
+        }
+        assert_eq!(
+            command(&mut game, json!({"type": "newGame", "seed": 1}))["ok"],
+            true
+        );
+        return;
+    }
+    panic!("no seed reached victory with the planner");
+}
+
+#[test]
+fn finishing_early_needs_victory() {
+    let mut game = Game::new(6);
+    let refused = command(&mut game, json!({"type": "finish"}));
+    assert_eq!(refused["ok"], false);
+    assert!(refused["message"].as_str().unwrap().contains("6000"));
+    assert_eq!(refused["snapshot"]["finished"], false);
+}
+
+#[test]
+fn every_region_appears_across_seeds() {
+    let regions: HashSet<String> = (0..60)
+        .map(|seed| {
+            snapshot(&Game::new(seed))["region"]
+                .as_str()
+                .unwrap()
+                .to_owned()
+        })
+        .collect();
+    assert_eq!(
+        regions,
+        HashSet::from(["medellin", "salento", "cartagena", "bogota"].map(String::from))
+    );
 }

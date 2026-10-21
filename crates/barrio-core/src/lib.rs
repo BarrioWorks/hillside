@@ -1,90 +1,208 @@
-mod catalog;
+mod board;
+mod deck;
+mod hex;
+mod network;
+pub mod play;
+mod quest;
+mod region;
+mod rng;
+mod run;
+mod score;
 mod terrain;
-mod world;
-
-use std::collections::HashSet;
+mod tile;
 
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
-use catalog::CATALOG;
-use terrain::{Generator, CELL_COUNT, DEPTH, WIDTH};
-use world::{Preview, Structure, World};
+pub use board::{Board, Placed, Placement, Stats};
+pub use hex::{Hex, DIRECTIONS};
+pub use play::Policy;
+pub use quest::{Quest, QuestFamily, QuestState, Tier};
+pub use region::{Region, REGIONS};
+pub use rng::Rng;
+pub use run::{Action, End, Run, MILESTONES, VICTORY};
+pub use tile::{meet, Edge, Family, Kind, Meet, TileSpec, EDGES, KINDS};
 
-const SAVE_VERSION: u32 = 1;
+use hex::SIDES;
+use tile::entrances;
+
+const SAVE_VERSION: u32 = 3;
+/// The rules a save or high score was made under. Change it whenever scoring or generation changes.
+pub const RULES: &str = "classic-2";
 const MAX_SAVE_BYTES: usize = 256 * 1024;
 const MAX_COMMAND_BYTES: usize = 4096;
-const HISTORY_LIMIT: usize = 64;
+/// More actions than any run can take: the deck never holds more than the cap, and rewards are finite.
+const MAX_ACTIONS: usize = 1000;
+const MAX_AUTOPLAY: u32 = 400;
+/// Tiles shown after the current one.
+const UPCOMING: usize = 2;
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-struct Cell {
-    x: u32,
-    z: u32,
-    height: u32,
+struct TileView {
+    q: i32,
+    r: i32,
+    kind: Kind,
+    family: Family,
+    /// Edges as placed, already rotated, indexed by direction.
+    edges: [Edge; SIDES],
+    /// Path group per side, rotated; zero where there is no path.
+    paths: [u8; SIDES],
+    /// The path group each home's entrance opens onto, per side, rotated.
+    entrances: [Option<u8>; SIDES],
+    /// Network id per side for path, nature and water edges.
+    networks: [Option<u32>; SIDES],
+    /// How each side meets its neighbor now; the renderer draws joins, stairs and path ends from this.
+    meets: [Meet; SIDES],
+    rotation: u32,
+    variation: u32,
+    elevation: u32,
 }
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-struct Snapshot<'a> {
+struct Spot {
+    q: i32,
+    r: i32,
+    elevation: u32,
+    /// Whether the current tile fits here in some rotation.
+    playable: bool,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct HandTile {
+    kind: Kind,
+    family: Family,
+    edges: [Edge; SIDES],
+    paths: [u8; SIDES],
+    entrances: [Option<u8>; SIDES],
+}
+
+impl From<&TileSpec> for HandTile {
+    fn from(spec: &TileSpec) -> Self {
+        Self {
+            kind: spec.kind,
+            family: spec.kind.family(),
+            edges: spec.edges,
+            paths: spec.paths,
+            entrances: spec.entrances(),
+        }
+    }
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct MilestoneView {
+    name: &'static str,
+    score: u32,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct QuestsView {
+    /// Up to three quests still on the ladder: active, or set aside while out of reach.
+    current: Vec<Quest>,
+    /// Completed quests in order.
+    history: Vec<Quest>,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct Snapshot {
+    rules: &'static str,
     seed: u32,
-    width: u32,
-    depth: u32,
-    cells: Vec<Cell>,
-    structures: &'a [Structure],
-    can_undo: bool,
-    can_redo: bool,
-    connected: usize,
+    region: Region,
+    region_name: &'static str,
+    tiles: Vec<TileView>,
+    frontier: Vec<Spot>,
+    current: Option<HandTile>,
+    upcoming: Vec<HandTile>,
+    remaining: u32,
+    can_skip: bool,
+    skip_used: bool,
+    score: u32,
+    placements: u32,
+    finished: bool,
+    end: Option<End>,
+    /// The highest milestone reached and the next one to reach.
+    milestone: Option<&'static str>,
+    next_milestone: Option<MilestoneView>,
+    victory: bool,
+    victory_at: Option<u32>,
+    quests: QuestsView,
+    /// Reward tiles earned so far, and how many the deck cap discarded.
+    rewards: u32,
+    discarded: u32,
+    cap: u32,
+    recoveries: u32,
+    /// What the safety rule did after the last action: `swapped` or `replaced`.
+    recovery: Option<run::Recovery>,
+    last: Option<run::Outcome>,
+    stats: Stats,
     revision: u32,
 }
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-struct CommandResult<'a> {
+struct CommandResult {
     ok: bool,
     message: String,
-    snapshot: Snapshot<'a>,
+    snapshot: Snapshot,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct PreviewResult {
+    #[serde(flatten)]
+    placement: Placement,
+    /// Rotations of the current tile that are valid at this spot.
+    valid_rotations: Vec<u32>,
+    /// The visual variation the tile would get here, so the preview matches the placed tile.
+    variation: u32,
+    /// Quests this placement would complete, found by applying it to a copy of the run.
+    completes: Vec<Quest>,
 }
 
 #[derive(Deserialize)]
 #[serde(tag = "type", rename_all = "camelCase", deny_unknown_fields)]
 enum Command {
     Place {
-        kind: String,
-        x: u32,
-        z: u32,
+        q: i32,
+        r: i32,
         rotation: u32,
     },
-    Remove {
-        x: u32,
-        z: u32,
-    },
-    Undo {},
-    Redo {},
-    Reset {
+    Skip {},
+    /// Ends a victorious run early.
+    Finish {},
+    NewGame {
         seed: u32,
     },
-    Benchmark {},
+    /// Places up to `count` tiles with a computer player (greedy unless `policy` names another); used for
+    /// demonstrations, captures and benchmarks.
+    Autoplay {
+        count: u32,
+        policy: Option<String>,
+    },
 }
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 struct Save {
     version: u32,
-    terrain_id: String,
+    rules: String,
     seed: u32,
-    width: u32,
-    depth: u32,
-    next_id: u32,
-    structures: Vec<Structure>,
+    actions: Vec<Action>,
+}
+
+#[derive(Deserialize)]
+struct SaveVersion {
+    version: u32,
 }
 
 #[wasm_bindgen]
 pub struct Game {
-    world: World,
-    undo: Vec<World>,
-    redo: Vec<World>,
-    next_id: u32,
+    run: Run,
     revision: u32,
 }
 
@@ -92,12 +210,8 @@ pub struct Game {
 impl Game {
     #[wasm_bindgen(constructor)]
     pub fn new(seed: u32) -> Self {
-        let mut next_id = 1;
         Self {
-            world: World::starter(seed, &mut next_id),
-            undo: Vec::new(),
-            redo: Vec::new(),
-            next_id,
+            run: Run::new(seed),
             revision: 0,
         }
     }
@@ -106,16 +220,52 @@ impl Game {
         json(&self.snapshot_value())
     }
 
-    pub fn catalog(&self) -> String {
-        json(&CATALOG)
-    }
-
-    pub fn preview(&self, kind: &str, x: f64, z: f64, rotation: f64) -> String {
-        let result = match (whole_number(x), whole_number(z), whole_number(rotation)) {
-            (Some(x), Some(z), Some(rotation)) => self.world.preview(kind, x, z, rotation),
-            _ => Preview::invalid("Choose whole-number coordinates and a rotation from 0 to 3."),
+    /// Evaluates placing the current tile at `(q, r)` with `rotation`.
+    pub fn preview(&self, q: f64, r: f64, rotation: f64) -> String {
+        let (Some(q), Some(r), Some(rotation)) = (integer(q), integer(r), integer(rotation)) else {
+            let mut placement = self.run.preview(Hex::ORIGIN, 0);
+            placement.valid = false;
+            placement.reason = if integer(q).is_some() && integer(r).is_some() {
+                "Rotation must be a whole number from 0 to 5."
+            } else {
+                "Coordinates must be whole numbers."
+            }
+            .into();
+            return json(&PreviewResult {
+                placement,
+                valid_rotations: Vec::new(),
+                variation: 0,
+                completes: Vec::new(),
+            });
         };
-        json(&result)
+        let rotation = u32::try_from(rotation).unwrap_or(u32::MAX);
+        let hex = Hex::new(q, r);
+        let board = &self.run.board;
+        let placement = self.run.preview(hex, rotation);
+        let completes = if placement.valid {
+            // A valid preview always places; if it ever did not, report no quests rather than abort.
+            let mut trial = self.run.clone();
+            match trial.apply(Action::Place { q, r, rotation }) {
+                Ok(()) => trial
+                    .last
+                    .map(|last| last.completed.into_iter().map(|done| done.quest).collect())
+                    .unwrap_or_default(),
+                Err(_) => Vec::new(),
+            }
+        } else {
+            Vec::new()
+        };
+        json(&PreviewResult {
+            placement,
+            completes,
+            valid_rotations: match self.run.current() {
+                Some(spec) => (0..SIDES as u32)
+                    .filter(|&turn| board.evaluate_legality(spec, hex, turn))
+                    .collect(),
+                None => Vec::new(),
+            },
+            variation: run::variation(self.run.seed, hex, board.tiles.len() as u32),
+        })
     }
 
     pub fn command(&mut self, input: &str) -> String {
@@ -129,7 +279,10 @@ impl Game {
             );
         };
         match self.execute(command) {
-            Ok(message) => self.result(true, message),
+            Ok(message) => {
+                self.revision = self.revision.wrapping_add(1);
+                self.result(true, message)
+            }
             Err(message) => self.result(false, message),
         }
     }
@@ -137,53 +290,111 @@ impl Game {
     pub fn save(&self) -> String {
         json(&Save {
             version: SAVE_VERSION,
-            terrain_id: self.world.generator.id().into(),
-            seed: self.world.seed,
-            width: WIDTH,
-            depth: DEPTH,
-            next_id: self
-                .world
-                .structures
-                .iter()
-                .map(|structure| structure.id + 1)
-                .fold(self.next_id, u32::max),
-            structures: self.world.structures.clone(),
+            rules: RULES.into(),
+            seed: self.run.seed,
+            actions: self.run.actions.clone(),
         })
     }
 
+    /// Restores a saved run exactly by replaying its actions.
     pub fn load(&mut self, input: &str) -> String {
-        match validate_save(input) {
-            Ok((world, next_id)) => {
-                self.replace(world);
-                self.next_id = self.next_id.max(next_id);
-                self.result(true, "Neighborhood loaded.")
+        match replay(input) {
+            Ok(run) => {
+                self.run = run;
+                self.revision = self.revision.wrapping_add(1);
+                self.result(true, "Welcome back to your neighborhood.")
             }
             Err(message) => self.result(false, message),
         }
     }
+
+    /// Same as `load`; kept for the autosave path.
+    pub fn restore(&mut self, input: &str) -> String {
+        self.load(input)
+    }
 }
 
 impl Game {
-    fn snapshot_value(&self) -> Snapshot<'_> {
+    fn snapshot_value(&self) -> Snapshot {
+        let run = &self.run;
+        let board = &run.board;
+        let networks = board.networks();
+        let current = run.current();
         Snapshot {
-            seed: self.world.seed,
-            width: WIDTH,
-            depth: DEPTH,
-            cells: self
-                .world
-                .heights
+            rules: RULES,
+            seed: run.seed,
+            region: run.region,
+            region_name: run.region.name(),
+            tiles: board
+                .tiles
                 .iter()
                 .enumerate()
-                .map(|(index, &height)| Cell {
-                    x: index as u32 % WIDTH,
-                    z: index as u32 / WIDTH,
-                    height: u32::from(height),
+                .map(|(slot, tile)| {
+                    let spec = tile.spec();
+                    let edges = spec.rotated(tile.rotation);
+                    let paths = spec.rotated_paths(tile.rotation);
+                    TileView {
+                        q: tile.q,
+                        r: tile.r,
+                        kind: tile.kind,
+                        family: tile.kind.family(),
+                        edges,
+                        paths,
+                        entrances: entrances(&edges, &paths),
+                        networks: board
+                            .nodes(slot)
+                            .map(|node| node.map(|node| networks.network(node))),
+                        meets: board.meets(slot),
+                        rotation: tile.rotation,
+                        variation: tile.variation,
+                        elevation: board.elevation(tile.hex()),
+                    }
                 })
                 .collect(),
-            structures: &self.world.structures,
-            can_undo: !self.undo.is_empty(),
-            can_redo: !self.redo.is_empty(),
-            connected: self.world.connected(),
+            frontier: board
+                .frontier()
+                .into_iter()
+                .map(|hex| Spot {
+                    q: hex.q,
+                    r: hex.r,
+                    elevation: board.elevation(hex),
+                    playable: current.is_some_and(|spec| {
+                        (0..SIDES as u32).any(|turn| board.evaluate_legality(spec, hex, turn))
+                    }),
+                })
+                .collect(),
+            current: current.map(HandTile::from),
+            upcoming: run
+                .deck
+                .iter()
+                .skip(1)
+                .take(UPCOMING)
+                .map(HandTile::from)
+                .collect(),
+            remaining: run.deck.len() as u32,
+            can_skip: run.can_skip(),
+            skip_used: run.skip_used,
+            score: run.score,
+            placements: run.placements,
+            finished: run.finished(),
+            end: run.end,
+            milestone: run.milestone(),
+            next_milestone: MILESTONES
+                .get(run.milestones)
+                .map(|&(score, name)| MilestoneView { name, score }),
+            victory: run.victory_at.is_some(),
+            victory_at: run.victory_at,
+            quests: QuestsView {
+                current: run.quests.current.clone(),
+                history: run.quests.history.clone(),
+            },
+            rewards: run.rewards,
+            discarded: run.discarded,
+            cap: deck::CAP,
+            recoveries: run.recoveries,
+            recovery: run.recovery,
+            last: run.last.clone(),
+            stats: board.stats(),
             revision: self.revision,
         }
     }
@@ -196,155 +407,152 @@ impl Game {
         })
     }
 
-    fn replace(&mut self, world: World) {
-        let previous = std::mem::replace(&mut self.world, world);
-        push_history(&mut self.undo, previous);
-        self.redo.clear();
-        self.revision = self.revision.wrapping_add(1);
-    }
-
-    fn allocation_start(&self, count: u32) -> u32 {
-        let mut ids: Vec<_> = std::iter::once(&self.world)
-            .chain(&self.undo)
-            .chain(&self.redo)
-            .flat_map(|world| world.structures.iter().map(|structure| structure.id))
-            .collect();
-        ids.sort_unstable();
-        let find_range = |mut start: u32| {
-            for &id in &ids {
-                if id < start {
-                    continue;
-                }
-                if id - start >= count {
-                    break;
-                }
-                start = id + 1;
-            }
-            start.checked_add(count).map(|_| start)
-        };
-        find_range(self.next_id)
-            .or_else(|| find_range(1))
-            // Bounded history and board size leave room for a full board of fresh IDs.
-            .expect("bounded worlds cannot exhaust u32 placement identifiers")
-    }
-
-    fn execute(&mut self, command: Command) -> Result<&'static str, String> {
+    fn execute(&mut self, command: Command) -> Result<String, String> {
         match command {
-            Command::Place {
-                kind,
-                x,
-                z,
-                rotation,
-            } => {
-                let preview = self.world.preview(&kind, x, z, rotation);
-                if !preview.valid {
-                    return Err(preview.reason);
+            Command::Place { q, r, rotation } => {
+                self.run.apply(Action::Place { q, r, rotation })?;
+                Ok(placement_message(&self.run))
+            }
+            Command::Finish {} => {
+                self.run.apply(Action::Finish {})?;
+                Ok("Run finished. Here is your neighborhood.".into())
+            }
+            Command::Skip {} => {
+                self.run.apply(Action::Skip {})?;
+                Ok("Tile moved to the back of the deck.".into())
+            }
+            Command::NewGame { seed } => {
+                self.run = Run::new(seed);
+                Ok(format!("A new neighborhood in {}.", self.run.region.name()))
+            }
+            Command::Autoplay { count, policy } => {
+                let policy = match policy.as_deref() {
+                    None => Policy::Greedy,
+                    Some(name) => play::POLICIES
+                        .into_iter()
+                        .find(|policy| policy.name() == name)
+                        .ok_or_else(|| format!("There is no player called {name}."))?,
+                };
+                if count == 0 || count > MAX_AUTOPLAY {
+                    return Err(format!(
+                        "Autoplay places between 1 and {MAX_AUTOPLAY} tiles."
+                    ));
                 }
-                self.next_id = self.allocation_start(1);
-                let mut next = self.world.clone();
-                next.add(&kind, x, z, rotation, &mut self.next_id);
-                self.replace(next);
-                Ok("Placed.")
-            }
-            Command::Remove { x, z } => {
-                let Some(slot) = self.world.at(x, z) else {
-                    return Err("There is nothing here to remove.".into());
-                };
-                let mut next = self.world.clone();
-                next.remove(slot);
-                self.replace(next);
-                Ok("Removed.")
-            }
-            Command::Undo {} => {
-                let Some(previous) = self.undo.pop() else {
-                    return Err("There is nothing to undo yet.".into());
-                };
-                push_history(&mut self.redo, std::mem::replace(&mut self.world, previous));
-                self.revision = self.revision.wrapping_add(1);
-                Ok("Undone.")
-            }
-            Command::Redo {} => {
-                let Some(next) = self.redo.pop() else {
-                    return Err("There is nothing to redo yet.".into());
-                };
-                push_history(&mut self.undo, std::mem::replace(&mut self.world, next));
-                self.revision = self.revision.wrapping_add(1);
-                Ok("Redone.")
-            }
-            Command::Reset { seed } => {
-                self.next_id = self.allocation_start(CELL_COUNT as u32);
-                let world = World::starter(seed, &mut self.next_id);
-                self.replace(world);
-                Ok("A new neighborhood is ready.")
-            }
-            Command::Benchmark {} => {
-                self.next_id = self.allocation_start(CELL_COUNT as u32);
-                let world = World::benchmark(self.world.seed, &mut self.next_id);
-                self.replace(world);
-                Ok("Benchmark neighborhood ready.")
+                let mut rng = Rng::new(self.run.seed ^ self.run.placements, 0x6175_746f);
+                let mut placed = 0;
+                while placed < count {
+                    let Some(action) = play::choose(&self.run, policy, &mut rng) else {
+                        break;
+                    };
+                    self.run
+                        .apply(action)
+                        .expect("the player only picks legal moves");
+                    placed += 1;
+                }
+                if placed == 0 {
+                    return Err("There are no tiles left to place.".into());
+                }
+                Ok("The neighborhood grew.".into())
             }
         }
     }
 }
 
-fn whole_number(value: f64) -> Option<u32> {
-    (value.is_finite() && value >= 0.0 && value <= f64::from(u32::MAX) && value.fract() == 0.0)
-        .then_some(value as u32)
+/// The toast after a placement: its points, then any quests, milestone, victory, and the end of the run.
+fn placement_message(run: &Run) -> String {
+    let last = run.last.as_ref().expect("a placement records its outcome");
+    let mut message = match last.label {
+        Some(label) => format!("+{} · {label}", last.points.total),
+        None => format!("+{}", last.points.total),
+    };
+    let plural = |count: u32| if count == 1 { "tile" } else { "tiles" };
+    for done in &last.completed {
+        message.push_str(&format!(
+            " Quest complete: +{} and +{} {}.",
+            done.quest.points,
+            done.tiles_added,
+            plural(done.tiles_added)
+        ));
+        if done.tiles_discarded > 0 {
+            message.push_str(&format!(
+                " The deck is full, so {} reward {} discarded.",
+                done.tiles_discarded,
+                if done.tiles_discarded == 1 {
+                    "tile was"
+                } else {
+                    "tiles were"
+                }
+            ));
+        }
+    }
+    if last.victory {
+        message.push_str(" Thriving Barrio! You reached victory.");
+    } else if let Some(name) = last.milestone {
+        message.push_str(&format!(" Milestone reached: {name}."));
+    }
+    if run.end == Some(End::DeckEmpty) {
+        message.push_str(" The deck is empty: the run is complete.");
+    }
+    message
+}
+
+fn integer(value: f64) -> Option<i32> {
+    (value.is_finite()
+        && value.fract() == 0.0
+        && value >= f64::from(i32::MIN)
+        && value <= f64::from(i32::MAX))
+    .then_some(value as i32)
 }
 
 fn json(value: &impl Serialize) -> String {
     serde_json::to_string(value).expect("game data contains only finite JSON values")
 }
 
-fn push_history(history: &mut Vec<World>, world: World) {
-    if history.len() == HISTORY_LIMIT {
-        history.remove(0);
-    }
-    history.push(world);
-}
-
-fn validate_save(input: &str) -> Result<(World, u32), String> {
+/// Validates a save by replaying it through the rules: every action must be legal when it happens.
+fn replay(input: &str) -> Result<Run, String> {
     if input.len() > MAX_SAVE_BYTES {
         return Err(
             "This file is too large. Neighborhood files must be smaller than 256 KB.".into(),
         );
     }
-    let save: Save = serde_json::from_str(input)
-        .map_err(|_| "This file is not a valid Barrio neighborhood.".to_string())?;
-    if save.version != SAVE_VERSION {
-        return Err("This neighborhood uses an unsupported save version.".into());
-    }
-    let Some(generator) = Generator::parse(&save.terrain_id) else {
-        return Err("This neighborhood uses an unsupported terrain type.".into());
-    };
-    if save.width != WIDTH || save.depth != DEPTH {
-        return Err("Neighborhoods must use a 32 by 32 hillside.".into());
-    }
-    if save.structures.len() > CELL_COUNT {
-        return Err("This file contains too many structures.".into());
-    }
-    if save.next_id == 0 {
-        return Err("This file has an invalid next placement identifier.".into());
-    }
-    let mut ids = HashSet::new();
-    let mut world = World::with_terrain(save.seed, generator);
-    for structure in save.structures {
-        if structure.id == 0 || structure.id >= save.next_id || !ids.insert(structure.id) {
-            return Err("This file has duplicate or invalid placement identifiers.".into());
+    let invalid = || "This file is not a valid Barrio neighborhood.".to_string();
+    let version: SaveVersion = serde_json::from_str(input).map_err(|_| invalid())?;
+    match version.version {
+        1 => {
+            return Err(
+                "This neighborhood was built on the original square hillside, which Classic \
+                        cannot load. Your file has not been changed."
+                    .into(),
+            )
         }
-        if structure.variation >= 16 {
-            return Err("This file has an unknown visual variation.".into());
+        2 => {
+            return Err(
+                "This neighborhood comes from the earlier free-building version, which had no \
+                        deck or score, so Classic cannot load it. Your file has not been changed."
+                    .into(),
+            )
         }
-        let preview = world.preview(
-            &structure.kind,
-            structure.x,
-            structure.z,
-            structure.rotation,
-        );
-        if !preview.valid {
-            return Err(format!("Cannot load this neighborhood. {}", preview.reason));
-        }
-        world.insert(structure);
+        SAVE_VERSION => {}
+        _ => return Err("This neighborhood uses an unsupported save version.".into()),
     }
-    Ok((world, save.next_id))
+    let save: Save = serde_json::from_str(input).map_err(|_| invalid())?;
+    if save.rules != RULES {
+        return Err(format!(
+            "This run was played under different rules ({}) and cannot be replayed exactly.",
+            save.rules
+        ));
+    }
+    if save.actions.len() > MAX_ACTIONS {
+        return Err("This file has too many actions.".into());
+    }
+    let mut run = Run::new(save.seed);
+    for (index, action) in save.actions.iter().enumerate() {
+        run.apply(*action).map_err(|reason| {
+            format!(
+                "Cannot load this neighborhood: move {} is not allowed. {reason}",
+                index + 1
+            )
+        })?;
+    }
+    Ok(run)
 }

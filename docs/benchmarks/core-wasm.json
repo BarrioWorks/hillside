@@ -1,42 +1,102 @@
 {
-  "recordedAt": "2026-10-20T22:20:06.753Z",
+  "recordedAt": "2026-10-21T12:21:31.787Z",
   "runtime": "v24.22.0",
   "platform": "linux",
   "cpu": "AMD EPYC 7B13 64-Core Processor",
-  "wasmSHA256": "ce928897147bd943e3751dfdd000a0aade4cff4bc188640b0e6874a2b8639339",
-  "method": "Five fresh games after one warmup. Time only the compiled WASM benchmark command and returned Rust-serialized JSON. JavaScript command creation and response parsing stay outside the timed region.",
-  "limitations": "Node WASM timing measures the same release core, not browser scheduling, scene updates, or GPU rendering. No comparative speedup is claimed.",
-  "medianMilliseconds": 3.8439809999999994,
-  "rangeMilliseconds": [
-    1.8383280000000042,
-    5.621206000000001
+  "loadAverage": [
+    9.43,
+    6.55,
+    4.83
   ],
-  "errors": 0,
-  "samples": [
-    {
-      "run": 1,
-      "milliseconds": 2.4818439999999953,
-      "structures": 1024
-    },
-    {
-      "run": 2,
-      "milliseconds": 1.8383280000000042,
-      "structures": 1024
-    },
-    {
-      "run": 3,
-      "milliseconds": 5.621206000000001,
-      "structures": 1024
-    },
-    {
-      "run": 4,
-      "milliseconds": 3.8439809999999994,
-      "structures": 1024
-    },
-    {
-      "run": 5,
-      "milliseconds": 4.093227999999996,
-      "structures": 1024
-    }
-  ]
+  "wasmSHA256": "5dc4624d455b11c63bd9f41e1337f63347fea474804ce5b6a3f99c04d5a3278a",
+  "method": "Eleven seeds after one warmup. Each run times new Game(seed) (start tile and deck), a preview of every frontier hex at all six rotations, one placement command including its JSON snapshot, greedy play to the end of the deck, one snapshot of the finished run, and loading its save (a full replay of every action through the rules). Times include Rust JSON serialization and JavaScript parsing where noted in the code.",
+  "limitations": "Node WASM timing measures the release core only, not scene updates or rendering.",
+  "medianMilliseconds": {
+    "newRun": 0.05213200000000029,
+    "previewSweep": 1.4156280000000265,
+    "placement": 0.19207600000001435,
+    "greedyRunToEnd": 16.614014999999995,
+    "snapshotFinished": 0.32005799999998885,
+    "saveReplay": 1.7486260000000016
+  },
+  "samples": {
+    "newRun": [
+      0.07851300000001515,
+      0.05476100000001338,
+      0.07172299999999154,
+      0.03854200000000674,
+      0.0740509999999972,
+      0.05213200000000029,
+      0.048080999999967844,
+      0.037101000000006934,
+      0.03721100000001343,
+      0.053512000000011994,
+      0.03396099999997659
+    ],
+    "previewSweep": [
+      2.643591000000015,
+      1.5913419999999974,
+      1.4440189999999973,
+      2.8860770000000002,
+      1.1095090000000027,
+      1.047138000000018,
+      1.3860169999999812,
+      0.9928469999999834,
+      1.0538379999999847,
+      1.4156280000000265,
+      2.3949140000000284
+    ],
+    "placement": [
+      0.5499229999999784,
+      0.19207600000001435,
+      0.20951500000001033,
+      0.13103499999999713,
+      0.20450700000000666,
+      0.1254430000000184,
+      0.2238959999999679,
+      0.16451399999999694,
+      0.15143399999999474,
+      0.2082269999999653,
+      0.18971499999997832
+    ],
+    "greedyRunToEnd": [
+      17.24252199999998,
+      19.163793,
+      17.121319,
+      17.851798000000002,
+      12.19770600000001,
+      13.610634999999974,
+      17.446207000000015,
+      14.682101999999986,
+      16.614014999999995,
+      12.078052999999954,
+      14.200012000000015
+    ],
+    "snapshotFinished": [
+      0.4466029999999819,
+      0.3867700000000127,
+      0.44796199999998976,
+      0.32005799999998885,
+      0.24540700000000015,
+      0.45652200000000676,
+      0.41785099999998465,
+      0.31040799999999535,
+      0.276157000000012,
+      0.25289699999996174,
+      0.2652169999999501
+    ],
+    "saveReplay": [
+      3.732630999999998,
+      2.4407449999999926,
+      2.4576160000000016,
+      1.7486260000000016,
+      1.6682839999999999,
+      1.8024479999999699,
+      1.7394259999999804,
+      1.6409439999999904,
+      1.7437369999999532,
+      1.492480999999998,
+      2.903547000000003
+    ]
+  }
 }

@@ -1,0 +1,44 @@
+{
+  "found": {
+    "seed": 0,
+    "step": 55,
+    "q": -3,
+    "r": 2,
+    "rotation": 0
+  },
+  "run": {
+    "seed": 0,
+    "region": "medellin",
+    "score": 6000,
+    "placements": 56,
+    "victory": true,
+    "end": "finished",
+    "last": {
+      "q": -3,
+      "r": 2,
+      "points": {
+        "base": 10,
+        "matches": 2,
+        "matchPoints": 40,
+        "perfect": false,
+        "perfectBonus": 0,
+        "total": 50
+      },
+      "label": null,
+      "completed": [],
+      "questPoints": 0,
+      "milestone": "Thriving Barrio",
+      "victory": true
+    },
+    "quests": [
+      "residential-small",
+      "residential-medium",
+      "nature-small",
+      "residential-large",
+      "nature-medium",
+      "water-small",
+      "nature-large",
+      "water-medium"
+    ]
+  }
+}

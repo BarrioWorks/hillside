@@ -32,6 +32,27 @@ export const PALETTE = {
   zinc: '#9aa3a1',
   shutter: '#8b958f',
   lamp: '#ffe2a8',
+  // Hex landscape, candidate A "Sage valley" from docs/strategy-redesign.md.
+  meadow: '#94a679',
+  meadowLight: '#adbb8c',
+  meadowLow: '#7d9168',
+  lawn: '#a2b47f',
+  forestFloor: '#8a9c72',
+  skirtTop: '#b8946c',
+  skirtMid: '#977656',
+  skirtDeep: '#6d5848',
+  retaining: '#bdb3a1',
+  coping: '#d3cbbb',
+  walkway: '#cdbd9d',
+  water: '#6fb7b4',
+  waterDeep: '#4e9ea5',
+  foam: '#eaf2ea',
+  crownLight: '#71895a',
+  crownMid: '#587250',
+  crownDeep: '#3f5a45',
+  bank: '#7f8a63',
+  contact: '#7a8a5c',
+  bloom: '#c4457a',
 } as const;
 export type PaletteName = keyof typeof PALETTE;
 
@@ -81,5 +102,6 @@ export const Surface = {
   fabric: 13,
   corrugated: 14,
   paving: 15,
+  water: 16,
 } as const;
 export type SurfaceId = (typeof Surface)[keyof typeof Surface];

@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { describe, expect, it, vi } from 'vitest';
 import { StructureBatches } from '../src/render/batches';
-import { ModelLibrary } from '../src/render/models';
-import { heightAt } from '../src/render/terrain';
-import { realCore } from './core-fixture';
+import { center, LEVEL } from '../src/render/hex';
+import { TileKit } from '../src/render/tiles';
+import { realCore, sidesOf, siteOf } from './core-fixture';
 
 function meshes(batches: StructureBatches): THREE.InstancedMesh[] {
   return batches.group.children.filter((child) => child instanceof THREE.InstancedMesh);
@@ -247,58 +247,67 @@ describe('shared structure batches', () => {
     },
   );
 
-  it.each(['benchmark', 'mixed catalog'])(
-    'preserves all geometry for 500 %s structures',
-    async (population) => {
-      const core = realCore();
-      const library = new ModelLibrary(core.catalog());
-      const batches = new StructureBatches();
-      try {
-        const snapshot = core.command({ type: 'benchmark' }).snapshot;
-        const catalog = core.catalog();
-        const structures = Array.from({ length: 500 }, (_, index) => {
-          const structure = snapshot.structures[Math.floor((index * snapshot.structures.length) / 500)];
-          if (!structure) throw new Error('Expected a benchmark placement.');
-          return population === 'benchmark'
-            ? structure
-            : { ...structure, kind: catalog[index % catalog.length]?.id ?? structure.kind };
-        });
-        expect(structures).toHaveLength(500);
-        let triangles = 0;
-        let parts = 0;
-        for (const structure of structures) {
-          const mesh = library.create(structure.kind, structure.variation);
-          mesh.position.set(structure.x, heightAt(snapshot, structure.x, structure.z), structure.z);
-          mesh.rotation.y = (structure.rotation * Math.PI) / 2;
-          mesh.traverse((object) => {
-            if (!(object instanceof THREE.Mesh)) return;
-            triangles += (object.geometry.index?.count ?? object.geometry.getAttribute('position').count) / 3;
-            parts++;
-          });
-          batches.add(structure.id, mesh);
+  it('preserves all geometry for autoplayed hillsides of composed tiles', () => {
+    // Eight whole runs side by side, each shifted well clear of the others.
+    const tiles = [11, 12, 13, 14, 15, 16, 17, 18].flatMap((seed, index) => {
+      const { tiles: run, region } = realCore(seed).command({ type: 'autoplay', count: 30 }).snapshot;
+      return run.map((tile) => ({ tile, region, sides: sidesOf(tile, run), offset: index * 20 }));
+    });
+    const kit = new TileKit();
+    const material = new THREE.MeshStandardMaterial();
+    const batches = new StructureBatches();
+    const compose = () =>
+      tiles.map(({ tile, region, sides, offset }) => {
+        const root = new THREE.Group();
+        for (const part of kit.compose(siteOf(tile, region), sides)) {
+          const mesh = new THREE.Mesh(part.geometry, material);
+          mesh.matrixAutoUpdate = false;
+          mesh.matrix.copy(part.matrix);
+          root.add(mesh);
         }
-        const instancedTriangles = meshes(batches).reduce(
-          (sum, mesh) =>
-            sum +
-            (mesh.count * (mesh.geometry.index?.count ?? mesh.geometry.getAttribute('position').count)) / 3,
-          0,
-        );
-        expect(parts).toBe(500);
-        expect(instancedTriangles).toBe(triangles);
-        expect(batches.partCount).toBe(parts);
-        // Six buildings × 16 seeded variants dominate; props and street contexts add a few more.
-        expect(batches.batchCount).toBeLessThanOrEqual(6 * 16 + 24);
-        expect(meshes(batches).every((mesh) => mesh.count <= 1024)).toBe(true);
-        const before = meshes(batches);
-        for (const structure of structures) batches.remove(structure.id);
-        expect(batches.batchCount).toBe(0);
-        for (const structure of structures)
-          batches.add(structure.id, library.create(structure.kind, structure.variation));
-        expect(meshes(batches)).toEqual(before);
-      } finally {
-        batches.dispose();
-        library.dispose();
-      }
-    },
-  );
+        const c = center(tile.q + offset, tile.r);
+        root.position.set(c.x, tile.elevation * LEVEL, c.z);
+        return root;
+      });
+    try {
+      expect(tiles.length).toBe(8 * 31);
+      const roots = compose();
+      let triangles = 0;
+      let parts = 0;
+      roots.forEach((root, id) => {
+        root.traverse((object) => {
+          if (!(object instanceof THREE.Mesh)) return;
+          triangles += (object.geometry.index?.count ?? object.geometry.getAttribute('position').count) / 3;
+          parts++;
+        });
+        batches.add(id, root);
+      });
+      const instancedTriangles = meshes(batches).reduce(
+        (sum, mesh) =>
+          sum +
+          (mesh.count * (mesh.geometry.index?.count ?? mesh.geometry.getAttribute('position').count)) / 3,
+        0,
+      );
+      expect(instancedTriangles).toBe(triangles);
+      expect(batches.partCount).toBe(parts);
+      // One batch per cached tile geometry, far fewer than the parts they draw.
+      expect(batches.batchCount).toBe(kit.size);
+      expect(batches.batchCount).toBeLessThan(parts / 4);
+      expect(meshes(batches).every((mesh) => mesh.count <= 1024)).toBe(true);
+      console.info(
+        'hillside batches',
+        JSON.stringify({ tiles: tiles.length, parts, triangles, batches: kit.size }),
+      );
+      const before = meshes(batches);
+      for (const id of roots.keys()) batches.remove(id);
+      expect(batches.batchCount).toBe(0);
+      for (const [id, root] of compose().entries()) batches.add(id, root);
+      expect(meshes(batches)).toEqual(before);
+      expect(batches.partCount).toBe(parts);
+    } finally {
+      batches.dispose();
+      kit.dispose();
+      material.dispose();
+    }
+  });
 });

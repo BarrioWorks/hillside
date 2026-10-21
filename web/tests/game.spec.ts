@@ -1,257 +1,327 @@
 import { expect, type Page, test } from '@playwright/test';
+import { FAMILY_NAME, KIND_INFO } from '../src/tileArt';
 
-async function waitForGame(page: Page) {
-  await page.goto('/?quality=low');
-  await page.waitForFunction(() => window.__barrio?.ready, {}, { timeout: 45000 });
-  await expect(page.getByRole('button', { name: 'Build Casa', exact: true })).toBeVisible();
-}
-async function buildAtVisibleCell(page: Page, kind: string) {
-  const candidates = await page.evaluate((kind) => {
-    const api = window.__barrio;
-    const snapshot = api.snapshot();
-    return api
-      .snapshot()
-      .cells.filter((cell) => {
-        const preview = api.preview(kind, cell.x, cell.z);
-        const p = api.cellToScreen(cell.x, cell.z);
-        return (
-          typeof preview === 'object' &&
-          preview !== null &&
-          'valid' in preview &&
-          preview.valid &&
-          (kind !== 'path' ||
-            snapshot.structures.some(
-              (path) =>
-                path.kind === 'path' &&
-                Math.abs(path.x - cell.x) + Math.abs(path.z - cell.z) === 1 &&
-                snapshot.cells.find((c) => c.x === path.x && c.z === path.z)?.height === cell.height,
-            )) &&
-          p.x > 100 &&
-          p.x < innerWidth - 100 &&
-          p.y > 120 &&
-          p.y < innerHeight - 310
-        );
-      })
-      .sort((a, b) => Math.abs(a.x - 12) + Math.abs(a.z - 13) - (Math.abs(b.x - 12) + Math.abs(b.z - 13)))
-      .slice(0, 30)
-      .map((cell) => api.cellToScreen(cell.x, cell.z));
-  }, kind);
-  for (const point of candidates) {
-    await page.mouse.move(point.x, point.y);
-    const feedback = page.locator('#placement-feedback');
-    if ((await feedback.textContent()) === 'Ready to build') {
-      const before = await page.evaluate(() => window.__barrio.snapshot().structures.length);
-      await page.mouse.click(point.x, point.y);
-      await expect
-        .poll(() => page.evaluate(() => window.__barrio.snapshot().structures.length))
-        .toBe(before + 1);
-      return;
-    }
-  }
-  throw new Error(`No visible valid ${kind} placement found.`);
-}
-test('builds, connects, removes, undoes, saves, reloads and exports a neighborhood', async ({
-  page,
-}, testInfo) => {
-  test.setTimeout(120000);
+test.setTimeout(120000);
+
+/** Opens the game and collects page errors; every test ends by asserting there were none. */
+async function open(page: Page): Promise<string[]> {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  await waitForGame(page);
-  const before = await page.evaluate(() => window.__barrio.snapshot().structures.length);
-  await buildAtVisibleCell(page, 'casa');
-  await page.getByRole('tab', { name: 'Connections', exact: true }).click();
-  await page.getByRole('button', { name: 'Build Path', exact: true }).click();
-  await buildAtVisibleCell(page, 'path');
-  await page.getByRole('button', { name: 'Undo (Ctrl Z)', exact: true }).click();
-  await expect.poll(() => page.evaluate(() => window.__barrio.snapshot().structures.length)).toBe(before + 1);
-  await page.getByRole('button', { name: 'Redo (Ctrl Shift Z)', exact: true }).click();
-  await expect.poll(() => page.evaluate(() => window.__barrio.snapshot().structures.length)).toBe(before + 2);
-  await page.getByRole('button', { name: 'Remove a structure (X)', exact: true }).click();
-  const pathPoint = await page.evaluate(() => {
-    const api = window.__barrio;
-    const path = api.snapshot().structures.at(-1);
-    if (!path) throw new Error('No new path.');
-    return api.cellToScreen(path.x, path.z);
+  await page.goto('/?quality=low');
+  await page.waitForFunction(() => window.__barrio?.ready, undefined, { timeout: 60000 });
+  await settle(page);
+  return errors;
+}
+
+/** Waits until the camera stops moving, judged by where an outer hex lands on screen. */
+async function settle(page: Page) {
+  let last = '';
+  await expect
+    .poll(
+      async () => {
+        await page.waitForTimeout(400);
+        const now = JSON.stringify(await page.evaluate(() => window.__barrio.hexToScreen(3, -3)));
+        const still = now === last;
+        last = now;
+        return still;
+      },
+      { timeout: 30000, intervals: [0] },
+    )
+    .toBe(true);
+}
+
+const state = (page: Page) =>
+  page.evaluate(() => {
+    const snapshot = window.__barrio.snapshot();
+    return {
+      tiles: snapshot.tiles.length,
+      remaining: snapshot.remaining,
+      score: snapshot.score,
+      rotation: window.__barrio.rotation(),
+    };
   });
-  await page.mouse.click(pathPoint.x, pathPoint.y);
-  await expect.poll(() => page.evaluate(() => window.__barrio.snapshot().structures.length)).toBe(before + 1);
-  await page.getByRole('button', { name: 'Undo (Ctrl Z)', exact: true }).click();
-  await expect.poll(() => page.evaluate(() => window.__barrio.snapshot().structures.length)).toBe(before + 2);
-  await page.getByRole('button', { name: 'Save', exact: true }).click();
-  await expect(page.getByRole('status')).toContainText('saved');
-  const saved = await page.evaluate(() => window.__barrio.snapshot().structures);
-  await page.reload();
-  await page.waitForFunction(() => window.__barrio?.ready);
-  expect(await page.evaluate(() => window.__barrio.snapshot().structures)).toEqual(saved);
-  await page.getByRole('button', { name: 'Neighborhood menu', exact: true }).click();
-  const [download] = await Promise.all([
-    page.waitForEvent('download'),
-    page.getByRole('button', { name: 'Export a copy', exact: true }).click(),
-  ]);
-  expect(download.suggestedFilename()).toBe('my-barrio.json');
-  const savedPath = testInfo.outputPath('neighborhood.json');
-  await download.saveAs(savedPath);
-  await page.getByRole('button', { name: 'Neighborhood menu', exact: true }).click();
-  await page.getByRole('button', { name: 'New neighborhood', exact: true }).click();
-  await page.getByRole('button', { name: 'Start fresh', exact: true }).click();
-  await page.locator('#import-file').setInputFiles(savedPath);
-  await expect.poll(() => page.evaluate(() => window.__barrio.snapshot().structures)).toEqual(saved);
-  await page.mouse.move(15, 90);
-  await page.screenshot({ path: testInfo.outputPath('neighborhood-desktop.png') });
+
+interface Spot {
+  q: number;
+  r: number;
+  x: number;
+  y: number;
+  rotations: number[];
+}
+
+/** Open frontier hexes clear of the interface, with the rotations at which the tile in hand fits. */
+function visibleSpots(page: Page): Promise<Spot[]> {
+  return page.evaluate(() => {
+    const api = window.__barrio;
+    return api
+      .snapshot()
+      .frontier.map((ground) => {
+        const point = api.hexToScreen(ground.q, ground.r);
+        return { ...ground, ...point, rotations: api.preview(ground.q, ground.r, 0).validRotations };
+      })
+      .filter(({ x, y }) => x > 110 && x < innerWidth - 110 && y > 110 && y < innerHeight - 260);
+  });
+}
+
+/** Turns the tile in hand with the R key until it faces `rotation`. */
+async function turnTo(page: Page, rotation: number) {
+  for (let i = 0; i < 6 && (await state(page)).rotation !== rotation; i++) await page.keyboard.press('r');
+  expect((await state(page)).rotation).toBe(rotation);
+}
+
+test('places a tile on a fitting spot for the previewed points', async ({ page }) => {
+  const errors = await open(page);
+  const spot = (await visibleSpots(page)).find((candidate) => candidate.rotations.length > 0);
+  if (!spot) throw new Error('No visible frontier hex fits the tile in hand.');
+  const rotation = spot.rotations[0] as number;
+  await turnTo(page, rotation);
+  const before = await state(page);
+  const points = await page.evaluate(
+    ({ q, r, rotation }) => window.__barrio.preview(q, r, rotation).points.total,
+    { q: spot.q, r: spot.r, rotation },
+  );
+  await page.mouse.move(spot.x, spot.y);
+  const feedback = page.locator('#placement-feedback');
+  await expect(feedback).toBeVisible();
+  await expect(feedback).not.toHaveClass(/invalid/);
+  await expect(feedback).toContainText(`+${points}`);
+  await page.mouse.click(spot.x, spot.y);
+  await expect
+    .poll(() => state(page))
+    .toMatchObject({
+      tiles: before.tiles + 1,
+      remaining: before.remaining - 1,
+      score: before.score + points,
+    });
+  expect(
+    await page.evaluate(
+      ({ q, r }) => window.__barrio.snapshot().tiles.some((t) => t.q === q && t.r === r),
+      spot,
+    ),
+  ).toBe(true);
+  await expect(page.locator('#score')).toHaveText(String(before.score + points));
+  await expect(page.locator('#remaining')).toHaveText(`${before.remaining - 1} tiles left`);
   expect(errors).toEqual([]);
 });
-test('camera dragging never places a structure and home restores the view', async ({ page }) => {
-  test.setTimeout(60000);
-  await waitForGame(page);
-  const before = await page.evaluate(() => ({
-    count: window.__barrio.snapshot().structures.length,
-    point: window.__barrio.cellToScreen(16, 16),
-  }));
-  await page.mouse.move(600, 350);
-  await page.mouse.down();
-  await page.mouse.move(700, 420, { steps: 6 });
-  await page.mouse.up();
-  expect(await page.evaluate(() => window.__barrio.snapshot().structures.length)).toBe(before.count);
-  const moved = await page.evaluate(() => window.__barrio.cellToScreen(16, 16));
-  expect(moved).not.toEqual(before.point);
-  await page.getByRole('button', { name: 'Reset camera', exact: true }).click();
-  await expect
-    .poll(async () => {
-      const point = await page.evaluate(() => window.__barrio.cellToScreen(16, 16));
-      return Math.hypot(point.x - before.point.x, point.y - before.point.y);
-    })
-    .toBeLessThan(1);
-});
-test('mobile palette remains reachable with local 3D thumbnails', async ({ page }, testInfo) => {
-  test.setTimeout(60000);
-  await page.setViewportSize({ width: 390, height: 844 });
-  await waitForGame(page);
-  await expect(page.getByRole('button', { name: 'Build Casa', exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'Build Esquina', exact: true }).scrollIntoViewIfNeeded();
-  await page.getByRole('button', { name: 'Build Esquina', exact: true }).click();
-  await expect(page.locator('#selection-title')).toHaveText('Esquina');
-  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
-  await page.screenshot({ path: testInfo.outputPath('neighborhood-mobile.png') });
-});
 
-async function assertTouchTargets(page: Page) {
-  const tooSmall = await page.locator('button, a').evaluateAll((buttons) =>
-    buttons
-      .filter((button) => {
-        const rect = button.getBoundingClientRect();
-        const style = getComputedStyle(button);
-        return (
-          rect.width > 0 &&
-          rect.height > 0 &&
-          style.visibility !== 'hidden' &&
-          (rect.width < 44 || rect.height < 44)
-        );
-      })
-      .map((button) => ({
-        label: button.getAttribute('aria-label') ?? button.textContent,
-        width: button.getBoundingClientRect().width,
-        height: button.getBoundingClientRect().height,
-      })),
+test('shows the region, the tile in hand, and turns it with the tray buttons', async ({ page }) => {
+  const errors = await open(page);
+  const { current, regionName, seed } = await page.evaluate(() => window.__barrio.snapshot());
+  if (!current) throw new Error('A new run has a tile in hand.');
+  await expect(page.locator('#region')).toHaveText(`${regionName} · seed ${seed}`);
+  await expect(page.locator('#hand-title')).toHaveText(
+    `${KIND_INFO[current.kind].name} · ${FAMILY_NAME[current.family]}`,
   );
-  expect(tooSmall).toEqual([]);
-}
-for (const [name, width, height] of [
-  ['desktop', 1440, 1000],
-  ['mobile', 390, 844],
-] satisfies [string, number, number][]) {
-  test(`${name} startup matches its visual baseline and has accessible touch targets`, async ({ page }) => {
-    test.setTimeout(90000);
-    await page.setViewportSize({ width, height });
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await waitForGame(page);
-    await page.evaluate(() => document.fonts.ready);
-    await page.waitForFunction(() => {
-      const metrics = window.__barrio.metrics();
-      return 'renderFrames' in metrics && Number(metrics.renderFrames) > 0;
-    });
-    await page.mouse.move(5, 100);
-    await assertTouchTargets(page);
-    await expect(page).toHaveScreenshot(`${name}-startup.png`, {
-      animations: 'disabled',
-      maxDiffPixelRatio: 0.005,
-      timeout: 15000,
-    });
-    await page.getByRole('button', { name: 'Neighborhood menu', exact: true }).click();
-    await assertTouchTargets(page);
-  });
-}
-test('clicking a visible roof removes that building rather than the terrain behind it', async ({ page }) => {
-  test.setTimeout(60000);
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await waitForGame(page);
-  const target = await page.evaluate(() => {
+  await expect(page.locator('#remaining')).toHaveText('30 tiles left');
+  await expect(page.locator('#score')).toHaveText('0');
+  expect((await state(page)).rotation).toBe(0);
+  await page.getByRole('button', { name: 'Turn tile (R)', exact: true }).click();
+  await expect.poll(async () => (await state(page)).rotation).toBe(1);
+  await expect(page.locator('#hand-tile')).toHaveAttribute('aria-label', /turned 1 of 6/);
+  await page.getByRole('button', { name: 'Turn tile back (Shift R)', exact: true }).click();
+  await page.getByRole('button', { name: 'Turn tile back (Shift R)', exact: true }).click();
+  await expect.poll(async () => (await state(page)).rotation).toBe(5);
+  expect(errors).toEqual([]);
+});
+
+test('refuses a spot where the tile in hand cannot go', async ({ page }) => {
+  const errors = await open(page);
+  let spot: Spot | undefined;
+  // Only streams refuse a spot; grow the run until one does where it can be seen.
+  for (let attempt = 0; attempt < 10 && !spot; attempt++) {
+    const rotation = (await state(page)).rotation;
+    spot = (await visibleSpots(page)).find((candidate) => !candidate.rotations.includes(rotation));
+    if (!spot) {
+      await page.evaluate(() => window.__barrio.autoplay(2));
+      await settle(page);
+    }
+  }
+  if (!spot) throw new Error('No visible frontier hex refuses the tile in hand.');
+  const before = await state(page);
+  await page.mouse.move(spot.x, spot.y);
+  const feedback = page.locator('#placement-feedback');
+  await expect(feedback).toBeVisible();
+  await expect(feedback).toHaveClass(/invalid/);
+  await expect(feedback).toContainText('Cannot place here');
+  await page.mouse.click(spot.x, spot.y);
+  await page.waitForTimeout(500);
+  expect(await state(page)).toEqual(before);
+  expect(errors).toEqual([]);
+});
+
+test('skips the tile in hand once per run', async ({ page }) => {
+  const errors = await open(page);
+  const before = await page.evaluate(() => window.__barrio.snapshot());
+  const skip = page.locator('#skip');
+  await expect(skip).toBeEnabled();
+  await skip.click();
+  await expect.poll(() => page.evaluate(() => window.__barrio.snapshot().skipUsed)).toBe(true);
+  const after = await page.evaluate(() => window.__barrio.snapshot());
+  expect(after.current).toEqual(before.upcoming[0]);
+  expect(after.remaining).toBe(before.remaining);
+  expect(after.score).toBe(before.score);
+  await expect(skip).toBeDisabled();
+  await expect(skip).toHaveText('Skip used');
+  expect(errors).toEqual([]);
+});
+
+test('shows the results when the deck runs out', async ({ page }) => {
+  const errors = await open(page);
+  await page.evaluate(() => window.__barrio.autoplay(400));
+  const done = await page.evaluate(() => window.__barrio.snapshot());
+  expect(done.finished).toBe(true);
+  expect(done.end).toBe('deckEmpty');
+  expect(done.placements).toBe(30 + done.rewards - done.discarded);
+  expect(done.tiles).toHaveLength(done.placements + 1);
+  const results = page.locator('#results');
+  await expect(results).toBeVisible();
+  await expect(page.locator('#results-score')).toHaveText(done.score.toLocaleString('en-US'));
+  await expect(page.locator('#results-reason')).toHaveText(
+    'The deck is empty: every tile has found its place.',
+  );
+  await expect(page.locator('#results-stats')).toContainText(`${done.regionName} · ${done.seed}`);
+  await expect(page.locator('#results-stats')).toContainText(`Quests completed${done.quests.history.length}`);
+  await expect(page.locator('#results-best')).not.toBeEmpty();
+  await expect(results.locator('[data-action="share"]')).toBeVisible();
+  await expect(page.locator('#victory')).toBeHidden();
+  await expect(page.locator('#remaining')).toHaveText('0 tiles left');
+  await expect(page.locator('#hand-title')).toHaveText('The deck is empty');
+  expect(errors).toEqual([]);
+});
+
+/** A visible frontier hex, and a rotation there, where placing the tile in hand completes a quest. */
+function completingSpot(page: Page) {
+  return page.evaluate(() => {
     const api = window.__barrio;
-    const structure = api.snapshot().structures.find((s) => s.kind === 'torre');
-    if (!structure) throw new Error('The starter tower is missing.');
-    return { id: structure.id, point: api.cellToScreen(structure.x, structure.z, 2.85) };
+    for (const ground of api.snapshot().frontier) {
+      const { x, y } = api.hexToScreen(ground.q, ground.r);
+      if (x < 110 || x > innerWidth - 110 || y < 110 || y > innerHeight - 260) continue;
+      for (let rotation = 0; rotation < 6; rotation++) {
+        const preview = api.preview(ground.q, ground.r, rotation);
+        if (preview.valid && preview.completes.length > 0)
+          return {
+            q: ground.q,
+            r: ground.r,
+            x,
+            y,
+            rotation,
+            points: preview.points.total,
+            questPoints: preview.completes.reduce((sum, quest) => sum + quest.points, 0),
+            ids: preview.completes.map((quest) => quest.id),
+          };
+      }
+    }
+    return null;
   });
-  await page.getByRole('button', { name: 'Remove a structure (X)', exact: true }).click();
-  await page.mouse.click(target.point.x, target.point.y);
+}
+
+test('shows three quests and pays one on the placement that completes it', async ({ page }) => {
+  const errors = await open(page);
+  const cards = page.locator('#quest-list li.quest[data-id]');
+  await expect(cards).toHaveCount(3);
+  const quests = await page.evaluate(() => window.__barrio.snapshot().quests.current);
+  expect(quests.map((quest) => quest.tier)).toEqual(['small', 'small', 'small']);
+  for (const [index, quest] of quests.entries()) {
+    await expect(cards.nth(index)).toHaveAttribute('data-id', quest.id);
+    await expect(cards.nth(index)).toContainText(
+      quest.state === 'active' ? `${quest.progress} / ${quest.target}` : 'Out of reach for now',
+    );
+  }
+  await expect(page.locator('#milestone-text')).toHaveText('Next: Settlement at 1,000');
+  let spot = await completingSpot(page);
+  // Grow the run until a placement on screen would complete a quest.
+  for (let attempt = 0; attempt < 25 && !spot; attempt++) {
+    await page.evaluate(() => window.__barrio.autoplay(1));
+    await settle(page);
+    spot = await completingSpot(page);
+  }
+  if (!spot) throw new Error('No visible placement completes a quest.');
+  await turnTo(page, spot.rotation);
+  const before = await state(page);
+  await page.mouse.move(spot.x, spot.y);
+  const feedback = page.locator('#placement-feedback');
+  await expect(feedback).toBeVisible();
+  await expect(feedback).toContainText('Completes “');
+  await page.mouse.click(spot.x, spot.y);
+  // The completed card shows briefly, then its successor takes its place.
+  const completed = page.locator(`#quest-list li[data-id="${spot.ids[0]}"]`);
+  await expect(completed).toHaveClass(/done/, { timeout: 1000 });
   await expect
-    .poll(() =>
-      page.evaluate((id) => window.__barrio.snapshot().structures.some((s) => s.id === id), target.id),
-    )
-    .toBe(false);
-});
-test('contact sheet renders all catalog models at 128 and 512 pixels', async ({ page }, testInfo) => {
-  test.setTimeout(60000);
-  await page.goto('/?contact-sheet');
-  await expect(page.getByRole('heading', { name: 'The neighborhood collection', exact: true })).toBeVisible();
-  await expect(page.locator('.contact-grid article')).toHaveCount(11);
-  expect(await page.locator('img[width="128"]').count()).toBe(11);
-  expect(await page.locator('img[width="512"]').count()).toBe(11);
-  expect(
-    await page
-      .locator('img')
-      .evaluateAll((images) =>
-        images.every(
-          (image) => image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0,
-        ),
-      ),
-  ).toBe(true);
-  await page.screenshot({ path: testInfo.outputPath('catalog-contact-sheet.png'), fullPage: true });
+    .poll(async () => (await state(page)).score)
+    .toBe(before.score + spot.points + spot.questPoints);
+  await expect(page.locator('#status')).toContainText('Quest complete: +');
+  const after = await page.evaluate(() => window.__barrio.snapshot());
+  expect(after.last?.completed.map((done) => done.quest.id)).toEqual(spot.ids);
+  expect(after.quests.history.map((quest) => quest.id)).toEqual(expect.arrayContaining(spot.ids));
+  await expect(completed).toHaveCount(0, { timeout: 5000 });
+  await expect(page.locator('#score')).toHaveText(
+    (before.score + spot.points + spot.questPoints).toLocaleString('en-US'),
+  );
+  expect(errors).toEqual([]);
 });
 
-test('canceling a reopened new-neighborhood dialog preserves edits and autosave', async ({ page }) => {
-  test.setTimeout(60000);
-  await waitForGame(page);
-  const openNew = async () => {
-    await page.getByRole('button', { name: 'Neighborhood menu', exact: true }).click();
-    await page.getByRole('button', { name: 'New neighborhood', exact: true }).click();
-  };
-  await openNew();
-  await page.getByRole('button', { name: 'Start fresh', exact: true }).click();
-  await expect(page.locator('#new-dialog')).not.toBeVisible();
-  await page.evaluate(() => {
-    const api = window.__barrio;
-    const cell = api.snapshot().cells.find((cell) => {
-      const preview = api.preview('casa', cell.x, cell.z);
-      return typeof preview === 'object' && preview !== null && 'valid' in preview && preview.valid;
-    });
-    if (!cell) throw new Error('No editable terrace.');
-    if (!api.command({ type: 'place', kind: 'casa', x: cell.x, z: cell.z, rotation: 0 }))
-      throw new Error('The test edit was refused.');
-  });
-  const before = await page.evaluate(() => ({
-    snapshot: window.__barrio.snapshot(),
-    autosave: localStorage.getItem('barrio.autosave.v1'),
-  }));
-  await openNew();
-  await page.keyboard.press('Escape');
-  await expect(page.locator('#new-dialog')).not.toBeVisible();
-  expect(await page.evaluate(() => window.__barrio.snapshot())).toEqual(before.snapshot);
-  expect(await page.evaluate(() => localStorage.getItem('barrio.autosave.v1'))).toBe(before.autosave);
-});
-
-test('mobile save retains its accessible name when its text is hidden', async ({ page }) => {
-  test.setTimeout(60000);
-  await page.setViewportSize({ width: 390, height: 844 });
-  await waitForGame(page);
+test('keeps the run across a reload', async ({ page }) => {
+  const errors = await open(page);
+  await page.evaluate(() => window.__barrio.autoplay(6));
   await page.getByRole('button', { name: 'Save', exact: true }).click();
-  await expect(page.getByRole('status')).toContainText('saved on this device');
+  const saved = await page.evaluate(() => ({
+    snapshot: window.__barrio.snapshot(),
+    autosave: localStorage.getItem('barrio.autosave.v3'),
+    save: localStorage.getItem('barrio.saved.v3'),
+  }));
+  expect(saved.snapshot.tiles).toHaveLength(7);
+  expect(JSON.parse(saved.autosave ?? '{}').version).toBe(3);
+  expect(saved.save).toBe(saved.autosave);
+  await page.reload();
+  await page.waitForFunction(() => window.__barrio?.ready, undefined, { timeout: 60000 });
+  const restored = await page.evaluate(() => window.__barrio.snapshot());
+  expect(restored.tiles).toEqual(saved.snapshot.tiles);
+  expect(restored.current).toEqual(saved.snapshot.current);
+  expect(restored.upcoming).toEqual(saved.snapshot.upcoming);
+  expect(restored.score).toBe(saved.snapshot.score);
+  await expect(page.locator('#remaining')).toHaveText(`${saved.snapshot.remaining} tiles left`);
+  expect(await page.evaluate(() => localStorage.getItem('barrio.autosave.v2'))).toBeNull();
+  expect(await page.evaluate(() => localStorage.getItem('barrio.autosave.v1'))).toBeNull();
+  expect(errors).toEqual([]);
 });
+
+test('turns the camera with the view buttons', async ({ page }) => {
+  const errors = await open(page);
+  const where = () =>
+    page.evaluate(() => {
+      // A hex well away from the orbit center moves visibly when the view turns.
+      const far = window.__barrio
+        .snapshot()
+        .frontier.reduce((a, b) => (Math.abs(b.q) + Math.abs(b.r) > Math.abs(a.q) + Math.abs(a.r) ? b : a));
+      return { far, point: window.__barrio.hexToScreen(far.q, far.r) };
+    });
+  const before = await where();
+  await page.getByRole('button', { name: 'Turn the view right (E)', exact: true }).click();
+  await page.waitForTimeout(800);
+  await settle(page);
+  const after = await page.evaluate(({ q, r }) => window.__barrio.hexToScreen(q, r), before.far);
+  expect(Math.hypot(after.x - before.point.x, after.y - before.point.y)).toBeGreaterThan(20);
+  await page.getByRole('button', { name: 'Turn the view left (Q)', exact: true }).click();
+  await page.waitForTimeout(800);
+  await settle(page);
+  const back = await page.evaluate(({ q, r }) => window.__barrio.hexToScreen(q, r), before.far);
+  expect(Math.hypot(back.x - before.point.x, back.y - before.point.y)).toBeLessThan(4);
+  expect(errors).toEqual([]);
+});
+
+for (const [name, grow] of [
+  ['opening', 0],
+  ['developed', 50],
+] as const)
+  test(`matches the ${name} neighborhood baseline`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.goto(`/?quality=low&seed=2026${grow ? `&autoplay=${grow}` : ''}`);
+    await page.waitForFunction(() => window.__barrio?.ready, undefined, { timeout: 60000 });
+    await page.evaluate(() => window.__barrio.home());
+    await page.addStyleTag({ content: '#app > :not(canvas){display:none!important}' });
+    await page.evaluate(() => window.__barrio.updateShadows());
+    await page.waitForTimeout(1500);
+    await expect(page).toHaveScreenshot(`${name}.png`, { maxDiffPixelRatio: 0.02 });
+    expect(errors).toEqual([]);
+  });

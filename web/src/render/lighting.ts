@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import type { Region } from '../domain';
 import { glow } from './material';
 
 export type LightingPreset = 'afternoon' | 'daylight' | 'evening';
@@ -80,36 +81,58 @@ function gradient(top: string, bottom: string): THREE.CanvasTexture {
   return texture;
 }
 
+/** Afternoon sky per region, from the art direction review: small shifts around the shared gradient. */
+const REGION_SKY: Record<Region, { zenith: string; horizon: string }> = {
+  medellin: { zenith: '#a9c6cf', horizon: '#f2dcc0' },
+  salento: { zenith: '#a4c4cc', horizon: '#eadfc6' },
+  cartagena: { zenith: '#a8cbd4', horizon: '#f4d9b8' },
+  bogota: { zenith: '#a3b8c6', horizon: '#e6dccd' },
+};
+
 /** Owns the sun, sky light, background, and fog so a preset switch is one call. */
 export class Lighting {
   readonly sun = new THREE.DirectionalLight();
   readonly sky = new THREE.HemisphereLight();
   private background: THREE.CanvasTexture | null = null;
 
+  private preset: LightingPreset = 'afternoon';
+  private region: Region = 'medellin';
+  private backgroundPreset: string | null = null;
+  readonly center = new THREE.Vector3();
+
   constructor(
     private readonly scene: THREE.Scene,
     private readonly renderer: THREE.WebGLRenderer,
-    readonly center: THREE.Vector3,
+    center: THREE.Vector3,
     radius: number,
     shadowSize: number,
   ) {
     this.sun.castShadow = true;
     this.sun.shadow.mapSize.set(shadowSize, shadowSize);
+    this.sun.shadow.bias = -0.0004;
+    this.sun.shadow.normalBias = 0.025;
+    scene.add(this.sun, this.sun.target, this.sky);
+    scene.fog = new THREE.Fog('#ffffff', 60, 140);
+    this.frame(center, radius);
+  }
+
+  /** Fits the sun's shadow volume to the neighborhood as it grows. */
+  frame(center: THREE.Vector3, radius: number): void {
+    this.center.copy(center);
     const camera = this.sun.shadow.camera;
     camera.left = -radius;
     camera.right = radius;
     camera.top = radius;
     camera.bottom = -radius;
     camera.near = 1;
-    camera.far = radius * 4;
-    this.sun.shadow.bias = -0.0004;
-    this.sun.shadow.normalBias = 0.025;
+    camera.far = 60 + radius * 3;
+    camera.updateProjectionMatrix();
     this.sun.target.position.copy(center);
-    scene.add(this.sun, this.sun.target, this.sky);
-    scene.fog = new THREE.Fog('#ffffff', 60, 140);
+    this.apply(this.preset);
   }
 
   apply(preset: LightingPreset): void {
+    this.preset = preset;
     const mood = MOODS[preset];
     const distance = 60;
     this.sun.color.set(mood.sun);
@@ -123,11 +146,23 @@ export class Lighting {
     this.sky.groundColor.set(mood.ground);
     this.sky.intensity = mood.ambient;
     this.renderer.toneMappingExposure = mood.exposure;
-    this.background?.dispose();
-    this.background = gradient(mood.zenith, mood.horizon);
-    this.scene.background = this.background;
-    if (this.scene.fog instanceof THREE.Fog) this.scene.fog.color.set(mood.horizon);
+    // The afternoon sky takes the region's own zenith and horizon; daylight and evening stay shared.
+    const sky = preset === 'afternoon' ? REGION_SKY[this.region] : mood;
+    const backgroundKey = `${preset}/${preset === 'afternoon' ? this.region : ''}`;
+    if (this.backgroundPreset !== backgroundKey) {
+      this.background?.dispose();
+      this.background = gradient(sky.zenith, sky.horizon);
+      this.backgroundPreset = backgroundKey;
+      this.scene.background = this.background;
+    }
+    if (this.scene.fog instanceof THREE.Fog) this.scene.fog.color.set(sky.horizon);
     glow.value = mood.windows;
+  }
+
+  setRegion(region: Region): void {
+    if (region === this.region) return;
+    this.region = region;
+    this.apply(this.preset);
   }
 
   dispose(): void {

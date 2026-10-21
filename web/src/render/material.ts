@@ -107,6 +107,9 @@ if (bbSurface == 1 && bbWall) {
   float meadow = smoothstep(0.35, 0.8, bbNoise(vPatternPosition.xz * 0.16 + 3.7));
   diffuseColor.rgb *= 0.92 + 0.14 * n;
   diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * vec3(1.06, 1.05, 0.84), meadow * 0.4);
+} else if (bbSurface == 16) {
+  float n = bbNoise(vPatternPosition.xz * 2.2 + vec2(0.0, vPatternPosition.x * 0.3));
+  diffuseColor.rgb *= 0.93 + 0.12 * n;
 } else if (bbSurface == 9 && bbWall) {
   float v = vPatternPosition.y * 7.0 + bbNoise(vec2(bbWallUV().x * 1.3, vPatternPosition.y)) * 2.2;
   diffuseColor.rgb *= 0.86 + 0.16 * (0.5 + 0.5 * sin(v));
@@ -115,7 +118,7 @@ if (bbSurface == 1 && bbWall) {
 const roughnessBody = /* glsl */ `
 {
   int s = int(vSurface + 0.5);
-  roughnessFactor = s == 6 ? 0.22 : s == 4 ? 0.5 : s == 14 ? 0.55 : s == 3 ? 0.72 : s == 11 ? 0.78 : 0.94;
+  roughnessFactor = s == 6 ? 0.22 : s == 16 ? 0.6 : s == 4 ? 0.5 : s == 14 ? 0.55 : s == 3 ? 0.72 : s == 11 ? 0.78 : 0.94;
 }
 `;
 const metalnessBody = /* glsl */ `
@@ -154,7 +157,7 @@ export function createWorldMaterial(): THREE.MeshStandardMaterial {
   const material = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, metalness: 0 });
   (material as WithDefines).defines = { BARRIO_PATTERNS: '' };
   material.onBeforeCompile = patch;
-  material.customProgramCacheKey = () => 'barrio-world-v2';
+  material.customProgramCacheKey = () => 'barrio-world-v3';
   return material;
 }
 

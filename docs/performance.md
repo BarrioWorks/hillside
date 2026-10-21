@@ -1,5 +1,7 @@
 # Performance validation
 
+> The sections below measure the square-grid sandbox. The hexagonal game measures its scenes with the rewritten `tools/benchmark.mjs`; results and method are in the [strategy redesign Phase 1 report](strategy-redesign.md#measured-performance) and `docs/benchmarks/hex-scenes-*.json`. The measurement method (render cost through `?profile`) is unchanged.
+
 ## Acceptance status
 
 The hardware targets are not measured. Those targets are 60 FPS on a hardware desktop and 30 FPS on a physical mid-range mobile device. This host has no GPU. Every number below comes from SwiftShader, a CPU software rasterizer. Its costs do not scale like a GPU's, so these results support A/B comparison on the same host only. They do not predict device frame rates.

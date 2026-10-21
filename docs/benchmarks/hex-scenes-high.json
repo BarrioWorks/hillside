@@ -1,0 +1,173 @@
+{
+  "recordedAt": "2026-10-21T08:57:03.944Z",
+  "browserVersion": "134.0.6998.35",
+  "host": {
+    "platform": "linux",
+    "release": "7.0.0-34-generic",
+    "cpu": "AMD EPYC 7B13 64-Core Processor",
+    "logicalCPUs": 8,
+    "loadAverageAtStart": [
+      7.24,
+      4.79,
+      3.65
+    ]
+  },
+  "quality": "high",
+  "mode": "explicit SwiftShader software rendering, 1440x900, pixel ratio 1",
+  "method": "Per scene: load /?profile&seed=2026, grow with the greedy autoplay command, frame the neighborhood, render continuously for the sample window, and take the median of renderer.render plus a one-pixel readPixels. Placement latency times the place command through Rust validation, snapshot parsing, and the synchronous scene reconcile; rendering of the next frame is excluded.",
+  "limitations": "Software rasterization on a GPU-less host. Use for A/B comparison only; it does not establish desktop or mobile frame rates.",
+  "results": [
+    {
+      "grownBy": 0,
+      "tiles": 5,
+      "readyMilliseconds": 2026.0164630000004,
+      "autoplayMilliseconds": 0,
+      "sceneBuildMilliseconds": 177.80000001192093,
+      "renderMedianMilliseconds": 123.40000000596046,
+      "renderSamples": 63,
+      "drawCalls": 29,
+      "triangles": 12706,
+      "geometries": 30,
+      "textures": 2,
+      "groundTriangles": 208,
+      "tileParts": 30,
+      "batchCount": 26,
+      "placementMedianMilliseconds": 16.80000001192093,
+      "hoverPreviewMedianMilliseconds": 0,
+      "frontierSweepMedianMilliseconds": 0.19999998807907104,
+      "memory": {
+        "before": {
+          "geometries": 45,
+          "textures": 2,
+          "allocatedBatchCount": 41,
+          "cachedGeometries": 41
+        },
+        "afterTenUndoRedoCycles": {
+          "geometries": 45,
+          "textures": 2,
+          "allocatedBatchCount": 41,
+          "cachedGeometries": 41
+        }
+      },
+      "loadAverage": [
+        7.64,
+        5.07,
+        3.78
+      ]
+    },
+    {
+      "grownBy": 20,
+      "tiles": 25,
+      "readyMilliseconds": 1331.7517110000008,
+      "autoplayMilliseconds": 340.59999999403954,
+      "sceneBuildMilliseconds": 331,
+      "renderMedianMilliseconds": 317.5,
+      "renderSamples": 25,
+      "drawCalls": 71,
+      "triangles": 96228,
+      "geometries": 73,
+      "textures": 2,
+      "groundTriangles": 782,
+      "tileParts": 180,
+      "batchCount": 68,
+      "placementMedianMilliseconds": 7.5,
+      "hoverPreviewMedianMilliseconds": 0.09999999403953552,
+      "frontierSweepMedianMilliseconds": 0.09999999403953552,
+      "memory": {
+        "before": {
+          "geometries": 79,
+          "textures": 2,
+          "allocatedBatchCount": 76,
+          "cachedGeometries": 76
+        },
+        "afterTenUndoRedoCycles": {
+          "geometries": 81,
+          "textures": 2,
+          "allocatedBatchCount": 76,
+          "cachedGeometries": 76
+        }
+      },
+      "loadAverage": [
+        7.97,
+        5.35,
+        3.9
+      ]
+    },
+    {
+      "grownBy": 50,
+      "tiles": 55,
+      "readyMilliseconds": 1476.6052809999965,
+      "autoplayMilliseconds": 693.4000000059605,
+      "sceneBuildMilliseconds": 670.5999999940395,
+      "renderMedianMilliseconds": 496.2999999821186,
+      "renderSamples": 15,
+      "drawCalls": 104,
+      "triangles": 214796,
+      "geometries": 106,
+      "textures": 2,
+      "groundTriangles": 1606,
+      "tileParts": 427,
+      "batchCount": 101,
+      "placementMedianMilliseconds": 9.199999988079071,
+      "hoverPreviewMedianMilliseconds": 0.10000002384185791,
+      "frontierSweepMedianMilliseconds": 0.29999998211860657,
+      "memory": {
+        "before": {
+          "geometries": 111,
+          "textures": 2,
+          "allocatedBatchCount": 107,
+          "cachedGeometries": 107
+        },
+        "afterTenUndoRedoCycles": {
+          "geometries": 112,
+          "textures": 2,
+          "allocatedBatchCount": 107,
+          "cachedGeometries": 107
+        }
+      },
+      "loadAverage": [
+        8.56,
+        5.78,
+        4.1
+      ]
+    },
+    {
+      "grownBy": 100,
+      "tiles": 105,
+      "readyMilliseconds": 1343.1901780000044,
+      "autoplayMilliseconds": 832.0999999940395,
+      "sceneBuildMilliseconds": 793.5,
+      "renderMedianMilliseconds": 692.6999999880791,
+      "renderSamples": 12,
+      "drawCalls": 126,
+      "triangles": 422042,
+      "geometries": 128,
+      "textures": 2,
+      "groundTriangles": 2878,
+      "tileParts": 799,
+      "batchCount": 123,
+      "placementMedianMilliseconds": 14.300000011920929,
+      "hoverPreviewMedianMilliseconds": 0.09999999403953552,
+      "frontierSweepMedianMilliseconds": 0.30000001192092896,
+      "memory": {
+        "before": {
+          "geometries": 130,
+          "textures": 2,
+          "allocatedBatchCount": 126,
+          "cachedGeometries": 126
+        },
+        "afterTenUndoRedoCycles": {
+          "geometries": 131,
+          "textures": 2,
+          "allocatedBatchCount": 126,
+          "cachedGeometries": 126
+        }
+      },
+      "loadAverage": [
+        8.79,
+        6.23,
+        4.33
+      ]
+    }
+  ]
+}

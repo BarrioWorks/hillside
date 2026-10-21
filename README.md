@@ -1,8 +1,10 @@
 # Barrio Builder
 
-A relaxing browser sandbox for building a miniature Medellín-inspired hillside neighborhood. Place homes, shops, streets, stairs, and plants on contour terraces. Change the light, rotate the view, undo changes, and keep your neighborhood on your own device.
+A relaxing tile-placement game about growing a Colombian hillside neighborhood one hexagon at a time. Each tile carries homes, paths, gardens, or a stream. Fit its six edges to the neighborhood, join paths with stairs across terraces, and watch an irregular little island grow.
 
-The browser runs the complete game. Rust/WebAssembly owns the deterministic terrain, placement rules, connectivity, history, and save validation. Three.js renders the world. There is no account system or game server.
+The browser runs the complete game. Rust/WebAssembly owns the deterministic hex terrain, tile supply, placement rules, path networks, history, and save validation. Three.js renders the world. There is no account system or game server.
+
+The game is being redesigned in phases; [the strategy redesign](docs/strategy-redesign.md) records the research, decisions, and progress. Phase 1, the hexagonal foundation, is complete. Resources, objectives, and a finite tile supply come in Phase 2.
 
 ## Run locally
 
@@ -22,17 +24,21 @@ Open <http://localhost:5173>. A WebGL-capable browser is required.
 
 ## Play
 
-Choose a building, connection, or prop from the bottom palette and click an open terrace. A translucent preview shows whether the placement is valid, and a short note explains why when it is not. Buildings need flat ground. Stairs face one step uphill, with a level landing behind them.
+Barrio Classic is a seeded run. It starts with one settlement in a Colombian region (Medellín, Salento, Cartagena or Bogotá) and a deck of 30 tiles. The bottom tray shows the tile in hand, the next two, and the tiles left.
 
-- Drag to orbit, right-drag to pan, and scroll to zoom. On touch screens, use two fingers to pan and pinch to zoom.
-- `Q` and `E` rotate the view a quarter turn. The camera buttons on the right do the same.
-- `R` rotates a placement. `X` selects the remove tool, which highlights the structure it would take away. `Esc` returns to exploring.
-- `H` hides the interface for a clean view. `?` opens the help panel.
-- `Ctrl Z` undoes, `Ctrl Shift Z` redoes, and `Ctrl S` saves. macOS uses `Command`.
-- The sun button opens the lighting presets: warm afternoon, bright daylight, and soft evening.
-- The neighborhood menu provides load, export, import, mute, and a new neighborhood.
+- **Placing:** outlined spots beside the neighborhood show where the tile in hand fits; dashed rims mark spots where it fits in no rotation. Point at a spot to see the tile in place and its points, then click to place it. On touch screens, tap to preview and tap again to place.
+- **Scoring:** every tile scores 10, plus 20 for each edge that matches its neighbor. Filling a spot whose six edges all match adds 60.
+- **Water:** streams must meet streams, and land may not touch water. A stream may end at an empty spot.
+- **Paths:** matching path edges join walks, with stairs across one terrace. Two terraces is too steep, so the path stops at a railing. A home counts once a path reaches its door.
+- **Skip:** once per run, the tile in hand can go to the back of the deck.
+- **Quests:** three quests ask for homes on one walk, a large nature area, and a long stream. Each completed quest pays points and adds tiles to the deck, and the next, larger quest of its kind takes its place.
+- **Victory:** milestones come at 1,000, 3,000, and 6,000 points. Reaching 6,000 is victory: keep building, or finish and see the results.
+- **End:** the run ends when the deck is empty. Personal bests are kept on this device. There is no undo.
+- **Keys:** `R` turns the tile, `Shift R` turns it back, `S` skips. With the canvas focused, the arrow keys move between open spots and `Enter` places. `Q` and `E` turn the view, `H` hides the interface, `?` opens help, and `Ctrl S` saves (`Command S` on macOS).
+- **Camera:** drag to orbit, right-drag to pan, scroll to zoom. The house button frames the neighborhood.
+- **Menu:** the sun button changes the lighting. The neighborhood menu loads, exports and imports runs, mutes sound, and starts a new game.
 
-Open `/?contact-sheet` to inspect the building collection under identical lighting.
+Add `?seed=<number>` to play a specific run without touching your autosave, and `&autoplay=<count>` to let the built-in greedy player place tiles. The rules are specified in [Classic gameplay](docs/classic-gameplay.md).
 
 ## Graphics quality
 
@@ -55,27 +61,29 @@ The production build is written to `dist/`. Run `npm run preview` to inspect it 
 
 ## Benchmark and screenshots
 
-Start `npm run preview -- --port 4173`, then run `node tools/benchmark.mjs` in another terminal. It imports a deterministic 500-structure scene and records five runs of render cost and throughput. Set `BARRIO_BENCHMARK_OUT` to choose the output file. The script forces SwiftShader software rendering, so its numbers do not establish desktop or mobile targets. [Performance notes](docs/performance.md) describe the method, the A/B results against the prototype, and the steps to measure on real devices.
+Start a server, then run `node tools/benchmark.mjs`. It measures the one-tile opening and runs grown by 10, 20, and 30 placements: render cost per frame, draw calls, triangles, renderer memory, scene build time, placement latency, and renderer memory after ten regrown runs. Set `BARRIO_QUALITY` to `low` or `high` and `BARRIO_BENCHMARK_OUT` to choose the output file. `node tools/benchmark-core.mjs` times the release WASM rules on their own. `cargo run --release --bin simulate -- --seeds 1000 --out docs/benchmarks/classic-balance.json` plays 1,000 seeded runs with each of five computer players through the real rules and reports scores, quests, run length, and victory rates (see [Classic gameplay, Balance](docs/classic-gameplay.md#45-balance)). The scripts force SwiftShader software rendering, so their numbers do not establish desktop or mobile targets. [Performance notes](docs/performance.md) describe the method.
 
-`tools/capture.mjs` renders the documentation screenshots from fixed scenes and camera views:
+`tools/capture.mjs` renders the documentation screenshots in the real engine. They cover the four regional starts, hover and invalid previews, 10- and 30-tile neighborhoods, and the path evidence shots. Path shots search seeded runs for the situation they show: two joined homes tiles, a three-way crossing, hillside stairs, and two walks before and after joining.
 
 ```sh
 BARRIO_URL=http://127.0.0.1:5173 BARRIO_BROWSER_PATH=/path/to/chrome node tools/capture.mjs <outdir> [shot,shot]
 ```
 
-The optional second argument limits the run to named shots, for example `03-dense-hillside,09-evening`. Each shot writes a PNG and a JSON file of renderer metrics.
+The optional second argument limits the run to named shots, for example `06-hover-preview,14-hillside-stairs`. Each shot writes a PNG and a JSON file of renderer metrics.
 
 ## Save files
 
-Neighborhoods stay in browser-local storage. Export a JSON file to keep a portable copy or move a neighborhood between browsers. Import validates the file before changing the current neighborhood. Browser storage can be cleared by the browser or operating system, so keep an exported copy of important creations.
+Runs stay in browser-local storage. Export a JSON file to keep a portable copy or move a run between browsers. Browser storage can be cleared by the browser or operating system, so keep an exported copy of runs that matter.
 
-New neighborhoods use contour terrain (`hillside-v2`). Saves made with the original straight terraces (`hillside-v1`) still load with their original terrain.
+Runs are saved as version 3 files: the seed, the rules version (`classic-2`), and the list of placements and skips. Loading replays every action through the rules, so a file restores the exact run or is refused without changing the current one.
+
+Earlier saves (the square sandbox, version 1, and free hex building, version 2) cannot be played in Classic. Loading one explains why and changes nothing. If this browser still holds one, or an autosave this version could not read, the menu offers to download it.
 
 ## Project structure
 
-- `crates/barrio-core/` contains deterministic rules, terrain generators, save validation, and native Rust tests.
+- `crates/barrio-core/` contains the hex grid, tile edges and placement rules, the seeded hillside and tile supply, path networks, save validation, and native Rust tests.
 - `web/src/` contains interaction, the WASM boundary, rendering, sound, persistence, and UI.
-- `web/src/render/` generates every building procedurally from a shape grammar (`architecture.ts`), with one shared procedural material (`material.ts`) and palette (`palette.ts`).
+- `web/src/render/` builds the hex ground (`ground.ts`), lays out each tile's houses, paths, stairs, streams, and trees (`tiles.ts`), and generates every building procedurally from a shape grammar (`architecture.ts`), with one shared procedural material (`material.ts`) and palette (`palette.ts`).
 - `asset-sources/` keeps the Kenney source models used by the prototype, with licenses and provenance. The runtime no longer loads GLB models, and the asset build pipeline was removed.
 - `tools/` contains the WASM build, benchmarks, WASM verification, and the screenshot capture tool.
 - `docs/` records architecture, research, decisions, and measured performance.

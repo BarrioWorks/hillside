@@ -1,0 +1,173 @@
+{
+  "recordedAt": "2026-10-21T12:19:59.987Z",
+  "browserVersion": "134.0.6998.35",
+  "host": {
+    "platform": "linux",
+    "release": "7.0.0-34-generic",
+    "cpu": "AMD EPYC 7B13 64-Core Processor",
+    "logicalCPUs": 8,
+    "loadAverageAtStart": [
+      4.77,
+      4.4,
+      3.93
+    ]
+  },
+  "quality": "low",
+  "mode": "explicit SwiftShader software rendering, 1440x900, pixel ratio 1",
+  "method": "Per scene: load /?profile&seed=2026, grow with the greedy autoplay command (a run holds at most the 30-tile deck plus rewards), frame the neighborhood, render continuously for the sample window, and take the median of renderer.render plus a one-pixel readPixels. Placement latency times the place command through Rust validation, snapshot parsing, and the synchronous scene reconcile; rendering of the next frame is excluded.",
+  "limitations": "Software rasterization on a GPU-less host. Use for A/B comparison only; it does not establish desktop or mobile frame rates.",
+  "results": [
+    {
+      "grownBy": 0,
+      "tiles": 1,
+      "readyMilliseconds": 1781.5256930000003,
+      "autoplayMilliseconds": 0,
+      "sceneBuildMilliseconds": 75.80000001192093,
+      "renderMedianMilliseconds": 67.7999999821186,
+      "renderSamples": 83,
+      "drawCalls": 16,
+      "triangles": 3062,
+      "geometries": 14,
+      "textures": 2,
+      "groundTriangles": 54,
+      "tileParts": 10,
+      "batchCount": 8,
+      "placementMedianMilliseconds": 18.19999998807907,
+      "hoverPreviewMedianMilliseconds": 0.20000001788139343,
+      "frontierSweepMedianMilliseconds": 0.4000000059604645,
+      "memory": {
+        "before": {
+          "geometries": 56,
+          "textures": 2,
+          "allocatedBatchCount": 53,
+          "cachedGeometries": 53
+        },
+        "afterTenRegrownRuns": {
+          "geometries": 56,
+          "textures": 2,
+          "allocatedBatchCount": 53,
+          "cachedGeometries": 53
+        }
+      },
+      "loadAverage": [
+        6.15,
+        4.72,
+        4.04
+      ]
+    },
+    {
+      "grownBy": 10,
+      "tiles": 11,
+      "readyMilliseconds": 1026.1910769999995,
+      "autoplayMilliseconds": 275.30000001192093,
+      "sceneBuildMilliseconds": 261.09999999403954,
+      "renderMedianMilliseconds": 144.90000000596046,
+      "renderSamples": 42,
+      "drawCalls": 61,
+      "triangles": 36658,
+      "geometries": 60,
+      "textures": 2,
+      "groundTriangles": 386,
+      "tileParts": 116,
+      "batchCount": 53,
+      "placementMedianMilliseconds": 41.599999994039536,
+      "hoverPreviewMedianMilliseconds": 0.19999998807907104,
+      "frontierSweepMedianMilliseconds": 0.4000000059604645,
+      "memory": {
+        "before": {
+          "geometries": 94,
+          "textures": 2,
+          "allocatedBatchCount": 92,
+          "cachedGeometries": 92
+        },
+        "afterTenRegrownRuns": {
+          "geometries": 94,
+          "textures": 2,
+          "allocatedBatchCount": 92,
+          "cachedGeometries": 92
+        }
+      },
+      "loadAverage": [
+        7.31,
+        5.08,
+        4.17
+      ]
+    },
+    {
+      "grownBy": 20,
+      "tiles": 21,
+      "readyMilliseconds": 1034.9249339999951,
+      "autoplayMilliseconds": 477,
+      "sceneBuildMilliseconds": 448.7999999821186,
+      "renderMedianMilliseconds": 223,
+      "renderSamples": 27,
+      "drawCalls": 86,
+      "triangles": 76352,
+      "geometries": 85,
+      "textures": 2,
+      "groundTriangles": 658,
+      "tileParts": 227,
+      "batchCount": 78,
+      "placementMedianMilliseconds": 11.400000005960464,
+      "hoverPreviewMedianMilliseconds": 0.20000001788139343,
+      "frontierSweepMedianMilliseconds": 0.4000000059604645,
+      "memory": {
+        "before": {
+          "geometries": 105,
+          "textures": 2,
+          "allocatedBatchCount": 101,
+          "cachedGeometries": 101
+        },
+        "afterTenRegrownRuns": {
+          "geometries": 105,
+          "textures": 2,
+          "allocatedBatchCount": 101,
+          "cachedGeometries": 101
+        }
+      },
+      "loadAverage": [
+        7.48,
+        5.29,
+        4.27
+      ]
+    },
+    {
+      "grownBy": 30,
+      "tiles": 31,
+      "readyMilliseconds": 980.3922779999994,
+      "autoplayMilliseconds": 667.3000000119209,
+      "sceneBuildMilliseconds": 608.3000000119209,
+      "renderMedianMilliseconds": 295.7000000178814,
+      "renderSamples": 19,
+      "drawCalls": 107,
+      "triangles": 116614,
+      "geometries": 106,
+      "textures": 2,
+      "groundTriangles": 908,
+      "tileParts": 347,
+      "batchCount": 99,
+      "placementMedianMilliseconds": 10.799999982118607,
+      "hoverPreviewMedianMilliseconds": 0.09999999403953552,
+      "frontierSweepMedianMilliseconds": 0.4000000059604645,
+      "memory": {
+        "before": {
+          "geometries": 132,
+          "textures": 2,
+          "allocatedBatchCount": 130,
+          "cachedGeometries": 130
+        },
+        "afterTenRegrownRuns": {
+          "geometries": 132,
+          "textures": 2,
+          "allocatedBatchCount": 130,
+          "cachedGeometries": 130
+        }
+      },
+      "loadAverage": [
+        7.91,
+        5.53,
+        4.37
+      ]
+    }
+  ]
+}

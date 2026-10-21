@@ -1,34 +1,58 @@
-import type { BuildingDefinition, CellPoint, Command, CorePort, Preview, Snapshot, Tool } from './domain';
-import { type Persistence, SAVE_KEY } from './persistence';
+import type { Command, CorePort, HexPoint, Preview, Snapshot } from './domain';
+import { type Best, type Persistence, SAVE_KEY, UNREADABLE_KEY } from './persistence';
+
+const RECOVERY = {
+  swapped: 'No spot fits that tile, so it traded places with the next tile that does.',
+  replaced: 'No tile in the deck fits anywhere, so the next one became open meadow.',
+} as const;
 export class Controller {
-  readonly catalog: BuildingDefinition[];
   snapshot: Snapshot;
-  tool: Tool = { type: 'place', kind: 'casa' };
+  /** Sixth-turns applied to the tile in hand. */
   rotation = 0;
-  hover: CellPoint | null = null;
+  hover: HexPoint | null = null;
   preview: Preview | null = null;
-  message = 'A little hillside. Make it yours.';
+  message = 'A single settlement on the hillside. Place a tile beside it.';
   persistenceWarning = '';
+  /** An original square-grid neighborhood remains in this browser and can be downloaded. */
+  legacy = false;
   coreMilliseconds = 0;
+  /** The personal best before the run that just ended, and whether that run beat it. */
+  bestBefore: Best | null = null;
+  newBest = false;
+  /** True only right after a live placement reached victory, so a reload or load never celebrates again. */
+  celebrate = false;
   private listeners = new Set<() => void>();
   constructor(
     readonly core: CorePort,
     private readonly persistence: Persistence,
   ) {
-    this.catalog = core.catalog();
     this.snapshot = core.snapshot();
+    let saved: string | null = null;
     try {
-      const saved = persistence.read();
-      if (saved) {
-        const result = core.load(saved);
-        if (result.ok) {
-          this.snapshot = result.snapshot;
-          this.message = 'Welcome back to your neighborhood.';
-        } else this.message = `Your autosave could not be loaded. ${result.message}`;
-      }
+      saved = persistence.read();
+      this.legacy = persistence.legacy() !== null;
     } catch {
       this.persistenceWarning = 'Browser storage is unavailable. Export a copy to keep your neighborhood.';
     }
+    if (saved) {
+      try {
+        const result = core.restore(saved);
+        if (result.ok) {
+          this.snapshot = result.snapshot;
+          this.message = result.message;
+          this.showStoredBest();
+        } else {
+          // Keep it aside before the next autosave replaces it; the menu offers it for download.
+          persistence.write(saved, UNREADABLE_KEY);
+          this.legacy = true;
+          this.message = `Your autosave could not be loaded. ${result.message} A copy is kept in the menu.`;
+        }
+      } catch {
+        this.message = 'Your autosave could not be read. A fresh hillside is ready.';
+      }
+    } else if (this.legacy)
+      this.message =
+        'Barrio Builder now plays Classic runs with a deck and a score. Your earlier neighborhood is still kept; download it from the menu.';
   }
   subscribe(listener: () => void): () => void {
     this.listeners.add(listener);
@@ -37,46 +61,80 @@ export class Controller {
   private emit(): void {
     for (const listener of this.listeners) listener();
   }
-  select(tool: Tool): void {
-    this.tool = tool;
+  /** Turns the tile in hand clockwise (+1) or counterclockwise (-1). */
+  rotate(direction: 1 | -1 = 1): void {
+    this.rotation = (this.rotation + direction + 6) % 6;
     this.refreshPreview();
     this.emit();
   }
-  rotate(): void {
-    this.rotation = (this.rotation + 1) % 4;
-    this.refreshPreview();
-    this.emit();
-  }
-  point(cell: CellPoint | null): void {
-    if (cell?.x === this.hover?.x && cell?.z === this.hover?.z) return;
-    this.hover = cell;
+  point(hex: HexPoint | null): void {
+    if (hex?.q === this.hover?.q && hex?.r === this.hover?.r) return;
+    this.hover = hex;
     this.refreshPreview();
     this.emit();
   }
   private refreshPreview(): void {
+    const open =
+      this.hover &&
+      this.snapshot.frontier.some((ground) => ground.q === this.hover?.q && ground.r === this.hover?.r);
     this.preview =
-      this.hover && this.tool.type === 'place'
-        ? this.core.preview(this.tool.kind, this.hover.x, this.hover.z, this.rotation)
+      this.hover && open && !this.snapshot.finished
+        ? this.core.preview(this.hover.q, this.hover.r, this.rotation)
         : null;
   }
   place(): boolean {
-    if (!this.hover || this.tool.type === 'navigate') return false;
-    if (this.tool.type === 'place')
-      return this.execute({ type: 'place', kind: this.tool.kind, ...this.hover, rotation: this.rotation });
-    return this.execute({ type: 'remove', ...this.hover });
+    if (!this.hover || !this.preview || this.snapshot.finished) return false;
+    return this.execute({ type: 'place', q: this.hover.q, r: this.hover.r, rotation: this.rotation });
+  }
+  skip(): boolean {
+    return this.execute({ type: 'skip' });
   }
   execute(command: Command): boolean {
     const start = performance.now();
     const result = this.core.command(command);
     this.coreMilliseconds = performance.now() - start;
     this.message = result.message;
+    this.celebrate = false;
     if (result.ok) {
+      const ended = result.snapshot.finished && !this.snapshot.finished;
+      this.celebrate = command.type === 'place' && !!result.snapshot.last?.victory;
+      if (!ended) this.newBest = false;
       this.snapshot = result.snapshot;
+      if (result.snapshot.recovery) this.message = `${result.message} ${RECOVERY[result.snapshot.recovery]}`;
+      if (ended) this.recordBest();
       this.autosave();
     }
     this.refreshPreview();
     this.emit();
     return result.ok;
+  }
+  /** A loaded or restored run claims no record; its results show the stored best, if any. */
+  private showStoredBest(): void {
+    this.newBest = false;
+    try {
+      this.bestBefore = this.persistence.best(this.snapshot.rules);
+    } catch {
+      this.bestBefore = null;
+    }
+  }
+  /** Keeps the best finished score per rules version on this device. */
+  private recordBest(): void {
+    const { rules, score, seed, regionName, placements, milestone } = this.snapshot;
+    try {
+      this.bestBefore = this.persistence.best(rules);
+      this.newBest = !this.bestBefore || score > this.bestBefore.score;
+      if (this.newBest)
+        this.persistence.writeBest(rules, {
+          score,
+          seed,
+          region: regionName,
+          placements,
+          milestone,
+          date: new Date().toISOString().slice(0, 10),
+        });
+    } catch {
+      this.newBest = false;
+    }
   }
   private autosave(): void {
     try {
@@ -114,6 +172,8 @@ export class Controller {
       this.message = result.message;
       if (result.ok) {
         this.snapshot = result.snapshot;
+        this.celebrate = false;
+        this.showStoredBest();
         this.autosave();
       }
       this.refreshPreview();
@@ -123,6 +183,13 @@ export class Controller {
       this.message = 'This file could not be read. Choose a Barrio neighborhood JSON file.';
       this.emit();
       return false;
+    }
+  }
+  legacySave(): string | null {
+    try {
+      return this.persistence.legacy();
+    } catch {
+      return null;
     }
   }
   notify(message: string): void {

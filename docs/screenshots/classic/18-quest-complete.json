@@ -1,0 +1,55 @@
+{
+  "found": {
+    "seed": 2026,
+    "step": 9,
+    "q": -4,
+    "r": 0,
+    "rotation": 5
+  },
+  "run": {
+    "seed": 2026,
+    "region": "cartagena",
+    "score": 1030,
+    "placements": 10,
+    "victory": false,
+    "end": null,
+    "last": {
+      "q": -4,
+      "r": 0,
+      "points": {
+        "base": 10,
+        "matches": 1,
+        "matchPoints": 20,
+        "perfect": false,
+        "perfectBonus": 0,
+        "total": 30
+      },
+      "label": null,
+      "completed": [
+        {
+          "quest": {
+            "id": "residential-medium",
+            "family": "residential",
+            "tier": "medium",
+            "target": 12,
+            "points": 350,
+            "tiles": 3,
+            "progress": 12,
+            "state": "completed",
+            "completedAt": 10
+          },
+          "tilesAdded": 3,
+          "tilesDiscarded": 0
+        }
+      ],
+      "questPoints": 350,
+      "milestone": "Settlement",
+      "victory": false
+    },
+    "quests": [
+      "residential-small",
+      "nature-small",
+      "residential-medium"
+    ]
+  }
+}

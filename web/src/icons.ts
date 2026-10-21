@@ -25,6 +25,9 @@ const paths = {
   'rotate-right': 'm17 4 4 4-4 4m4-4H11a7 7 0 1 0 5 12',
   sunset: 'M3 17h18M5 21h14M7 17a5 5 0 0 1 10 0M12 3v4M4 8l2 2m12 0 2-2M2 13h2m16 0h2',
   moon: 'M20.8 14A9 9 0 0 1 10 3.2 9 9 0 1 0 20.8 14Z',
+  water: 'M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z',
+  share: 'M12 15V3m-4 4 4-4 4 4M5 11v9h14v-9',
+  star: 'm12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9L12 3Z',
   sun: 'M12 1v2m0 18v2M1 12h2m18 0h2M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2M17 12a5 5 0 1 1-10 0 5 5 0 0 1 10 0',
 };
 export type IconName = keyof typeof paths;

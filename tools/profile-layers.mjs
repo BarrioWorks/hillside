@@ -35,7 +35,7 @@ const results = [];
 for (const round of [1, 2])
   for (const [label, { quality, setup }] of Object.entries(variants)) {
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
-    await page.goto(`${baseURL}/?benchmark&profile&quality=${quality}`);
+    await page.goto(`${baseURL}/?profile&seed=2026&autoplay=30&quality=${quality}`);
     await page.waitForFunction(() => window.__barrio?.ready && window.__barrio.metrics().renderFrames > 0);
     await page.evaluate(setup);
     await page.evaluate(() => window.__barrio.renderContinuously(true));
@@ -48,5 +48,5 @@ for (const round of [1, 2])
 await browser.close();
 await writeFile(
   process.env.BARRIO_PROFILE_OUT ?? 'docs/benchmarks/limiter.json',
-  `${JSON.stringify({ recordedAt: new Date().toISOString(), scene: '1,023-structure stress scene, 1440x900, SwiftShader', method: 'Median of renderer.render + 1-pixel readPixels per frame over 10 s of continuous rendering', results }, null, 2)}\n`,
+  `${JSON.stringify({ recordedAt: new Date().toISOString(), scene: 'Seed 2026 grown to 31 tiles (a full deck) with autoplay, 1440x900, SwiftShader', method: 'Median of renderer.render + 1-pixel readPixels per frame over 10 s of continuous rendering', results }, null, 2)}\n`,
 );
