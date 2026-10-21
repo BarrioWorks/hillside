@@ -129,13 +129,16 @@ function window(
   }
 }
 
+const doors = new WeakMap<Builder, { x: number; z: number }>();
+
 function door(b: Builder, s: Style, side: Side, m: Mass, u: number, y0: number): void {
   const [x, z, r] = facePoint(side, m.w / 2, m.d / 2, u, 0.012);
   b.box(0.27, 0.5, 0.03, m.x + x, y0 + 0.25, m.z + z, 'offWhite', Surface.paint, r);
   const [dx, dz] = facePoint(side, m.w / 2, m.d / 2, u, 0.024);
   b.box(0.21, 0.46, 0.02, m.x + dx, y0 + 0.23, m.z + dz, s.trim, Surface.metal, r);
-  const [kx, kz] = facePoint(side, m.w / 2, m.d / 2, u, 0.07);
-  b.box(0.32, 0.04, 0.12, m.x + kx, y0 + 0.02, m.z + kz, 'concrete', Surface.concrete, r);
+  const [kx, kz] = facePoint(side, m.w / 2, m.d / 2, u, 0.08);
+  if (side === 0 && y0 === 0) doors.set(b, { x: m.x + kx, z: m.z + kz + 0.071 });
+  b.box(0.32, 0.04, 0.14, m.x + kx, y0 + 0.02, m.z + kz, 'concrete', Surface.concrete, r);
 }
 
 function shutter(b: Builder, side: Side, m: Mass, u: number, y0: number, w: number, h: number): void {
@@ -531,7 +534,14 @@ export function building(
   } else if (kind === 'esquina') {
     const floors = 3;
     mass(b, s, { ...base, floors, open: [0, 1, 2] }, (floor, i, count, side) => {
-      if (floor === 0) return side === 0 ? 'door' : i === count - 1 ? 'shop' : 'window';
+      if (floor === 0)
+        return side === 0
+          ? i === variation % count
+            ? 'door'
+            : 'window'
+          : i === count - 1
+            ? 'shop'
+            : 'window';
       return side === 1 && i === 0 ? 'balcony' : side === 0 ? 'balcony' : 'window';
     });
     roof(b, s, { ...base, y: floors * STOREY }, { features: roofFeatures() });
@@ -576,7 +586,9 @@ export function building(
     const [x, z, r] = facePoint(1, W / 2, D / 2, (s.rng() - 0.5) * 0.3, 0.05);
     b.box(0.16, 0.12, 0.09, x, STOREY * 1.25, z, 'offWhite', Surface.paint, r);
   }
-  return b.finish();
+  const geometry = b.finish();
+  geometry.userData.door = doors.get(b);
+  return geometry;
 }
 
 export function buildingStyle(kind: string, variation: number): { plaster: PaletteName; finish: Finish } {

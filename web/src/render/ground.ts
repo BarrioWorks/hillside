@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import type { Edge, Kind, Region, Tile } from '../domain';
 import { center, corner, DIRECTIONS, HEX as HEX_RADIUS, key, LEVEL, SKIRT } from './hex';
 import { PALETTE, Surface, type SurfaceId } from './palette';
+import { COPING, PATH_WIDTH } from './tiles';
 
 /** Ground tone per tile kind; neighbors at the same level blend toward each other at shared corners. */
 const GROUND: Record<Kind, string> = {
@@ -198,18 +199,39 @@ export function groundGeometry(tiles: readonly Tile[], region: Region = 'medelli
         );
         if (masonry) {
           const lip = y + 0.05;
-          out.quad(
-            [top(a, lip, 0.04), top(b, lip, 0.04), top(b, lip, -0.1), top(a, lip, -0.1)],
-            [coping, coping, coping, coping],
-            Surface.concrete,
-            up,
-          );
-          out.quad(
-            [top(a, y - 0.05, 0.04), top(b, y - 0.05, 0.04), top(b, lip, 0.04), top(a, lip, 0.04)],
-            [coping, coping, coping, coping],
-            Surface.concrete,
-            facing,
-          );
+          const stairs =
+            tile.edges[side] === 'path' &&
+            other.edges[(side + 3) % 6] === 'path' &&
+            tile.meets[side] === 'match' &&
+            tile.elevation - other.elevation === 1;
+          const gap = (PATH_WIDTH + COPING) / (2 * Math.hypot(b.x - a.x, b.z - a.z));
+          const spans = stairs
+            ? [
+                [0, 0.5 - gap],
+                [0.5 + gap, 1],
+              ]
+            : [[0, 1]];
+          for (const [from, to] of spans as [number, number][]) {
+            const left = { x: a.x + (b.x - a.x) * from, z: a.z + (b.z - a.z) * from };
+            const right = { x: a.x + (b.x - a.x) * to, z: a.z + (b.z - a.z) * to };
+            out.quad(
+              [top(left, lip, 0.04), top(right, lip, 0.04), top(right, lip, -0.1), top(left, lip, -0.1)],
+              [coping, coping, coping, coping],
+              Surface.concrete,
+              up,
+            );
+            out.quad(
+              [
+                top(left, y - 0.05, 0.04),
+                top(right, y - 0.05, 0.04),
+                top(right, lip, 0.04),
+                top(left, lip, 0.04),
+              ],
+              [coping, coping, coping, coping],
+              Surface.concrete,
+              facing,
+            );
+          }
         } else {
           const lip = own.clone().multiplyScalar(0.86);
           out.quad(

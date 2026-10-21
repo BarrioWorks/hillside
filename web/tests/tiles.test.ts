@@ -12,14 +12,20 @@ import {
   type Tile,
 } from '../src/domain';
 import { center, DIRECTIONS, edgeAngle, HEX, INRADIUS, LEVEL } from '../src/render/hex';
+import { Surface } from '../src/render/palette';
 import {
+  COPING,
   clearance,
+  footprintDistance,
   PATH_WIDTH,
   type Part,
   pathEnd,
+  plan,
   type SideState,
   STAIR_RUN,
+  segmentsDistance,
   TileKit,
+  type TilePlan,
   type TileSite,
   type Walk,
   walks,
@@ -31,8 +37,6 @@ const TILE_TRIANGLE_BUDGET = 15300;
 /** Forest crowns near an edge lean a little past the hex corners; nothing else leaves the hex. */
 const FOREST_REACH = HEX + 0.15;
 const reach = (where: TileSite) => (where.kind === 'monte' ? FOREST_REACH : HEX + 1e-6);
-/** Closest a building's center may stand to the middle of a walkway. */
-const BUILDING_CLEARANCE = 0.45;
 const WALKWAY_TOP = 0.045;
 
 type Point = { x: number; z: number };
@@ -275,6 +279,25 @@ describe('path layout inside a tile', () => {
     kit.dispose();
   });
 
+  it.each([[0], [0, 3], [0, 1], [0, 2, 4], [0, 1, 3, 4], [0, 1, 2, 3, 4], [0, 1, 2, 3, 4, 5]])(
+    'reaches every midpoint and hub without gaps (case %#)',
+    (...members) => {
+      const layout = walks(pathTile(members), OPEN);
+      for (const side of members) {
+        const { end } = endAt(layout, side);
+        expect(Math.hypot(end.x - anchor(side).x, end.z - anchor(side).z)).toBeLessThan(1e-9);
+      }
+      for (const walk of layout)
+        if (walk.hub)
+          for (const curve of walk.curves) {
+            const end = curve.at(-1) as Point;
+            expect(Math.hypot(end.x - walk.hub.x, end.z - walk.hub.z)).toBeLessThanOrEqual(
+              0.4 - PATH_WIDTH / 2,
+            );
+          }
+    },
+  );
+
   it('meets a neighbor straight on: both end tangents collinear through the seam', () => {
     for (let side = 0; side < 6; side++) {
       const back = (side + 3) % 6;
@@ -391,14 +414,65 @@ function dealt(seeds: number[]): HandTile[] {
   return [...seen.values()];
 }
 
-/** Building geometry by its cache key: houses, regional homes, chapels, and forecourts. */
-function buildingGeometries(kit: TileKit): Set<THREE.BufferGeometry> {
-  const cache = (kit as unknown as { cache: Map<string, THREE.BufferGeometry> }).cache;
-  return new Set(
-    [...cache.entries()]
-      .filter(([name]) => /^(building|finca|casona|chapel|terrace)\//.test(name))
-      .map(([, geometry]) => geometry),
-  );
+const modelCache = new Map<string, THREE.BufferGeometry>();
+const cachedModel = (key: string, make: () => THREE.BufferGeometry) => {
+  let model = modelCache.get(key);
+  if (!model) {
+    model = make();
+    modelCache.set(key, model);
+  }
+  return model;
+};
+function checkHomes(layout: TilePlan, label: string) {
+  for (const home of layout.homes) {
+    expect(home.model.userData.door, label).toBeDefined();
+    for (const walk of layout.walks)
+      if (walk.hub)
+        expect(footprintDistance(home.footprint, walk.hub, walk.hub), label).toBeGreaterThanOrEqual(
+          0.46 - 1e-8,
+        );
+    for (const walk of layout.walks)
+      for (const curve of walk.curves)
+        for (let i = 1; i < curve.length; i++)
+          expect(
+            footprintDistance(home.footprint, curve[i - 1] as Point, curve[i] as Point),
+            label,
+          ).toBeGreaterThanOrEqual((PATH_WIDTH + COPING) / 2 + 0.02 - 1e-8);
+    for (const other of layout.homes)
+      if (other !== home)
+        for (let i = 0; i < home.footprint.length; i++)
+          expect(
+            footprintDistance(
+              other.footprint,
+              home.footprint[i] as Point,
+              home.footprint[(i + 1) % 4] as Point,
+            ),
+            label,
+          ).toBeGreaterThanOrEqual(0.02 - 1e-8);
+    if (!home.connected) {
+      expect(home.access, label).toBeNull();
+      continue;
+    }
+    expect(home.access, label).not.toBeNull();
+    const a = home.access?.[0] as Point,
+      b = home.access?.at(-1) as Point;
+    expect(Math.hypot(a.x - home.door.x, a.z - home.door.z), label).toBeLessThanOrEqual(0.03);
+    const walk = layout.walks.find((w) => w.group === home.group) as Walk;
+    expect(clearance([walk], b), label).toBeLessThanOrEqual(1e-6);
+    for (const other of layout.homes) {
+      if (other === home) {
+        expect(footprintDistance(other.footprint, a, b), label).toBeGreaterThan(0);
+      } else expect(footprintDistance(other.footprint, a, b), label).toBeGreaterThanOrEqual(0.12);
+    }
+    for (const other of layout.walks)
+      if (other !== walk)
+        for (const curve of other.curves)
+          for (let i = 1; i < curve.length; i++)
+            expect(
+              segmentsDistance(a, b, curve[i - 1] as Point, curve[i] as Point),
+              label,
+            ).toBeGreaterThanOrEqual(PATH_WIDTH / 2 + 0.12);
+  }
 }
 
 describe('buildings and walkways', () => {
@@ -417,8 +491,7 @@ describe('buildings and walkways', () => {
     }
   });
 
-  it('keeps every building clear of every walkway', () => {
-    const kit = new TileKit();
+  it('keeps house footprints and door access clear across templates, regions and contexts', () => {
     const tiles = [
       ...fromCore,
       ...(['casas', 'tienda', 'plaza', 'parque', 'capilla', 'inicio'] as const).flatMap((kind) =>
@@ -432,8 +505,7 @@ describe('buildings and walkways', () => {
       ['dead ends', Array.from({ length: 6 }, () => ({ meet: 'differ', rise: 0 }) as const)],
       ['cliffs', Array.from({ length: 6 }, () => ({ meet: 'steep', rise: 2 }) as const)],
     ];
-    let worst = Infinity,
-      buildings = 0;
+    let buildings = 0;
     for (const tile of tiles)
       for (const region of REGIONS)
         for (const variation of [0, 7])
@@ -442,24 +514,12 @@ describe('buildings and walkways', () => {
               ...site(tile.edges, tile.paths, { kind: tile.kind, variation, region }),
               entrances: tile.entrances,
             };
-            const parts = kit.compose(where, sides);
-            const layout = walks(where, sides);
-            const houses = buildingGeometries(kit);
-            for (const part of parts) {
-              if (!houses.has(part.geometry)) continue;
-              const at = new THREE.Vector3().setFromMatrixPosition(part.matrix);
-              const room = clearance(layout, { x: at.x, z: at.z });
-              worst = Math.min(worst, room);
-              buildings++;
-              expect(room, `${tile.kind} ${tile.edges.join()} ${region} ${label}`).toBeGreaterThanOrEqual(
-                BUILDING_CLEARANCE,
-              );
-            }
+            const layout = plan(where, sides, cachedModel);
+            checkHomes(layout, `${tile.kind} ${tile.edges.join()} ${region} ${label}`);
+            buildings += layout.homes.length;
           }
-    console.info('closest building to a walkway', JSON.stringify({ buildings, worst }));
     expect(buildings).toBeGreaterThan(1000);
-    kit.dispose();
-  });
+  }, 30000);
 });
 
 /** Real placed tiles of every kind, with the sides they actually meet. */
@@ -538,7 +598,7 @@ describe('tile composition', () => {
       }
     }
     console.info('tile part extent', JSON.stringify({ cases: cases.length, ...worst }));
-  });
+  }, 30000);
 
   it('shares cached geometry between identical tiles', () => {
     const { tile, region, sides } = placed.find(
@@ -602,4 +662,162 @@ describe('tile composition', () => {
     console.info('max triangles per composed tile', JSON.stringify(report));
     for (const kind of KINDS) expect(report[kind], kind).toBeLessThanOrEqual(TILE_TRIANGLE_BUDGET);
   });
+});
+
+describe('real core path geometry', () => {
+  const runs = Array.from(
+    { length: 10 },
+    (_, i) => realCore(i + 1).command({ type: 'autoplay', count: 40 }).snapshot,
+  );
+  it('keeps real house footprints, doors and access clear and reports disconnected homes', () => {
+    let connected = 0,
+      disconnected = 0;
+    for (const { tiles, region } of runs)
+      for (const tile of tiles) {
+        const layout = plan(siteOf(tile, region), sidesOf(tile, tiles), cachedModel);
+        checkHomes(layout, `${tile.q},${tile.r} ${tile.kind}`);
+        expect(layout.homes.filter((h) => tile.edges[h.side] === 'homes')).toHaveLength(
+          tile.edges.filter((e) => e === 'homes').length,
+        );
+        for (const home of layout.homes) {
+          expect(home.connected).toBe(tile.entrances[home.side] !== null);
+          if (home.connected) connected++;
+          else disconnected++;
+        }
+      }
+    expect(connected).toBeGreaterThan(0);
+    expect(disconnected).toBeGreaterThan(0);
+  }, 30000);
+
+  it('keeps ground-floor vertices, tree crowns and every decoration clear of walks and access', () => {
+    const kit = new TileKit();
+    let houses = 0,
+      housesInside = 0,
+      trees = 0,
+      treesOver = 0,
+      decorations = 0;
+    for (const { tiles, region } of runs)
+      for (const tile of tiles) {
+        const where = siteOf(tile, region),
+          sides = sidesOf(tile, tiles);
+        const layout = plan(where, sides, cachedModel);
+        for (const part of kit.compose(where, sides)) {
+          const cache = (kit as unknown as { cache: Map<string, THREE.BufferGeometry> }).cache;
+          const name = [...cache].find(([, g]) => g === part.geometry)?.[0] ?? '';
+          const house = /^(building|finca|casona|chapel)\//.test(name);
+          const decoration = /^(tree|shrub|palm|bench|lamp|rock|bougainvillea)(\/|$)/.test(name);
+          if (!house && !decoration) continue;
+          let overlaps = false;
+          const p = part.geometry.getAttribute('position');
+          for (let i = 0; i < p.count; i++) {
+            const local = new THREE.Vector3().fromBufferAttribute(p, i);
+            if (house && local.y > 0.1) continue;
+            const v = local.applyMatrix4(part.matrix);
+            const crown = v.y > 0.5;
+            const room = clearance(layout.walks, v);
+            if (room < PATH_WIDTH / 2 - 1e-6 && (house || crown)) overlaps = true;
+            if (decoration) {
+              expect(room, name).toBeGreaterThanOrEqual((PATH_WIDTH + COPING) / 2);
+              for (const home of layout.homes)
+                if (home.access)
+                  expect(
+                    segmentsDistance(v, v, home.access[0] as Point, home.access[1] as Point),
+                    name,
+                  ).toBeGreaterThanOrEqual(0.12);
+            }
+          }
+          if (house) {
+            houses++;
+            if (overlaps) housesInside++;
+          }
+          if (name.startsWith('tree/')) {
+            trees++;
+            if (overlaps) treesOver++;
+          }
+          if (decoration) decorations++;
+        }
+      }
+    console.info(
+      'path occlusion seeds 1..10 autoplay 40',
+      JSON.stringify({ houses, housesInside, trees, treesOver, decorations }),
+    );
+    expect(housesInside).toBe(0);
+    expect(treesOver).toBe(0);
+    expect(decorations).toBeGreaterThan(0);
+    kit.dispose();
+  }, 30000);
+
+  it('matches Rust groups and network ids and joins actual ribbon and stair vertices across every Match seam', () => {
+    const kit = new TileKit();
+    let seams = 0,
+      stairs = 0;
+    for (const { tiles, region } of runs)
+      for (const tile of tiles) {
+        const layout = walks(tile, sidesOf(tile, tiles));
+        for (const walk of layout) {
+          const first = walk.sides[0] as number;
+          expect(walk.sides).toEqual(
+            tile.edges.flatMap((edge, side) =>
+              edge === 'path' &&
+              tile.paths[side] === walk.group &&
+              tile.networks[side] === tile.networks[first]
+                ? [side]
+                : [],
+            ),
+          );
+        }
+        for (const [side, d] of DIRECTIONS.entries()) {
+          if (tile.edges[side] !== 'path' || tile.meets[side] !== 'match') continue;
+          const other = tiles.find((t) => t.q === tile.q + d.q && t.r === tile.r + d.r);
+          if (other?.edges[(side + 3) % 6] !== 'path') continue;
+          expect(tile.networks[side]).toBe(other.networks[(side + 3) % 6]);
+          if (tile.elevation > other.elevation) continue;
+          const at = center(tile.q, tile.r),
+            mid = shift(at, anchor(side)),
+            normal = anchor(side, 1);
+          const height = Math.max(tile.elevation, other.elevation) * LEVEL + WALKWAY_TOP;
+          const ends = (owner: Tile) => {
+            const c = center(owner.q, owner.r);
+            const found: Point[] = [];
+            for (const part of kit.compose(siteOf(owner, region), sidesOf(owner, tiles))) {
+              const p = part.geometry.getAttribute('position'),
+                surface = part.geometry.getAttribute('surface');
+              for (let i = 0; i < p.count; i++) {
+                if (surface.getX(i) !== Surface.paving && surface.getX(i) !== Surface.concrete) continue;
+                const v = new THREE.Vector3().fromBufferAttribute(p, i).applyMatrix4(part.matrix);
+                v.x += c.x;
+                v.z += c.z;
+                v.y += owner.elevation * LEVEL;
+                if (Math.abs(v.y - height) > 0.001) continue;
+                const delta = minus(v, mid);
+                if (
+                  Math.abs(dot(delta, normal)) > 0.001 ||
+                  Math.abs(cross(normal, delta)) > PATH_WIDTH / 2 + 0.001
+                )
+                  continue;
+                if (!found.some((q) => Math.hypot(q.x - v.x, q.z - v.z) < 1e-5))
+                  found.push({ x: v.x, z: v.z });
+              }
+            }
+            return found;
+          };
+          const a = ends(tile),
+            b = ends(other);
+          expect(a.length, `lower ${tile.q},${tile.r}/${side}`).toBeGreaterThanOrEqual(2);
+          expect(b.length).toBeGreaterThanOrEqual(2);
+          for (const p of a)
+            expect(Math.min(...b.map((q) => Math.hypot(p.x - q.x, p.z - q.z)))).toBeLessThan(1e-3);
+          const width = (points: Point[]) =>
+            Math.max(...points.map((p) => cross(normal, minus(p, mid)))) -
+            Math.min(...points.map((p) => cross(normal, minus(p, mid))));
+          expect(width(a)).toBeCloseTo(PATH_WIDTH, 3);
+          expect(width(b)).toBeCloseTo(width(a), 3);
+          seams++;
+          if (tile.elevation < other.elevation) stairs++;
+        }
+      }
+    expect(seams).toBeGreaterThan(0);
+    expect(stairs).toBeGreaterThan(0);
+    kit.dispose();
+  }, 30000);
 });

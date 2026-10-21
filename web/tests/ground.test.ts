@@ -4,6 +4,7 @@ import type { Tile } from '../src/domain';
 import { fillGeometry, groundGeometry, rimGeometry } from '../src/render/ground';
 import { center, corner, DIRECTIONS, edgeAngle, HEX, hexAt, key, LEVEL, SKIRT } from '../src/render/hex';
 import { Surface } from '../src/render/palette';
+import { COPING, PATH_WIDTH } from '../src/render/tiles';
 import { realCore } from './core-fixture';
 
 interface Triangle {
@@ -166,6 +167,47 @@ describe('continuous terraced ground', () => {
     expect(exposed).toBeGreaterThan(0);
     expect(Math.min(...all.flatMap((t) => t.points.map(([, y]) => y)))).toBeCloseTo(base, 5);
   });
+});
+
+it('leaves both coping faces open across every matched staircase', () => {
+  let seams = 0;
+  for (let seed = 1; seed <= 10; seed++) {
+    const { tiles } = realCore(seed).command({ type: 'autoplay', count: 40 }).snapshot;
+    const all = triangles(groundGeometry(tiles));
+    for (const { tile, other, side } of pairs(tiles, (step) => step === 1)) {
+      if (
+        tile.edges[side] !== 'path' ||
+        other.edges[(side + 3) % 6] !== 'path' ||
+        tile.meets[side] !== 'match'
+      )
+        continue;
+      const c = center(tile.q, tile.r),
+        angle = edgeAngle(side);
+      const normal = { x: Math.cos(angle), z: Math.sin(angle) };
+      const mid = {
+        x: c.x + (normal.x * HEX * Math.sqrt(3)) / 2,
+        z: c.z + (normal.z * HEX * Math.sqrt(3)) / 2,
+      };
+      const top = tile.elevation * LEVEL;
+      for (const triangle of all) {
+        if (triangle.surface !== Surface.concrete || !triangle.points.some(([, y]) => y > top + 0.045))
+          continue;
+        const projected = triangle.points.map(([x, , z]) => ({
+          normal: (x - mid.x) * normal.x + (z - mid.z) * normal.z,
+          along: -(x - mid.x) * normal.z + (z - mid.z) * normal.x,
+        }));
+        if (!projected.every((p) => p.normal >= -0.101 && p.normal <= 0.041)) continue;
+        const left = Math.min(...projected.map((p) => p.along)),
+          right = Math.max(...projected.map((p) => p.along));
+        expect(
+          left >= (PATH_WIDTH + COPING) / 2 - 1e-5 || right <= -(PATH_WIDTH + COPING) / 2 + 1e-5,
+          `${seed} stair ${tile.q},${tile.r}/${side}`,
+        ).toBe(true);
+      }
+      seams++;
+    }
+  }
+  expect(seams).toBeGreaterThan(0);
 });
 
 describe('placement rims', () => {
