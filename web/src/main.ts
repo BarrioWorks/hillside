@@ -6,7 +6,7 @@ import { PointerGesture } from './input';
 import { downloadSave, Persistence } from './persistence';
 import { ModelLibrary } from './render/models';
 import { showContactSheet, thumbnails } from './render/thumbnails';
-import { World } from './render/world';
+import { type LightingPreset, World } from './render/world';
 import { Sound } from './sound';
 import { element, UI } from './ui';
 
@@ -18,6 +18,7 @@ interface BarrioDebug {
   benchmark(): { milliseconds: number; structures: number };
   preview(kind: string, x: number, z: number, rotation?: number): unknown;
   renderContinuously(enabled: boolean): void;
+  view(view: { zoom?: number; azimuth?: number; polar?: number; target?: [number, number, number] }): void;
   updateShadows(): void;
   readonly ready: boolean;
 }
@@ -97,9 +98,27 @@ async function start(): Promise<void> {
       case 'home':
         world.home();
         break;
+      case 'hide-ui':
+        ui.setHidden(!ui.hidden);
+        break;
+      case 'rotate-left':
+        world.rotateView(-1);
+        break;
+      case 'rotate-right':
+        world.rotateView(1);
+        break;
+      case 'light:afternoon':
+      case 'light:daylight':
+      case 'light:evening': {
+        const preset = action.slice('light:'.length) as LightingPreset;
+        world.setLighting(preset);
+        ui.lighting(preset);
+        break;
+      }
     }
   });
   world = new World(ui.canvas, controller.snapshot, library, (state) => ui.asset(state));
+  ui.lighting(world.lighting);
   let renderedSnapshot = controller.snapshot;
   controller.subscribe(() => {
     if (renderedSnapshot !== controller.snapshot) {
@@ -176,6 +195,9 @@ async function start(): Promise<void> {
         ui.closeMenu();
       }
       if (key === '?') ui.toggleHelp();
+      if (key === 'h') ui.setHidden(!ui.hidden);
+      if (key === 'q') world.rotateView(-1);
+      if (key === 'e') world.rotateView(1);
     }
   });
   window.__barrio = {
@@ -195,6 +217,7 @@ async function start(): Promise<void> {
       world.frameMilliseconds = [];
     },
     updateShadows: () => world.invalidateShadows(),
+    view: (view) => world.setView(view),
     benchmark: () => {
       world.continuousRendering = true;
       world.frameMilliseconds = [];

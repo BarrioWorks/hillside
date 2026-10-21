@@ -15,6 +15,7 @@ function escapeHtml(value: string): string {
 }
 export class UI {
   readonly canvas: HTMLCanvasElement;
+  hidden = false;
   private category = 'building';
   constructor(
     readonly controller: Controller,
@@ -169,6 +170,13 @@ export class UI {
       button.title = label;
       button.setAttribute('aria-pressed', String(muted));
     });
+  }
+  setHidden(hidden: boolean): void {
+    this.hidden = hidden;
+    document.body.classList.toggle('ui-hidden', hidden);
+  }
+  lighting(preset: string): void {
+    document.documentElement.dataset.light = preset;
   }
   asset(state: AssetState): void {
     const credit = element('#asset-credit', HTMLElement);

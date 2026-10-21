@@ -5,7 +5,10 @@ import { type AssetState, loadLandmark } from './assets';
 import { StructureBatches } from './batches';
 import type { ModelLibrary } from './models';
 import { heightAt, Terrain } from './terrain';
+export type LightingPreset = 'afternoon' | 'daylight' | 'evening';
+export const LIGHTING_PRESETS: readonly LightingPreset[] = ['afternoon', 'daylight', 'evening'];
 export class World {
+  lighting: LightingPreset = 'afternoon';
   readonly scene = new THREE.Scene();
   readonly camera = new THREE.OrthographicCamera(-20, 20, 15, -15, 0.1, 220);
   readonly renderer: THREE.WebGLRenderer;
@@ -257,6 +260,30 @@ export class World {
     this.controls.update();
     this.controls.reset();
     this.controls.enableDamping = damping;
+  }
+  setView(view: { zoom?: number; azimuth?: number; polar?: number; target?: [number, number, number] }): void {
+    const offset = this.camera.position.clone().sub(this.controls.target);
+    const spherical = new THREE.Spherical().setFromVector3(offset);
+    if (view.target) this.controls.target.set(...view.target);
+    if (view.azimuth !== undefined) spherical.theta = view.azimuth;
+    if (view.polar !== undefined) spherical.phi = view.polar;
+    this.camera.position.copy(this.controls.target).add(new THREE.Vector3().setFromSpherical(spherical));
+    if (view.zoom !== undefined) this.camera.zoom = view.zoom;
+    this.camera.updateProjectionMatrix();
+    const damping = this.controls.enableDamping;
+    this.controls.enableDamping = false;
+    this.controls.update();
+    this.controls.enableDamping = damping;
+    this.needsRender = true;
+  }
+  setLighting(preset: LightingPreset): void {
+    this.lighting = preset;
+    this.invalidateShadows();
+  }
+  rotateView(direction: 1 | -1): void {
+    const offset = this.camera.position.clone().sub(this.controls.target);
+    const spherical = new THREE.Spherical().setFromVector3(offset);
+    this.setView({ azimuth: spherical.theta + (direction * Math.PI) / 2 });
   }
   zoom(factor: number): void {
     this.camera.zoom = THREE.MathUtils.clamp(this.camera.zoom * factor, 0.65, 3.5);
