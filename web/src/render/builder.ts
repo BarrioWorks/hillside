@@ -57,7 +57,17 @@ export class Builder {
   }
 
   /** Axis-aligned box centered at (x, y, z), optionally rotated about Y around its own center. */
-  box(w: number, h: number, d: number, x: number, y: number, z: number, color: Paint, surface: SurfaceId, rotation = 0): void {
+  box(
+    w: number,
+    h: number,
+    d: number,
+    x: number,
+    y: number,
+    z: number,
+    color: Paint,
+    surface: SurfaceId,
+    rotation = 0,
+  ): void {
     const geometry = new THREE.BoxGeometry(w, h, d);
     if (rotation) geometry.rotateY(rotation);
     geometry.translate(x, y, z);
@@ -65,17 +75,46 @@ export class Builder {
   }
 
   /** Box whose base sits at y0. */
-  block(w: number, h: number, d: number, x: number, y0: number, z: number, color: Paint, surface: SurfaceId, rotation = 0): void {
+  block(
+    w: number,
+    h: number,
+    d: number,
+    x: number,
+    y0: number,
+    z: number,
+    color: Paint,
+    surface: SurfaceId,
+    rotation = 0,
+  ): void {
     this.box(w, h, d, x, y0 + h / 2, z, color, surface, rotation);
   }
 
-  cylinder(radius: number, height: number, x: number, y0: number, z: number, color: Paint, surface: SurfaceId, top = radius, segments = 10): void {
+  cylinder(
+    radius: number,
+    height: number,
+    x: number,
+    y0: number,
+    z: number,
+    color: Paint,
+    surface: SurfaceId,
+    top = radius,
+    segments = 10,
+  ): void {
     const geometry = new THREE.CylinderGeometry(top, radius, height, segments);
     geometry.translate(x, y0 + height / 2, z);
     this.add(geometry, color, surface);
   }
 
-  blob(radius: number, x: number, y: number, z: number, color: Paint, surface: SurfaceId, squash = 1, detail = 1): void {
+  blob(
+    radius: number,
+    x: number,
+    y: number,
+    z: number,
+    color: Paint,
+    surface: SurfaceId,
+    squash = 1,
+    detail = 1,
+  ): void {
     const geometry = new THREE.IcosahedronGeometry(radius, detail);
     geometry.scale(1, squash, 1);
     geometry.translate(x, y, z);
@@ -87,8 +126,7 @@ export class Builder {
     const length = from.distanceTo(to);
     const geometry = new THREE.BoxGeometry(thickness, thickness, length);
     const matrix = new THREE.Matrix4().lookAt(from, to, new THREE.Vector3(0, 1, 0));
-    if (Math.abs(to.x - from.x) < 1e-6 && Math.abs(to.z - from.z) < 1e-6)
-      matrix.makeRotationX(Math.PI / 2);
+    if (Math.abs(to.x - from.x) < 1e-6 && Math.abs(to.z - from.z) < 1e-6) matrix.makeRotationX(Math.PI / 2);
     matrix.setPosition(from.clone().add(to).multiplyScalar(0.5));
     this.add(geometry, color, surface, matrix);
   }
@@ -121,7 +159,13 @@ export class Builder {
 }
 
 /** Maps facade coordinates (u along the face, v up, out from the face) into building space. */
-export function facePoint(side: Side, halfW: number, halfD: number, u: number, out: number): [number, number, number] {
+export function facePoint(
+  side: Side,
+  halfW: number,
+  halfD: number,
+  u: number,
+  out: number,
+): [number, number, number] {
   switch (side) {
     case 0:
       return [u, halfD + out, 0];

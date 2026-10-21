@@ -167,15 +167,7 @@ for (const [name, width, height] of [
     await page.evaluate(() => document.fonts.ready);
     await page.waitForFunction(() => {
       const metrics = window.__barrio.metrics();
-      return (
-        typeof metrics === 'object' &&
-        metrics !== null &&
-        'asset' in metrics &&
-        typeof metrics.asset === 'object' &&
-        metrics.asset !== null &&
-        'status' in metrics.asset &&
-        metrics.asset.status === 'ready'
-      );
+      return 'renderFrames' in metrics && Number(metrics.renderFrames) > 0;
     });
     await page.mouse.move(5, 100);
     await assertTouchTargets(page);
@@ -194,9 +186,9 @@ test('clicking a visible roof removes that building rather than the terrain behi
   await waitForGame(page);
   const target = await page.evaluate(() => {
     const api = window.__barrio;
-    const structure = api.snapshot().structures.find((s) => s.kind === 'torre' && s.x === 17 && s.z === 11);
+    const structure = api.snapshot().structures.find((s) => s.kind === 'torre');
     if (!structure) throw new Error('The starter tower is missing.');
-    return { id: structure.id, point: api.cellToScreen(structure.x, structure.z, 3.25) };
+    return { id: structure.id, point: api.cellToScreen(structure.x, structure.z, 2.85) };
   });
   await page.getByRole('button', { name: 'Remove a structure (X)', exact: true }).click();
   await page.mouse.click(target.point.x, target.point.y);

@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import type { BuildingDefinition, CellPoint, Preview, Snapshot, Structure, Tool } from '../domain';
 import { StructureBatches } from './batches';
 import { Decor, type Lot } from './decor';
-import { type LightingPreset, Lighting } from './lighting';
+import { Lighting, type LightingPreset } from './lighting';
 import { type Context, type Edge, type ModelLibrary, OPEN } from './models';
 import { PALETTE } from './palette';
 import { heightAt, MARGIN, Terrain } from './terrain';
@@ -97,7 +97,12 @@ export class World {
     const software = /swiftshader|llvmpipe|software/i.test(rendererName);
     const requested = new URLSearchParams(location.search).get('quality');
     const low = requested === 'low' || (requested !== 'high' && software);
-    this.graphics = { quality: low ? 'low' : 'high', software, renderer: rendererName, shadowSize: low ? 1024 : 2048 };
+    this.graphics = {
+      quality: low ? 'low' : 'high',
+      software,
+      renderer: rendererName,
+      shadowSize: low ? 1024 : 2048,
+    };
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, low ? 1 : 2));
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.NeutralToneMapping;
@@ -106,7 +111,13 @@ export class World {
     this.renderer.shadowMap.autoUpdate = false;
     this.renderer.shadowMap.needsUpdate = true;
     const center = new THREE.Vector3(snapshot.width / 2, 1, snapshot.depth / 2);
-    this.lights = new Lighting(this.scene, this.renderer, center, snapshot.width / 2 + MARGIN + 4, this.graphics.shadowSize);
+    this.lights = new Lighting(
+      this.scene,
+      this.renderer,
+      center,
+      snapshot.width / 2 + MARGIN + 4,
+      this.graphics.shadowSize,
+    );
     this.lights.apply(this.lighting);
     this.terrain = new Terrain(snapshot);
     this.scene.add(this.terrain.group);
@@ -128,7 +139,12 @@ export class World {
     canvas.addEventListener('wheel', (event) => this.onWheel(event), { passive: false });
     this.marker = new THREE.Mesh(
       new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2),
-      new THREE.MeshBasicMaterial({ color: PALETTE.offWhite, transparent: true, opacity: 0.28, depthWrite: false }),
+      new THREE.MeshBasicMaterial({
+        color: PALETTE.offWhite,
+        transparent: true,
+        opacity: 0.28,
+        depthWrite: false,
+      }),
     );
     this.marker.renderOrder = 2;
     this.outline = new THREE.LineLoop(
@@ -138,7 +154,12 @@ export class World {
         new THREE.Vector3(0.5, 0, 0.5),
         new THREE.Vector3(-0.5, 0, 0.5),
       ]),
-      new THREE.LineBasicMaterial({ color: PALETTE.offWhite, transparent: true, opacity: 0.95, depthTest: false }),
+      new THREE.LineBasicMaterial({
+        color: PALETTE.offWhite,
+        transparent: true,
+        opacity: 0.95,
+        depthTest: false,
+      }),
     );
     this.outline.renderOrder = 3;
     this.marker.visible = this.outline.visible = false;
@@ -242,7 +263,13 @@ export class World {
       const entry = this.structures.get(structure.id);
       if (!def || !entry) continue;
       const [width, depth] = this.footprint(structure.kind, structure.rotation);
-      lots.push({ structure, category: def.category, width, depth, height: entry.mesh.geometry.boundingBox?.max.y ?? 1 });
+      lots.push({
+        structure,
+        category: def.category,
+        width,
+        depth,
+        height: entry.mesh.geometry.boundingBox?.max.y ?? 1,
+      });
     }
     this.decor.update(snapshot, lots);
     this.snapshot = snapshot;
@@ -329,9 +356,11 @@ export class World {
   }
 
   screenCell(x: number, z: number, elevation = 0): { x: number; y: number } {
-    const point = new THREE.Vector3(x + 0.5, heightAt(this.snapshot, x, z) + 0.01 + elevation, z + 0.5).project(
-      this.camera,
-    );
+    const point = new THREE.Vector3(
+      x + 0.5,
+      heightAt(this.snapshot, x, z) + 0.01 + elevation,
+      z + 0.5,
+    ).project(this.camera);
     const bounds = this.canvas.getBoundingClientRect();
     return {
       x: bounds.left + ((point.x + 1) / 2) * bounds.width,
@@ -339,7 +368,12 @@ export class World {
     };
   }
 
-  setView(view: { zoom?: number; azimuth?: number; polar?: number; target?: [number, number, number] }): void {
+  setView(view: {
+    zoom?: number;
+    azimuth?: number;
+    polar?: number;
+    target?: [number, number, number];
+  }): void {
     const offset = this.camera.position.clone().sub(this.controls.target);
     const spherical = new THREE.Spherical().setFromVector3(offset);
     if (view.target) this.controls.target.set(...view.target);
@@ -428,7 +462,10 @@ export class World {
       entry.mesh.scale.set(1 + settle * 0.035, 1 - settle * 0.07, 1 + settle * 0.035);
       if (!entry.landed && t >= 0.62) {
         entry.landed = true;
-        const [w, d] = [entry.mesh.geometry.boundingBox?.max.x ?? 0.5, entry.mesh.geometry.boundingBox?.max.z ?? 0.5];
+        const [w, d] = [
+          entry.mesh.geometry.boundingBox?.max.x ?? 0.5,
+          entry.mesh.geometry.boundingBox?.max.z ?? 0.5,
+        ];
         this.ring(entry.base, Math.max(w, d) * 2);
       }
       if (t === 1) {
@@ -485,7 +522,13 @@ export class World {
     const target = this.controls.target;
     const limit = this.snapshot.width + 2;
     if (target.x < -2 || target.z < -2 || target.x > limit || target.z > limit) {
-      const clamped = target.clone().set(THREE.MathUtils.clamp(target.x, -2, limit), target.y, THREE.MathUtils.clamp(target.z, -2, limit));
+      const clamped = target
+        .clone()
+        .set(
+          THREE.MathUtils.clamp(target.x, -2, limit),
+          target.y,
+          THREE.MathUtils.clamp(target.z, -2, limit),
+        );
       this.camera.position.add(clamped.clone().sub(target));
       target.copy(clamped);
     }

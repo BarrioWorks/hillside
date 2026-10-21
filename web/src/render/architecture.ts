@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Builder, facePoint, type Paint, random, type Side } from './builder';
-import { PALETTE, PLASTER, type PaletteName, Surface, TRIM } from './palette';
+import { PALETTE, type PaletteName, PLASTER, Surface, TRIM } from './palette';
 
 /**
  * Shape grammar for Medellín self-built houses, after Müller et al. 2006 (CGA): a lot becomes a mass of
@@ -64,7 +64,11 @@ function style(kind: string, variation: number): Style {
   };
 }
 
-function wallFor(s: Style, floor: number, side: Side): { color: Paint; surface: (typeof Surface)[keyof typeof Surface] } {
+function wallFor(
+  s: Style,
+  floor: number,
+  side: Side,
+): { color: Paint; surface: (typeof Surface)[keyof typeof Surface] } {
   const painted = { color: s.plaster, surface: Surface.plaster } as const;
   const brick = { color: 'brick', surface: Surface.brick } as const;
   if (side !== 0 && (side === 2 || !s.paintedSides) && s.finish !== 'painted') return brick;
@@ -121,7 +125,17 @@ function shop(b: Builder, s: Style, side: Side, m: Mass, u: number, y0: number, 
   const [x, z, r] = facePoint(side, m.w / 2, m.d / 2, u, 0.012);
   b.box(w, 0.44, 0.02, m.x + x, y0 + 0.24, m.z + z, 'windowDark', Surface.glass, r);
   const [px, pz] = facePoint(side, m.w / 2, m.d / 2, u, 0.03);
-  b.box(w + 0.06, 0.12, 0.04, m.x + px, y0 + 0.52, m.z + pz, s.accent === s.plaster ? 'offWhite' : s.accent, Surface.paint, r);
+  b.box(
+    w + 0.06,
+    0.12,
+    0.04,
+    m.x + px,
+    y0 + 0.52,
+    m.z + pz,
+    s.accent === s.plaster ? 'offWhite' : s.accent,
+    Surface.paint,
+    r,
+  );
   for (let i = 0; i < 3; i++) {
     const [cx, cz] = facePoint(side, m.w / 2, m.d / 2, u - w * 0.3 + i * w * 0.3, 0.09);
     const goods: PaletteName[] = ['mustard', 'coral', 'mutedGreen'];
@@ -165,12 +179,16 @@ function mass(b: Builder, s: Style, m: Mass, rule: BayRule): void {
     const y = m.y0 + storey * STOREY;
     const floor = storey + level;
     for (const side of [0, 1, 2, 3] as const) {
-      const wall = side === 3 && s.mural && floor < 2 ? { color: s.plaster as Paint, surface: Surface.mural } : wallFor(s, floor, side);
+      const wall =
+        side === 3 && s.mural && floor < 2
+          ? { color: s.plaster as Paint, surface: Surface.mural }
+          : wallFor(s, floor, side);
       const along = side % 2 ? m.d - 0.24 : m.w;
       const [x, z, r] = facePoint(side, m.w / 2, m.d / 2, 0, -0.06);
       b.box(along, STOREY, 0.12, m.x + x, y + STOREY / 2, m.z + z, wall.color, wall.surface, r);
     }
-    if (storey > 0 || m.y0 > 0) b.box(m.w + 0.03, SLAB, m.d + 0.03, m.x, y + SLAB / 2 - 0.01, m.z, 'concrete', Surface.concrete);
+    if (storey > 0 || m.y0 > 0)
+      b.box(m.w + 0.03, SLAB, m.d + 0.03, m.x, y + SLAB / 2 - 0.01, m.z, 'concrete', Surface.concrete);
   }
   b.box(m.w - 0.2, 0.05, m.d - 0.2, m.x, m.y0 + 0.02, m.z, 'concrete', Surface.concrete);
   if (level === 0 && m.y0 === 0)
@@ -189,7 +207,16 @@ function mass(b: Builder, s: Style, m: Mass, rule: BayRule): void {
   if (s.finish === 'frame' || s.finish === 'brick')
     for (const cx of [-1, 1])
       for (const cz of [-1, 1])
-        b.block(0.09, m.floors * STOREY, 0.09, m.x + (cx * (m.w - 0.07)) / 2, m.y0, m.z + (cz * (m.d - 0.07)) / 2, 'concrete', Surface.concrete);
+        b.block(
+          0.09,
+          m.floors * STOREY,
+          0.09,
+          m.x + (cx * (m.w - 0.07)) / 2,
+          m.y0,
+          m.z + (cz * (m.d - 0.07)) / 2,
+          'concrete',
+          Surface.concrete,
+        );
   for (const side of m.open) {
     const along = side % 2 ? m.d : m.w;
     const count = Math.max(1, Math.round(along / 0.46));
@@ -220,7 +247,12 @@ interface Roof {
 }
 
 /** Parapet traced from the roof boundary, then additions placed into a slot grid so they never overlap. */
-function roof(b: Builder, s: Style, r: Roof, options: { parapet?: 'wall' | 'rail' | 'none'; slots?: number; features?: readonly string[] }): void {
+function roof(
+  b: Builder,
+  s: Style,
+  r: Roof,
+  options: { parapet?: 'wall' | 'rail' | 'none'; slots?: number; features?: readonly string[] },
+): void {
   b.box(r.w + 0.04, 0.05, r.d + 0.04, r.x, r.y + 0.025, r.z, 'concrete', Surface.concrete);
   const parapet = options.parapet ?? 'wall';
   if (parapet === 'wall') {
@@ -244,7 +276,16 @@ function roof(b: Builder, s: Style, r: Roof, options: { parapet?: 'wall' | 'rail
       const posts = Math.round(Math.max(w, d) / 0.08);
       for (let i = 0; i <= posts; i++) {
         const t = -0.5 + i / posts;
-        b.block(0.011, 0.26, 0.011, x + (w > d ? t * w : 0), r.y + 0.05, z + (d > w ? t * d : 0), 'metal', Surface.metal);
+        b.block(
+          0.011,
+          0.26,
+          0.011,
+          x + (w > d ? t * w : 0),
+          r.y + 0.05,
+          z + (d > w ? t * d : 0),
+          'metal',
+          Surface.metal,
+        );
       }
     }
   }
@@ -277,7 +318,17 @@ function roof(b: Builder, s: Style, r: Roof, options: { parapet?: 'wall' | 'rail
       for (const dx of [-0.17, 0.17]) b.block(0.015, 0.3, 0.015, x + dx, top, z, 'metal', Surface.metal);
       b.block(0.34, 0.008, 0.008, x, top + 0.29, z, 'metal', Surface.metal);
       const clothes: PaletteName[] = ['offWhite', 'turquoise', 'coral', 'mustard'];
-      for (let i = 0; i < 4; i++) b.block(0.06, 0.1, 0.006, x - 0.12 + i * 0.08, top + 0.18, z, clothes[(i + Math.floor(s.rng() * 4)) % 4] ?? 'offWhite', Surface.fabric);
+      for (let i = 0; i < 4; i++)
+        b.block(
+          0.06,
+          0.1,
+          0.006,
+          x - 0.12 + i * 0.08,
+          top + 0.18,
+          z,
+          clothes[(i + Math.floor(s.rng() * 4)) % 4] ?? 'offWhite',
+          Surface.fabric,
+        );
     } else if (feature === 'dish') {
       b.block(0.02, 0.12, 0.02, x, top, z, 'metal', Surface.metal);
       const dish = new THREE.CylinderGeometry(0.08, 0.03, 0.03, 12);
@@ -290,7 +341,8 @@ function roof(b: Builder, s: Style, r: Roof, options: { parapet?: 'wall' | 'rail
           const px = r.x + (cx * (r.w - 0.1)) / 2,
             pz = r.z + (cz * (r.d - 0.1)) / 2;
           b.block(0.08, 0.06, 0.08, px, top - 0.01, pz, 'concrete', Surface.concrete);
-          for (const o of [-0.02, 0.02]) b.block(0.008, 0.2, 0.008, px + o, top + 0.04, pz + o, 'brickDark', Surface.metal);
+          for (const o of [-0.02, 0.02])
+            b.block(0.008, 0.2, 0.008, px + o, top + 0.04, pz + o, 'brickDark', Surface.metal);
         }
     } else if (feature === 'shed') {
       b.block(0.36, 0.3, 0.32, x, top, z, 'brick', Surface.brick);
@@ -303,9 +355,13 @@ function roof(b: Builder, s: Style, r: Roof, options: { parapet?: 'wall' | 'rail
   }
 }
 
-
 /** Builds a building in local space: footprint centered on the origin, front facade facing +Z. */
-export function building(kind: string, width: number, depth: number, variation: number): THREE.BufferGeometry {
+export function building(
+  kind: string,
+  width: number,
+  depth: number,
+  variation: number,
+): THREE.BufferGeometry {
   const s = style(kind, variation);
   const b = new Builder();
   const W = width - GAP,
@@ -313,7 +369,7 @@ export function building(kind: string, width: number, depth: number, variation: 
   const base = { w: W, d: D, x: 0, z: 0, y0: 0 };
   const residential: BayRule = (floor, i, count, side) => {
     if (side !== 0) return s.rng() < 0.55 ? 'window' : 'blank';
-    if (floor === 0) return i === (variation % count) ? 'door' : 'window';
+    if (floor === 0) return i === variation % count ? 'door' : 'window';
     return s.rng() < 0.35 ? 'balcony' : 'window';
   };
   const roofFeatures = (): string[] => {
@@ -339,11 +395,29 @@ export function building(kind: string, width: number, depth: number, variation: 
     const area = cantilever ? { w: W, d: D + 0.1, x: 0, z: 0.05 } : { w: W, d: D, x: 0, z: 0 };
     const top = floors * STOREY;
     if (variation % 3 === 0) {
-      const room = { w: W * 0.55, d: D * 0.55, x: -W * 0.2, z: -D * 0.2, y0: top, floors: 1, open: [0] as Side[] };
+      const room = {
+        w: W * 0.55,
+        d: D * 0.55,
+        x: -W * 0.2,
+        z: -D * 0.2,
+        y0: top,
+        floors: 1,
+        open: [0] as Side[],
+      };
       roof(b, s, { ...area, y: top }, { parapet: 'rail', features: [] });
       mass(b, { ...s, finish: 'brick' }, room, () => 'window');
-      roof(b, s, { w: room.w, d: room.d, x: room.x, z: room.z, y: top + STOREY }, { parapet: 'none', features: ['tank'] });
-      roof(b, s, { w: W * 0.4, d: D * 0.35, x: W * 0.28, z: D * 0.3, y: top }, { parapet: 'none', features: ['plants'] });
+      roof(
+        b,
+        s,
+        { w: room.w, d: room.d, x: room.x, z: room.z, y: top + STOREY },
+        { parapet: 'none', features: ['tank'] },
+      );
+      roof(
+        b,
+        s,
+        { w: W * 0.4, d: D * 0.35, x: W * 0.28, z: D * 0.3, y: top },
+        { parapet: 'none', features: ['plants'] },
+      );
     } else roof(b, s, { ...area, y: top }, { features: roofFeatures().slice(0, 3) });
   } else if (kind === 'tienda') {
     const rule: BayRule = (floor, i, count, side) => {
@@ -361,29 +435,57 @@ export function building(kind: string, width: number, depth: number, variation: 
       if (side === 0 && floor > 0) return 'balcony';
       return side === 2 ? 'blank' : 'window';
     });
-    roof(b, s, { ...base, y: floors * STOREY }, { features: ['tank', variation % 2 ? 'line' : 'plants', 'rebar'] });
+    roof(
+      b,
+      s,
+      { ...base, y: floors * STOREY },
+      { features: ['tank', variation % 2 ? 'line' : 'plants', 'rebar'] },
+    );
   } else if (kind === 'terraza') {
     mass(b, s, { ...base, floors: 2, open: [0, 1, 2, 3] }, residential);
     const top = 2 * STOREY;
     roof(b, s, { ...base, y: top }, { parapet: 'rail', features: ['plants', 'line', 'plants'] });
-    const room = { w: W * 0.48, d: D * 0.5, x: -W * 0.24, z: -D * 0.22, y0: top, floors: 1, open: [0, 1] as Side[] };
-    mass(b, { ...s, finish: variation % 2 ? 'brick' : s.finish }, room, (_f, i) => (i === 0 ? 'door' : 'window'));
-    roof(b, s, { w: room.w, d: room.d, x: room.x, z: room.z, y: top + STOREY }, { features: ['tank', 'dish'] });
+    const room = {
+      w: W * 0.48,
+      d: D * 0.5,
+      x: -W * 0.24,
+      z: -D * 0.22,
+      y0: top,
+      floors: 1,
+      open: [0, 1] as Side[],
+    };
+    mass(b, { ...s, finish: variation % 2 ? 'brick' : s.finish }, room, (_f, i) =>
+      i === 0 ? 'door' : 'window',
+    );
+    roof(
+      b,
+      s,
+      { w: room.w, d: room.d, x: room.x, z: room.z, y: top + STOREY },
+      { features: ['tank', 'dish'] },
+    );
     for (const cx of [0.08, 0.44])
-      for (const cz of [0.12, 0.42]) b.block(0.03, 0.42, 0.03, W * cx, top + 0.05, D * cz, 'wood', Surface.wood);
-    for (let i = 0; i < 5; i++) b.block(0.42, 0.03, 0.035, W * 0.26, top + 0.47, D * 0.1 + i * D * 0.08, 'wood', Surface.wood);
+      for (const cz of [0.12, 0.42])
+        b.block(0.03, 0.42, 0.03, W * cx, top + 0.05, D * cz, 'wood', Surface.wood);
+    for (let i = 0; i < 5; i++)
+      b.block(0.42, 0.03, 0.035, W * 0.26, top + 0.47, D * 0.1 + i * D * 0.08, 'wood', Surface.wood);
   } else if (kind === 'taller') {
     mass(b, s, { ...base, floors: 1, open: [0] }, (_f, i, n) => (i === n - 1 ? 'door' : 'shutter'));
     const top = STOREY;
     roof(b, s, { ...base, y: top }, { parapet: 'none', features: [] });
     const upper = { w: W * 0.55, d: D, x: -W * 0.22, z: 0, y0: top, floors: 1, open: [0, 3] as Side[] };
     mass(b, { ...s, finish: 'brick' }, upper, () => (s.rng() < 0.7 ? 'window' : 'blank'));
-    roof(b, s, { w: upper.w, d: upper.d, x: upper.x, z: upper.z, y: top + STOREY }, { parapet: 'none', features: ['tank', 'rebar'] });
+    roof(
+      b,
+      s,
+      { w: upper.w, d: upper.d, x: upper.x, z: upper.z, y: top + STOREY },
+      { parapet: 'none', features: ['tank', 'rebar'] },
+    );
     const sheet = new THREE.BoxGeometry(W * 0.44, 0.025, D + 0.12);
     sheet.rotateX(-0.16);
     sheet.translate(W * 0.28, top + 0.36, 0);
     b.add(sheet, 'zinc', Surface.corrugated);
-    for (const cz of [-1, 1]) b.block(0.04, 0.3, 0.04, W * 0.47, top + 0.02, (cz * D) / 2.3, 'metal', Surface.metal);
+    for (const cz of [-1, 1])
+      b.block(0.04, 0.3, 0.04, W * 0.47, top + 0.02, (cz * D) / 2.3, 'metal', Surface.metal);
   } else if (kind === 'esquina') {
     const floors = 3;
     mass(b, s, { ...base, floors, open: [0, 1, 2] }, (floor, i, count, side) => {
@@ -395,13 +497,37 @@ export function building(kind: string, width: number, depth: number, variation: 
     const steps = 8;
     for (let i = 0; i < steps; i++) {
       const z = D / 2 - 0.12 - i * ((D * 0.62) / steps);
-      b.block(0.2, 0.05, (D * 0.62) / steps + 0.01, -W / 2 - 0.11, ((i + 1) * STOREY) / steps - 0.05, z, 'concrete', Surface.concrete);
+      b.block(
+        0.2,
+        0.05,
+        (D * 0.62) / steps + 0.01,
+        -W / 2 - 0.11,
+        ((i + 1) * STOREY) / steps - 0.05,
+        z,
+        'concrete',
+        Surface.concrete,
+      );
     }
     b.block(0.2, 0.05, 0.3, -W / 2 - 0.11, STOREY - 0.05, -D / 2 + 0.2, 'concrete', Surface.concrete);
-    b.bar(new THREE.Vector3(-W / 2 - 0.2, 0.28, D / 2 - 0.1), new THREE.Vector3(-W / 2 - 0.2, STOREY + 0.26, -D / 2 + 0.36), 0.018, s.trim, Surface.metal);
+    b.bar(
+      new THREE.Vector3(-W / 2 - 0.2, 0.28, D / 2 - 0.1),
+      new THREE.Vector3(-W / 2 - 0.2, STOREY + 0.26, -D / 2 + 0.36),
+      0.018,
+      s.trim,
+      Surface.metal,
+    );
     for (let i = 0; i <= 4; i++) {
       const t = i / 4;
-      b.block(0.012, 0.26, 0.012, -W / 2 - 0.2, t * STOREY + 0.02, D / 2 - 0.1 - t * (D - 0.46), 'metal', Surface.metal);
+      b.block(
+        0.012,
+        0.26,
+        0.012,
+        -W / 2 - 0.2,
+        t * STOREY + 0.02,
+        D / 2 - 0.1 - t * (D - 0.46),
+        'metal',
+        Surface.metal,
+      );
     }
   }
   if (s.rng() < 0.5 && kind !== 'torre') {

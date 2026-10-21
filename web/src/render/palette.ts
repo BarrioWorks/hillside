@@ -50,7 +50,14 @@ export const PLASTER: readonly PaletteName[] = [
   'offWhite',
   'turquoise',
 ];
-export const TRIM: readonly PaletteName[] = ['teal', 'brickRed', 'dustyBlue', 'mustard', 'turquoise', 'coral'];
+export const TRIM: readonly PaletteName[] = [
+  'teal',
+  'brickRed',
+  'dustyBlue',
+  'mustard',
+  'turquoise',
+  'coral',
+];
 
 export function color(name: PaletteName): THREE.Color {
   return new THREE.Color(PALETTE[name]);

@@ -78,7 +78,9 @@ export class Terrain {
         const top = level(x, z);
         const playable = x >= 0 && z >= 0 && x < width && z < depth;
         const tint = (playable ? grass : wild).clone();
-        const higher = DIRECTIONS.map(([dx, dz]) => inside(x + dx, z + dz) && level(x + dx, z + dz) > top + 0.01);
+        const higher = DIRECTIONS.map(
+          ([dx, dz]) => inside(x + dx, z + dz) && level(x + dx, z + dz) > top + 0.01,
+        );
         const occlusion = (fx: number, fz: number): number => {
           const weight = (f: number) => (f === 0 ? 1 : f < 0.5 ? 0.35 : 0);
           let shade = 1;
@@ -95,7 +97,12 @@ export class Terrain {
               z0 = fractions[j] as number,
               z1 = fractions[j + 1] as number;
             quads.quad(
-              [v(x + x0, top, z + z1), v(x + x1, top, z + z1), v(x + x1, top, z + z0), v(x + x0, top, z + z0)],
+              [
+                v(x + x0, top, z + z1),
+                v(x + x1, top, z + z1),
+                v(x + x1, top, z + z0),
+                v(x + x0, top, z + z0),
+              ],
               [occlusion(x0, z1), occlusion(x1, z1), occlusion(x1, z0), occlusion(x0, z0)],
               tint,
               Surface.grass,
@@ -120,7 +127,12 @@ export class Terrain {
             surface,
           );
           if (outer) {
-            quads.quad([v(fx, wallTop, fz), v(ex, wallTop, ez), v(ex, top, ez), v(fx, top, fz)], [1, 1, 1, 1], wild.clone().multiplyScalar(0.8), Surface.grass);
+            quads.quad(
+              [v(fx, wallTop, fz), v(ex, wallTop, ez), v(ex, top, ez), v(fx, top, fz)],
+              [1, 1, 1, 1],
+              wild.clone().multiplyScalar(0.8),
+              Surface.grass,
+            );
             return;
           }
           // Concrete coping: a lip along the terrace edge that catches light and outlines each terrace.
@@ -129,9 +141,39 @@ export class Terrain {
           const lip = top + 0.05;
           const ix = -dx * 0.08,
             iz = -dz * 0.08;
-          quads.quad([v(fx + ox, lip, fz + oz), v(ex + ox, lip, ez + oz), v(ex + ix, lip, ez + iz), v(fx + ix, lip, fz + iz)], [1, 1, 1, 1], coping, Surface.concrete);
-          quads.quad([v(fx + ox, top - 0.05, fz + oz), v(ex + ox, top - 0.05, ez + oz), v(ex + ox, lip, ez + oz), v(fx + ox, lip, fz + oz)], [0.92, 0.92, 1, 1], coping, Surface.concrete);
-          quads.quad([v(fx + ix, lip, fz + iz), v(ex + ix, lip, ez + iz), v(ex + ix, top, ez + iz), v(fx + ix, top, fz + iz)], [1, 1, 0.8, 0.8], coping, Surface.concrete);
+          quads.quad(
+            [
+              v(fx + ox, lip, fz + oz),
+              v(ex + ox, lip, ez + oz),
+              v(ex + ix, lip, ez + iz),
+              v(fx + ix, lip, fz + iz),
+            ],
+            [1, 1, 1, 1],
+            coping,
+            Surface.concrete,
+          );
+          quads.quad(
+            [
+              v(fx + ox, top - 0.05, fz + oz),
+              v(ex + ox, top - 0.05, ez + oz),
+              v(ex + ox, lip, ez + oz),
+              v(fx + ox, lip, fz + oz),
+            ],
+            [0.92, 0.92, 1, 1],
+            coping,
+            Surface.concrete,
+          );
+          quads.quad(
+            [
+              v(fx + ix, lip, fz + iz),
+              v(ex + ix, lip, ez + iz),
+              v(ex + ix, top, ez + iz),
+              v(fx + ix, top, fz + iz),
+            ],
+            [1, 1, 0.8, 0.8],
+            coping,
+            Surface.concrete,
+          );
         });
       }
     // Base slab under the diorama.
@@ -141,11 +183,36 @@ export class Terrain {
       z1 = depth + MARGIN + 0.12;
     const slab = new THREE.Color(PALETTE.brickDark).multiplyScalar(0.55);
     const yb = BASE - 0.16;
-    quads.quad([v(x0, yb, z1), v(x1, yb, z1), v(x1, BASE, z1), v(x0, BASE, z1)], [1, 1, 1, 1], slab, Surface.paint);
-    quads.quad([v(x1, yb, z1), v(x1, yb, z0), v(x1, BASE, z0), v(x1, BASE, z1)], [1, 1, 1, 1], slab, Surface.paint);
-    quads.quad([v(x1, yb, z0), v(x0, yb, z0), v(x0, BASE, z0), v(x1, BASE, z0)], [1, 1, 1, 1], slab, Surface.paint);
-    quads.quad([v(x0, yb, z0), v(x0, yb, z1), v(x0, BASE, z1), v(x0, BASE, z0)], [1, 1, 1, 1], slab, Surface.paint);
-    quads.quad([v(x0, BASE, z1), v(x1, BASE, z1), v(x1, BASE, z0), v(x0, BASE, z0)], [1, 1, 1, 1], slab, Surface.paint);
+    quads.quad(
+      [v(x0, yb, z1), v(x1, yb, z1), v(x1, BASE, z1), v(x0, BASE, z1)],
+      [1, 1, 1, 1],
+      slab,
+      Surface.paint,
+    );
+    quads.quad(
+      [v(x1, yb, z1), v(x1, yb, z0), v(x1, BASE, z0), v(x1, BASE, z1)],
+      [1, 1, 1, 1],
+      slab,
+      Surface.paint,
+    );
+    quads.quad(
+      [v(x1, yb, z0), v(x0, yb, z0), v(x0, BASE, z0), v(x1, BASE, z0)],
+      [1, 1, 1, 1],
+      slab,
+      Surface.paint,
+    );
+    quads.quad(
+      [v(x0, yb, z0), v(x0, yb, z1), v(x0, BASE, z1), v(x0, BASE, z0)],
+      [1, 1, 1, 1],
+      slab,
+      Surface.paint,
+    );
+    quads.quad(
+      [v(x0, BASE, z1), v(x1, BASE, z1), v(x1, BASE, z0), v(x0, BASE, z0)],
+      [1, 1, 1, 1],
+      slab,
+      Surface.paint,
+    );
 
     const ground = new THREE.Mesh(quads.geometry(), worldMaterial);
     ground.receiveShadow = true;
@@ -189,7 +256,8 @@ export class Terrain {
         } else if (roll < 0.72) {
           const shrub: PaletteName = rng() < 0.5 ? 'leaf' : 'leafDeep';
           b.blob(0.2 + rng() * 0.16, px, y + 0.08, pz, shrub, Surface.foliage, 0.7, 1);
-          if (rng() < 0.5) b.blob(0.14 + rng() * 0.1, px + 0.25, y + 0.05, pz - 0.15, 'leaf', Surface.foliage, 0.7, 0);
+          if (rng() < 0.5)
+            b.blob(0.14 + rng() * 0.1, px + 0.25, y + 0.05, pz - 0.15, 'leaf', Surface.foliage, 0.7, 0);
         } else if (roll < 0.8) {
           b.blob(0.12 + rng() * 0.1, px, y + 0.02, pz, 'stone', Surface.stone, 0.55, 0);
         }

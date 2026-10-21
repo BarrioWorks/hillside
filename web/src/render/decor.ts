@@ -83,7 +83,8 @@ export class Decor {
     const occupied = new Set<number>();
     for (const lot of lots)
       for (let z = lot.structure.z; z < lot.structure.z + lot.depth; z++)
-        for (let x = lot.structure.x; x < lot.structure.x + lot.width; x++) occupied.add(z * snapshot.width + x);
+        for (let x = lot.structure.x; x < lot.structure.x + lot.width; x++)
+          occupied.add(z * snapshot.width + x);
     const counts = [0, 0];
     for (const cell of snapshot.cells) {
       if (occupied.has(cell.z * snapshot.width + cell.x)) continue;
@@ -116,7 +117,8 @@ export class Decor {
 
   /** Poles along streets with spacing, wired to each other and to the nearest homes. */
   private wire(snapshot: Snapshot, lots: readonly Lot[]): void {
-    const top = (cell: { x: number; z: number }) => (snapshot.cells[cell.z * snapshot.width + cell.x]?.height ?? 0) * STEP;
+    const top = (cell: { x: number; z: number }) =>
+      (snapshot.cells[cell.z * snapshot.width + cell.x]?.height ?? 0) * STEP;
     const streets = lots
       .filter((lot) => lot.category === 'path')
       .map((lot) => lot.structure)
@@ -129,7 +131,9 @@ export class Decor {
       if (poles.length >= this.poles.instanceMatrix.count) break;
     }
     poles.forEach((point, i) => {
-      this.matrix.makeRotationY(hash(Math.round(point.x), Math.round(point.z), 2) > 0.5 ? 0 : Math.PI / 2).setPosition(point);
+      this.matrix
+        .makeRotationY(hash(Math.round(point.x), Math.round(point.z), 2) > 0.5 ? 0 : Math.PI / 2)
+        .setPosition(point);
       this.poles.setMatrixAt(i, this.matrix);
     });
     this.poles.count = poles.length;

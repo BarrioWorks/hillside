@@ -41,7 +41,13 @@ function path(context: Context, variation: number): THREE.BufferGeometry {
     const x = sx ? sx * 0.9 : 0.3,
       z = sz ? sz * 0.9 : 0.3;
     b.cylinder(0.025, 1.15, x, 0.05, z, 'metal', Surface.metal, 0.018, 6);
-    b.bar(new THREE.Vector3(x, 1.18, z), new THREE.Vector3(x * 0.55, 1.2, z * 0.55), 0.03, 'metal', Surface.metal);
+    b.bar(
+      new THREE.Vector3(x, 1.18, z),
+      new THREE.Vector3(x * 0.55, 1.2, z * 0.55),
+      0.03,
+      'metal',
+      Surface.metal,
+    );
     b.block(0.1, 0.05, 0.1, x * 0.55, 1.14, z * 0.55, 'lamp', Surface.glass);
   }
   return b.finish();
@@ -52,7 +58,16 @@ function stairs(): THREE.BufferGeometry {
   const steps = 5;
   for (let i = 0; i < steps; i++) {
     const h = ((i + 1) * STEP) / steps;
-    b.block(0.8, h, 1 / steps + 0.01, 0, -0.02, -0.5 + (i + 0.5) / steps, i % 2 ? 'stone' : 'offWhite', Surface.concrete);
+    b.block(
+      0.8,
+      h,
+      1 / steps + 0.01,
+      0,
+      -0.02,
+      -0.5 + (i + 0.5) / steps,
+      i % 2 ? 'stone' : 'offWhite',
+      Surface.concrete,
+    );
   }
   for (const x of [-0.45, 0.45]) {
     for (let i = 0; i < steps; i++) {
@@ -61,10 +76,16 @@ function stairs(): THREE.BufferGeometry {
     }
   }
   const rail = (x: number) => {
-    b.bar(new THREE.Vector3(x, 0.35, -0.48), new THREE.Vector3(x, STEP + 0.36, 0.48), 0.026, 'mustard', Surface.metal);
+    b.bar(
+      new THREE.Vector3(x, 0.35, -0.48),
+      new THREE.Vector3(x, STEP + 0.36, 0.48),
+      0.026,
+      'mustard',
+      Surface.metal,
+    );
     for (let i = 0; i <= 3; i++) {
       const t = i / 3;
-      b.block(0.016, 0.3, 0.016, x, (t * STEP * 0.92) + 0.06, -0.46 + t * 0.92, 'metal', Surface.metal);
+      b.block(0.016, 0.3, 0.016, x, t * STEP * 0.92 + 0.06, -0.46 + t * 0.92, 'metal', Surface.metal);
     }
   };
   rail(0.42);
@@ -81,20 +102,44 @@ export function tree(variation: number, planted = true): THREE.BufferGeometry {
   }
   const height = 0.85 + rng() * 0.3;
   b.cylinder(0.05, height, 0, 0, 0, 'wood', Surface.wood, 0.035, 6);
-  b.bar(new THREE.Vector3(0, height * 0.6, 0), new THREE.Vector3(0.18, height * 0.95, 0.06), 0.035, 'wood', Surface.wood);
+  b.bar(
+    new THREE.Vector3(0, height * 0.6, 0),
+    new THREE.Vector3(0.18, height * 0.95, 0.06),
+    0.035,
+    'wood',
+    Surface.wood,
+  );
   const clusters = 4 + Math.floor(rng() * 2);
   for (let i = 0; i < clusters; i++) {
     const a = (i / clusters) * Math.PI * 2 + rng();
     const r = i === 0 ? 0 : 0.2 + rng() * 0.1;
     const leaf: PaletteName = bloom && rng() < 0.75 ? bloom : i % 2 ? 'leaf' : 'leafDeep';
-    b.blob(0.26 + rng() * 0.1, Math.cos(a) * r, height + 0.1 + rng() * 0.18, Math.sin(a) * r, leaf, Surface.foliage, 0.82, 1);
+    b.blob(
+      0.26 + rng() * 0.1,
+      Math.cos(a) * r,
+      height + 0.1 + rng() * 0.18,
+      Math.sin(a) * r,
+      leaf,
+      Surface.foliage,
+      0.82,
+      1,
+    );
   }
   return b.finish();
 }
 
 function planter(variation: number): THREE.BufferGeometry {
   const b = new Builder(false);
-  b.block(0.7, 0.26, 0.42, 0, -0.02, 0, variation % 2 ? 'terracotta' : 'concrete', variation % 2 ? Surface.plaster : Surface.concrete);
+  b.block(
+    0.7,
+    0.26,
+    0.42,
+    0,
+    -0.02,
+    0,
+    variation % 2 ? 'terracotta' : 'concrete',
+    variation % 2 ? Surface.plaster : Surface.concrete,
+  );
   b.block(0.62, 0.02, 0.34, 0, 0.23, 0, 'soil', Surface.soil);
   const flowers: PaletteName[] = ['coral', 'mustard', 'offWhite', 'coral'];
   for (let i = 0; i < 4; i++) {
@@ -134,9 +179,11 @@ export class ModelLibrary {
         ? `${kind}/${variant}`
         : kind === 'path'
           ? `path/${variant % 5 === 0 ? 'lamp' : 'plain'}/${context.join(',')}`
-          : kind === 'tree' || kind === 'planter'
-            ? `${kind}/${variant}`
-            : kind;
+          : kind === 'tree'
+            ? `tree/${variant % 8}`
+            : kind === 'planter'
+              ? `planter/${variant % 4}`
+              : kind;
     let geometry = this.geometries.get(key);
     if (!geometry) {
       geometry =
@@ -147,9 +194,9 @@ export class ModelLibrary {
             : kind === 'stairs'
               ? stairs()
               : kind === 'tree'
-                ? tree(variant)
+                ? tree(variant % 8 === 7 ? 14 : variant % 8 === 6 ? 11 : variant % 8)
                 : kind === 'planter'
-                  ? planter(variant)
+                  ? planter(variant % 4)
                   : bench();
       this.geometries.set(key, geometry);
     }

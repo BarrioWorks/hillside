@@ -1,6 +1,4 @@
-import { Scene } from 'three';
-import { describe, expect, it, vi } from 'vitest';
-import { type AssetState, loadLandmark } from '../src/render/assets';
+import { describe, expect, it } from 'vitest';
 import { ModelLibrary } from '../src/render/models';
 import { realCore } from './core-fixture';
 
@@ -9,12 +7,13 @@ describe('catalog model assembly', () => {
     const catalog = realCore().catalog();
     const library = new ModelLibrary(catalog);
     for (const def of catalog)
-      for (let variation = 0; variation < 3; variation++) {
+      for (let variation = 0; variation < 16; variation++) {
         const mesh = library.create(def.id, variation);
         const position = mesh.geometry.getAttribute('position');
         expect(position.count).toBeGreaterThan(0);
         expect(mesh.geometry.index).toBeNull();
         expect(mesh.geometry.getAttribute('color').count).toBe(position.count);
+        expect(mesh.geometry.getAttribute('surface').count).toBe(position.count);
         expect(Array.from(position.array).every(Number.isFinite)).toBe(true);
         expect(mesh.geometry.boundingBox?.isEmpty()).toBe(false);
       }
@@ -37,24 +36,9 @@ describe('catalog model assembly', () => {
   it('shares geometry and materials across repeated placements', () => {
     const library = new ModelLibrary(realCore().catalog());
     const a = library.create('casa', 0),
-      b = library.create('casa', 3);
+      b = library.create('casa', 0);
     expect(a.geometry).toBe(b.geometry);
     expect(a.material).toBe(b.material);
     library.dispose();
-  });
-  it('keeps procedural models available when an external GLB cannot load', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
-    try {
-      const library = new ModelLibrary(realCore().catalog());
-      await library.loadDetails();
-      expect(library.detailsStatus).toBe('error');
-      expect(library.create('tienda').geometry.getAttribute('position').count).toBeGreaterThan(0);
-      const states: AssetState[] = [];
-      await loadLandmark(new Scene(), (state) => states.push(state));
-      expect(states.map((state) => state.status)).toEqual(['loading', 'error']);
-      library.dispose();
-    } finally {
-      vi.unstubAllGlobals();
-    }
   });
 });
