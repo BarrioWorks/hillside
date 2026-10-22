@@ -1,0 +1,227 @@
+{
+  "files": [
+    {
+      "path": "assets/barrio_core_bg-T-4oVMZb.wasm",
+      "sha256": "7a4fbce5aa976896aaf2595a6338598e7e0ea6f3b64ca2875d5701292b1c7db0"
+    },
+    {
+      "path": "assets/debug-95_NkZbi.js",
+      "sha256": "8527158d8f61b1e19a48a0ae5a57319ad0d5e5096675345a72d97b7652c4064f"
+    },
+    {
+      "path": "assets/fraunces-latin-600-normal-BFCDtZfi.woff2",
+      "sha256": "3a1de7711d147bad4422825045f87597fd77cca72e7c96d3b0a81735d00dda82"
+    },
+    {
+      "path": "assets/fraunces-latin-600-normal-DL5QCzvS.woff",
+      "sha256": "d78e988f844f474ce9b1cc10c72501add6c5056763bfe83ff2a8e2fcb6708ad0"
+    },
+    {
+      "path": "assets/fraunces-latin-ext-600-normal-B0Dy4lqi.woff",
+      "sha256": "7fce30e29ffbe3d6703a4bc2ab7dd832f50f979fc8a7efdc738d5e8023f0489a"
+    },
+    {
+      "path": "assets/fraunces-latin-ext-600-normal-BtzmzP0X.woff2",
+      "sha256": "69e09c7910e64d829e051f023af4c38a2e74b61d9e9439502f56edd7154b117c"
+    },
+    {
+      "path": "assets/fraunces-vietnamese-600-normal-BjlAJixd.woff2",
+      "sha256": "aa26bf964850ffd04079bdb40292c391c9c0498405fa9abaf865c46d66918112"
+    },
+    {
+      "path": "assets/fraunces-vietnamese-600-normal-DlAl5EAR.woff",
+      "sha256": "73fb7bb330dd90e4f3ace99686ce820db5ddff1020c81dda09c97eb2351865df"
+    },
+    {
+      "path": "assets/index-B2yLSBHV.css",
+      "sha256": "08352cfc874984410b083fbf145573134ea65344acae72b19487da7d54dd5e34"
+    },
+    {
+      "path": "assets/index-DNerqHTt.js",
+      "sha256": "c66a66289660b3caf4fbf4cd79784a16888b3ee6a4bb644ea9b559662aa6eace"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-400-normal-DDHmqnIJ.woff",
+      "sha256": "0b080499cbca539082a3c661dc6059c6c2cb1b85e44e5db21dff5c38d1b64498"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-400-normal-DUb-KqT8.woff2",
+      "sha256": "a8fa33d9ddd153baab4841bea3abe71b1bb7357ae6e5cf371f50943aa13c86c4"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-600-normal-CKMyzy87.woff",
+      "sha256": "a09a1695ec542df7e7fcdec36d274f136698d0042950f62c4f5cab71f8e7f305"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-600-normal-D4TuIAT6.woff2",
+      "sha256": "2ba68697eb37748ac85c369b60f3dc79bc7815087d8b8b4d4efbec897bc2028b"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-700-normal-BJ2iHHyS.woff2",
+      "sha256": "5d0211f378fb417c2a4439fd4d24435959037c00413b9147ab437c8afa2a5a96"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-700-normal-DG2UZxR9.woff",
+      "sha256": "40cdb435b3b9555457cbffefbf4314c966d836eaabdd904fc8cf472431ba9df7"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-800-normal-COys2OwR.woff2",
+      "sha256": "51001ff0868b121e6693d424724aca792ff173914ea0748d0aecef4e93cda35e"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-800-normal-x7mxdBjZ.woff",
+      "sha256": "7654c45be4dd5b6c82a49e10b36796e574495efeb82cd1452acd88fac8a3788d"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-ext-400-normal-El6lRT8b.woff2",
+      "sha256": "929951a2284383efd81da8e8423f146acea62ebcd8aa2dd7f974b3edf49ddc37"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-ext-400-normal-fk07B0hk.woff",
+      "sha256": "644df2dfdc8d61996ee5a8bebd00fa62e4af060fadcf9062d608c60755e10b89"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-ext-600-normal-CVjnjZn6.woff2",
+      "sha256": "b933ae3033eded0f3b88712d16dea53dc3c745878dfff6958fde47451d2a9a86"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-ext-600-normal-DZXkk6dX.woff",
+      "sha256": "e074baffd34009e068d1fd10bf13546e80459d3d21c9e56d7963410047f3a38a"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-ext-700-normal-Cqve7k0J.woff",
+      "sha256": "64ed1a6200cd5e2c7af9517fa88a8ae0bbf78ce81abda5c096492bf7e10682ec"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-ext-700-normal-GO46tfsI.woff2",
+      "sha256": "49347eb39c5bc2eaa63d3aaa4feff0036bd1071e8d962426bbe31576c4dfb9af"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-ext-800-normal-DlIrhRQ2.woff",
+      "sha256": "e894e216a1d833a1a75f8b315235ef77f67dc21396898edfa7bcbf798147b477"
+    },
+    {
+      "path": "assets/nunito-sans-cyrillic-ext-800-normal-suUH8DVf.woff2",
+      "sha256": "f2615ce104011f8d6f8d07676254d79d22a6905a70ecbce3f980c2489bbbee47"
+    },
+    {
+      "path": "assets/nunito-sans-latin-400-normal-AkRraKH2.woff2",
+      "sha256": "d9976dd1dc9c0d65046b52810e7cc69cfc229ee9939628ffe637e17efe4ef1ed"
+    },
+    {
+      "path": "assets/nunito-sans-latin-400-normal-DY9yCUyQ.woff",
+      "sha256": "978bf505dba34296f77e70706e24148d4d41bdc327331bf9b0808a33fc4ff955"
+    },
+    {
+      "path": "assets/nunito-sans-latin-600-normal-BtVRvDNj.woff2",
+      "sha256": "e03e312b8b7abd8b69ecef4060ded626f80e45723becd13676ad8273cf568a6e"
+    },
+    {
+      "path": "assets/nunito-sans-latin-600-normal-DLks-Kj1.woff",
+      "sha256": "590feff6926e4e25997cc3ee223bb606d364cc20969c0dc055e64068e7387d24"
+    },
+    {
+      "path": "assets/nunito-sans-latin-700-normal-CICRJDmU.woff2",
+      "sha256": "cb84238e7b852f2d22b91a598289f13b31cbc7a2d618fd2c0628ecb69459fbeb"
+    },
+    {
+      "path": "assets/nunito-sans-latin-700-normal-CLVG92B9.woff",
+      "sha256": "fe7ef3a1c3ca27c92cf6de0d060f4d42db3e56a2b48ac00cbb5b535909b0a276"
+    },
+    {
+      "path": "assets/nunito-sans-latin-800-normal-DOf_K5Iw.woff",
+      "sha256": "ec6b6c8b99b2775c4229a72caf344a3707db535ff2f51214b5d0f3af8109ae05"
+    },
+    {
+      "path": "assets/nunito-sans-latin-800-normal-MgCk9Q3Y.woff2",
+      "sha256": "4c839e56cbef1bbdfd509670f523730e24298aaf9a7791e0151031b023c12e4c"
+    },
+    {
+      "path": "assets/nunito-sans-latin-ext-400-normal-BoHsJHPR.woff2",
+      "sha256": "0eb529364e9d9b7220cd296d80b2bae4df772d156e30f7c56c2975602c48fbe7"
+    },
+    {
+      "path": "assets/nunito-sans-latin-ext-400-normal-CHwj-NZB.woff",
+      "sha256": "26b459dd8e284d936f01824563c7faaf932b7e46b52894ecf45a54a4d81086c6"
+    },
+    {
+      "path": "assets/nunito-sans-latin-ext-600-normal-DEh-VjuY.woff",
+      "sha256": "717b8dc4e55fc8b5d3df0c0702a43572d827426dba618285694fe78be6eed149"
+    },
+    {
+      "path": "assets/nunito-sans-latin-ext-600-normal-nHO2odcJ.woff2",
+      "sha256": "dbdebff032a168f84b2deab4a6665d01f2622628e9fdf2086f0caa62dff8cfdd"
+    },
+    {
+      "path": "assets/nunito-sans-latin-ext-700-normal-DBq_Pukt.woff2",
+      "sha256": "edc1a60bbc8687b7147d2053e02f8c1bb0f51f060626a5913f50c5b3f83aa60d"
+    },
+    {
+      "path": "assets/nunito-sans-latin-ext-700-normal-jHN8vCOt.woff",
+      "sha256": "ab0c1c0dd4aa32914fa23e952e1fc6dfc8b492d2b368637596b9cdbe58026f12"
+    },
+    {
+      "path": "assets/nunito-sans-latin-ext-800-normal-DG0lbXwA.woff",
+      "sha256": "b9346b49d7126a7b83c4746d6520d2b630c8dc46a44e133aba3f6e1c50ea83cd"
+    },
+    {
+      "path": "assets/nunito-sans-latin-ext-800-normal-DWckPAf3.woff2",
+      "sha256": "47657923af8623c265b93d9a9c9157151b790c74f9b3f9fb6153e62b98767d3b"
+    },
+    {
+      "path": "assets/nunito-sans-vietnamese-400-normal-D5dwM7ZL.woff",
+      "sha256": "1baa5161077bbc3ae729784a03aa0df7465c12529443a088409350ee1f897023"
+    },
+    {
+      "path": "assets/nunito-sans-vietnamese-400-normal-V2dSmW1H.woff2",
+      "sha256": "219284096be45b812a70e54556c7d0848e68a0ba60938ccb7c2429c6d2b0e6c0"
+    },
+    {
+      "path": "assets/nunito-sans-vietnamese-600-normal-BW3IEr32.woff",
+      "sha256": "105f27da75b2f3079229abad4ce83b4eb75ae090d81ed9f77dca20490c3a3bb2"
+    },
+    {
+      "path": "assets/nunito-sans-vietnamese-600-normal-DD7cNabE.woff2",
+      "sha256": "1f81b594f11e61f30e1f30f86adece7f238269b12c6d0dcb5066b4f76ce9b4e1"
+    },
+    {
+      "path": "assets/nunito-sans-vietnamese-700-normal-BwTSkH1V.woff",
+      "sha256": "f9b8d4d175cf97e02b42207db98e5435fae3ac4bbb193a0f9855b3f2010512e8"
+    },
+    {
+      "path": "assets/nunito-sans-vietnamese-700-normal-CZwaiz_e.woff2",
+      "sha256": "1d34da5927c894060944fc0b66e9b7d55f5f70f9375e180792e5d69f329fafff"
+    },
+    {
+      "path": "assets/nunito-sans-vietnamese-800-normal-CfdX2BhI.woff2",
+      "sha256": "296d79aabc5b4701a80f0a127247ff75f52bc056598e14a9a417bd16c296112f"
+    },
+    {
+      "path": "assets/nunito-sans-vietnamese-800-normal-hO2TqS3m.woff",
+      "sha256": "b5c13e3e560b7c6e1d792d7f26a63cf4f43656cb8e9ffc27d0102d64c955973b"
+    },
+    {
+      "path": "index.html",
+      "sha256": "9f26658432dd764901fb3d19986704472e4969f5309d93feb7d9e6914e02c4a3"
+    },
+    {
+      "path": "licenses/fraunces-OFL.txt",
+      "sha256": "cd3384cafac6f2bddc3955273958a2e029f97027c8037ac539ef5744a77b579e"
+    },
+    {
+      "path": "licenses/nunito-sans-OFL.txt",
+      "sha256": "6632e6c45fcc18cc03909a0a53d84e9775185e06203ff80d6367cf93959b91a8"
+    },
+    {
+      "path": "licenses/three-MIT.txt",
+      "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601"
+    },
+    {
+      "path": "licenses/zod-MIT.txt",
+      "sha256": "3f1189b28e3866e0d979968d466b78f813f76827cfdca1fbb124cc0a5c8841f8"
+    }
+  ],
+  "sourceFingerprints": "source-sha256.txt",
+  "renderDirection": "balanced",
+  "toneMapper": "neutral"
+}

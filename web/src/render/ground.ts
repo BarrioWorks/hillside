@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import type { Edge, Kind, Region, Tile } from '../domain';
+import type { GroundField } from './environment';
 import { center, corner, DIRECTIONS, HEX as HEX_RADIUS, key, LEVEL, SKIRT } from './hex';
 import { PALETTE, Surface, type SurfaceId } from './palette';
-import { COPING, PATH_WIDTH } from './tiles';
+import { type Boundary, boundary } from './pedestrian';
 
 /** Ground tone per tile kind; neighbors at the same level blend toward each other at shared corners. */
 const GROUND: Record<Kind, string> = {
@@ -91,13 +92,13 @@ function jitter(q: number, r: number, salt: number): number {
 }
 
 /**
- * One continuous ground mesh for all placed tiles: blended hex tops, retaining walls where a tile stands
- * above its neighbor, and earthen sides down to a shared base wherever the neighborhood ends.
+ * Grass color at a ground vertex, given the same-level tiles meeting there and a shade multiplier. Shared
+ * positions get the same tiles, so both strategies agree across tile boundaries.
  */
-export function groundGeometry(tiles: readonly Tile[], region: Region = 'medellin'): THREE.BufferGeometry {
-  const byKey = new Map(tiles.map((tile) => [key(tile.q, tile.r), tile]));
-  const out = new Triangles();
-  const up = new THREE.Vector3(0, 1, 0);
+type GroundTone = (point: THREE.Vector3, tiles: readonly Tile[], shade: number) => THREE.Color;
+
+/** Per-kind tone with a slight per-tile jitter, averaged at shared corners. */
+function legacyTone(region: Region): GroundTone {
   const meadow = new THREE.Color(REGION_MEADOW[region]);
   const shift = meadow.clone().sub(new THREE.Color(PALETTE.meadow));
   const tone = new Map<Kind, THREE.Color>(
@@ -105,6 +106,37 @@ export function groundGeometry(tiles: readonly Tile[], region: Region = 'medelli
   );
   const tileTone = (tile: Tile) =>
     (tone.get(tile.kind) as THREE.Color).clone().multiplyScalar(0.985 + jitter(tile.q, tile.r, 1) * 0.03);
+  return (_, tiles, shade) => {
+    const color = new THREE.Color(0, 0, 0);
+    for (const tile of tiles) color.add(tileTone(tile));
+    return color.multiplyScalar(shade / tiles.length);
+  };
+}
+
+/**
+ * World-space patch field. Forest floor spreads from forest tile centers as one soft mass rather than following
+ * which tiles meet at a vertex, which outlined each forest hex.
+ */
+function fieldTone(field: GroundField, tiles: readonly Tile[]): GroundTone {
+  const forests = tiles.filter((tile) => tile.kind === 'monte').map((tile) => center(tile.q, tile.r));
+  return (point, _, shade) =>
+    field.color(point.x, point.z, field.forestCover(point.x, point.z, forests)).multiplyScalar(shade);
+}
+
+/**
+ * One continuous ground mesh for all placed tiles: blended hex tops, retaining walls where a tile stands
+ * above its neighbor, and earthen sides down to a shared base wherever the neighborhood ends.
+ */
+export function groundGeometry(
+  tiles: readonly Tile[],
+  region: Region = 'medellin',
+  field?: GroundField,
+  pedestrianBoundaries?: ReadonlyMap<string, readonly Boundary[]>,
+): THREE.BufferGeometry {
+  const byKey = new Map(tiles.map((tile) => [key(tile.q, tile.r), tile]));
+  const out = new Triangles();
+  const up = new THREE.Vector3(0, 1, 0);
+  const tone = field ? fieldTone(field, tiles) : legacyTone(region);
   const stone = new THREE.Color(PALETTE.retaining);
   const coping = new THREE.Color(PALETTE.coping);
   const soilTop = new THREE.Color(PALETTE.skirtTop),
@@ -117,24 +149,19 @@ export function groundGeometry(tiles: readonly Tile[], region: Region = 'medelli
   for (const tile of tiles) {
     const { x, z } = center(tile.q, tile.r);
     const y = tile.elevation * LEVEL;
-    const own = tileTone(tile);
+    const self = [tile];
     const near = DIRECTIONS.map((d) => byKey.get(key(tile.q + d.q, tile.r + d.r)));
     const higher = near.map((other) => !!other && other.elevation > tile.elevation);
     // Corner i is shared with the neighbors across edges i - 1 and i.
-    const cornerTone = (i: number): THREE.Color => {
-      const color = own.clone();
-      let count = 1;
-      for (const side of [(i + 5) % 6, i]) {
+    const cornerTiles = (i: number): Tile[] => [
+      tile,
+      ...[(i + 5) % 6, i].flatMap((side) => {
         const other = near[side];
-        if (other && other.elevation === tile.elevation) {
-          color.add(tileTone(other));
-          count++;
-        }
-      }
-      const shade = higher[(i + 5) % 6] || higher[i] ? 0.8 : 1;
-      return color.multiplyScalar(shade / count);
-    };
+        return other && other.elevation === tile.elevation ? [other] : [];
+      }),
+    ];
     const middle = v(x, y, z);
+    const own = tone(middle, self, 1);
     const inner = Array.from({ length: 6 }, (_, i) => {
       const c = corner(i);
       return v(x + c.x * CORE, y, z + c.z * CORE);
@@ -143,10 +170,20 @@ export function groundGeometry(tiles: readonly Tile[], region: Region = 'medelli
       const c = corner(i);
       return v(x + c.x, y, z + c.z);
     });
-    const innerTone = inner.map((_, i) =>
-      own.clone().multiplyScalar(higher[(i + 5) % 6] || higher[i] ? 0.93 : 1),
+    const innerTone = inner.map((p, i) => tone(p, self, higher[(i + 5) % 6] || higher[i] ? 0.93 : 1));
+    const outerTone = outer.map((p, i) =>
+      tone(p, cornerTiles(i), higher[(i + 5) % 6] || higher[i] ? 0.8 : 1),
     );
-    const outerTone = outer.map((_, i) => cornerTone(i));
+    type Quad = readonly [THREE.Vector3, THREE.Vector3, THREE.Vector3, THREE.Vector3];
+    const lipTones = (
+      [p0, p1, p2, p3]: Quad,
+      shade: number,
+    ): [THREE.Color, THREE.Color, THREE.Color, THREE.Color] => [
+      tone(p0, self, shade),
+      tone(p1, self, shade),
+      tone(p2, self, shade),
+      tone(p3, self, shade),
+    ];
     for (let i = 0; i < 6; i++) {
       const j = (i + 1) % 6;
       out.add(
@@ -199,12 +236,16 @@ export function groundGeometry(tiles: readonly Tile[], region: Region = 'medelli
         );
         if (masonry) {
           const lip = y + 0.05;
-          const stairs =
-            tile.edges[side] === 'path' &&
-            other.edges[(side + 3) % 6] === 'path' &&
-            tile.meets[side] === 'match' &&
-            tile.elevation - other.elevation === 1;
-          const gap = (PATH_WIDTH + COPING) / (2 * Math.hypot(b.x - a.x, b.z - a.z));
+          const contract =
+            pedestrianBoundaries?.get(key(tile.q, tile.r))?.find((p) => p.side === side) ??
+            (tile.edges[side] === 'path'
+              ? boundary(side, tile.paths[side] ?? 0, {
+                  meet: tile.meets[side] ?? 'open',
+                  rise: other.elevation - tile.elevation,
+                })
+              : undefined);
+          const stairs = (contract?.opening ?? 0) > 0;
+          const gap = (contract?.opening ?? 0) / (2 * Math.hypot(b.x - a.x, b.z - a.z));
           const spans = stairs
             ? [
                 [0, 0.5 - gap],
@@ -233,24 +274,24 @@ export function groundGeometry(tiles: readonly Tile[], region: Region = 'medelli
             );
           }
         } else {
-          const lip = own.clone().multiplyScalar(0.86);
-          out.quad(
-            [top(a, y - 0.1, 0.03), top(b, y - 0.1, 0.03), top(b, y + 0.01, 0.03), top(a, y + 0.01, 0.03)],
-            [lip, lip, lip, lip],
-            Surface.grass,
-            facing,
-          );
+          const points = [
+            top(a, y - 0.1, 0.03),
+            top(b, y - 0.1, 0.03),
+            top(b, y + 0.01, 0.03),
+            top(a, y + 0.01, 0.03),
+          ] as const;
+          out.quad([...points], lipTones(points, 0.86), Surface.grass, facing);
         }
         continue;
       }
       // The edge of the neighborhood: a grass lip over earth that darkens toward the shared base.
-      const lipColor = own.clone().multiplyScalar(0.85);
-      out.quad(
-        [top(a, y - 0.09, 0.03), top(b, y - 0.09, 0.03), top(b, y + 0.01, 0.03), top(a, y + 0.01, 0.03)],
-        [lipColor, lipColor, lipColor, lipColor],
-        Surface.grass,
-        facing,
-      );
+      const points = [
+        top(a, y - 0.09, 0.03),
+        top(b, y - 0.09, 0.03),
+        top(b, y + 0.01, 0.03),
+        top(a, y + 0.01, 0.03),
+      ] as const;
+      out.quad([...points], lipTones(points, 0.85), Surface.grass, facing);
       const split = Math.max(bottom, y - 0.09 - (y - 0.09 - bottom) * 0.45);
       out.quad(
         [top(a, split), top(b, split), top(b, y - 0.09), top(a, y - 0.09)],

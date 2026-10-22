@@ -1,0 +1,225 @@
+{
+  "results": [
+    {
+      "name": "control",
+      "passed": true,
+      "errors": [],
+      "scenes": [
+        {
+          "name": "A-two-houses",
+          "passed": true,
+          "tiles": 1
+        },
+        {
+          "name": "B-five-houses",
+          "passed": true,
+          "tiles": 1
+        },
+        {
+          "name": "C-three-hexagons",
+          "passed": true,
+          "tiles": 3
+        },
+        {
+          "name": "D-hillside",
+          "passed": true,
+          "tiles": 3
+        },
+        {
+          "name": "E-settlement",
+          "passed": true,
+          "tiles": 20
+        },
+        {
+          "name": "B-uphill-expansion",
+          "passed": true,
+          "tiles": 2
+        }
+      ]
+    },
+    {
+      "name": "erase graph and geometry 2,0",
+      "passed": false,
+      "errors": [
+        {
+          "scene": "E-settlement",
+          "errors": [
+            "Missing or incorrect interior crossing 2,0/1",
+            "Missing or incorrect boundary crossing 2,0/1",
+            "Missing or incorrect boundary contract 2,0/1",
+            "Missing or incorrect interior crossing 2,0/4",
+            "Missing or incorrect boundary crossing 2,0/4",
+            "Missing or incorrect boundary contract 2,0/4",
+            "Missing required boundary adapter 2,0/4",
+            "Missing required primary route 2,0/1",
+            "Missing walkable hex 2,0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "erase only geometry 2,0",
+      "passed": false,
+      "errors": [
+        {
+          "scene": "E-settlement",
+          "errors": [
+            "Missing pavement for routed graph 2,0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "erase graph and geometry 0,-2",
+      "passed": false,
+      "errors": [
+        {
+          "scene": "E-settlement",
+          "errors": [
+            "Missing or incorrect interior crossing 0,-2/0",
+            "Missing or incorrect boundary crossing 0,-2/0",
+            "Missing or incorrect boundary contract 0,-2/0",
+            "Missing required boundary adapter 0,-2/0",
+            "Missing or incorrect interior crossing 0,-2/3",
+            "Missing or incorrect boundary crossing 0,-2/3",
+            "Missing or incorrect boundary contract 0,-2/3",
+            "Missing required boundary adapter 0,-2/3",
+            "Missing walkable hex 0,-2"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "erase only geometry 0,-2",
+      "passed": false,
+      "errors": [
+        {
+          "scene": "E-settlement",
+          "errors": [
+            "Missing pavement for routed graph 0,-2"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "remove matched boundary contract",
+      "passed": false,
+      "errors": [
+        {
+          "scene": "E-settlement",
+          "errors": [
+            "Missing or incorrect boundary contract 0,-2/0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "remove required crossing",
+      "passed": false,
+      "errors": [
+        {
+          "scene": "E-settlement",
+          "errors": [
+            "Missing or incorrect interior crossing 2,0/1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "change required crossing group",
+      "passed": false,
+      "errors": [
+        {
+          "scene": "E-settlement",
+          "errors": [
+            "Missing or incorrect boundary crossing 2,0/1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "change boundary group",
+      "passed": false,
+      "errors": [
+        {
+          "scene": "E-settlement",
+          "errors": [
+            "Missing or incorrect boundary contract 2,0/1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "remove multiport intrinsic route",
+      "passed": false,
+      "errors": [
+        {
+          "scene": "E-settlement",
+          "errors": [
+            "Missing required primary route 2,0/1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "remove required matched adapter",
+      "passed": false,
+      "errors": [
+        {
+          "scene": "E-settlement",
+          "errors": [
+            "Missing required boundary adapter 0,-2/0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "remove served open adapter",
+      "passed": false,
+      "errors": [
+        {
+          "scene": "A-two-houses",
+          "errors": [
+            "Missing required boundary adapter 0,0/1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "remove walkable hex",
+      "passed": false,
+      "errors": [
+        {
+          "scene": "E-settlement",
+          "errors": [
+            "Missing walkable hex 2,0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "isolated actual unused single open port -1,2",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "name": "isolated actual unused single open port 1,1",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "name": "missing matched neighbor bypasses no seam checks",
+      "passed": false,
+      "errors": [
+        {
+          "scene": "E-settlement",
+          "errors": [
+            "Missing matched boundary peer 0,-2/0"
+          ]
+        }
+      ]
+    }
+  ],
+  "capturedArtifactsUnchanged": true,
+  "artifactCount": 26
+}

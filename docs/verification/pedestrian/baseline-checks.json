@@ -1,0 +1,13 @@
+{
+  "typecheck": "passed",
+  "existingTests": {"passed": 227, "failed": 1, "failure": "web/tests/atmosphere.test.ts:175 regional light color equality"},
+  "newBehaviorTests": {
+    "stableBuildingsAfterExpansion": "failed with changed door transforms and house position",
+    "waterClearance": {"actual": 0.43301270189221946, "required": 0.5900000000000001, "status": "failed"},
+    "buildingClearanceInRealSettlements": "passed"
+  },
+  "renderedScenes": ["A-two-houses", "B-five-houses", "C-three-hexagons", "D-hillside", "E-settlement"],
+  "screenshotsPerScene": ["gameplay", "closeup", "graph"],
+  "referenceScreenshot": "docs/screenshots/classic/12-paths-joined.png",
+  "userScreenshotAttached": false
+}

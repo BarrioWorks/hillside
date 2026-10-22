@@ -1,0 +1,105 @@
+{
+  "comparisons": [
+    {
+      "scene": "909352-overview",
+      "candidate": "cool",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "909352-overview",
+      "candidate": "warm",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "909352-overview",
+      "candidate": "balanced",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "909352-overview",
+      "candidate": "legacy",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "909352-closeup",
+      "candidate": "cool",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "909352-closeup",
+      "candidate": "warm",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "909352-closeup",
+      "candidate": "balanced",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "909352-closeup",
+      "candidate": "legacy",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "2-overview",
+      "candidate": "cool",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "2-overview",
+      "candidate": "warm",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "2-overview",
+      "candidate": "balanced",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "2-overview",
+      "candidate": "legacy",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "2-closeup",
+      "candidate": "cool",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "2-closeup",
+      "candidate": "warm",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "2-closeup",
+      "candidate": "balanced",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    },
+    {
+      "scene": "2-closeup",
+      "candidate": "legacy",
+      "compositionMatches": true,
+      "geometryAndMaterialCountsMatch": true
+    }
+  ],
+  "legacyPixelDifference": 0,
+  "negativeControl": {
+    "mutated": "first tile q from 0 to 999",
+    "result": "AssertionError: scene composition drift"
+  }
+}

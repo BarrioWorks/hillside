@@ -10,10 +10,11 @@ import {
   type Tile,
 } from '../domain';
 import { StructureBatches } from './batches';
+import { type EnvironmentSelection, environmentFor, GroundField, parseEnvironmentQuery } from './environment';
 import { fillGeometry, groundGeometry, hexagon, rimGeometry } from './ground';
 import { center, DIRECTIONS, edgeAngle, HEX, key, LEVEL } from './hex';
 import { Lighting, type LightingPreset } from './lighting';
-import { setPatterns, worldMaterial } from './material';
+import { createWorldMaterial, setEnvironment, setPatterns, worldMaterial } from './material';
 import { PALETTE } from './palette';
 import { type SideState, TileKit, type TileSite } from './tiles';
 
@@ -70,6 +71,8 @@ export class World {
   frameMilliseconds: number[] = [];
   renderMilliseconds: number[] = [];
   private readonly profile = new URLSearchParams(location.search).has('profile');
+  /** Chosen once from the URL: Balanced unless `?environment=` names another candidate or `legacy`. */
+  readonly environment: EnvironmentSelection = parseEnvironmentQuery(location.search);
   private readonly probePixel = new Uint8Array(4);
   reconciled = 0;
   reconcileMilliseconds = 0;
@@ -90,13 +93,14 @@ export class World {
   private readonly pickMaterial = new THREE.MeshBasicMaterial({ visible: false });
   private readonly ghost = new THREE.Group();
   private ghostKey = '';
-  /** Translucent but depth-writing, so the ghost reads as a solid tile and not a stack of see-through parts. */
-  private readonly ghostMaterial = new THREE.MeshStandardMaterial({
-    vertexColors: true,
+  /**
+   * Translucent but depth-writing, so the ghost reads as a solid tile and not a stack of see-through parts. It
+   * shares the board's shader, so the tile in hand shows the colors it will have once placed.
+   */
+  private readonly ghostMaterial = createWorldMaterial({
     transparent: true,
     opacity: 0.85,
     depthWrite: true,
-    roughness: 0.9,
   });
   private readonly ghostBase: THREE.Mesh;
   private readonly hoverOutline: THREE.Mesh;
@@ -165,8 +169,6 @@ export class World {
     };
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, low ? 1 : 2));
     setPatterns(!low);
-    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-    this.renderer.toneMapping = THREE.NeutralToneMapping;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = low ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap;
     this.renderer.shadowMap.autoUpdate = false;
@@ -178,6 +180,7 @@ export class World {
       this.bounds.center,
       this.bounds.radius + 4,
       this.graphics.shadowSize,
+      this.environment,
     );
     this.lights.apply(this.lighting);
 
@@ -342,8 +345,9 @@ export class World {
     });
   }
 
-  private site(tile: Omit<TileSite, 'region'>): TileSite {
-    return { ...tile, region: this.snapshot.region };
+  /** Every tile, placed or previewed, dresses itself for the current world's region and seed. */
+  private site(tile: Omit<TileSite, 'region' | 'seed'>): TileSite {
+    return { ...tile, region: this.snapshot.region, seed: this.snapshot.seed };
   }
 
   reconcile(snapshot: Snapshot, animate = true): void {
@@ -365,7 +369,7 @@ export class World {
     this.snapshot = snapshot;
     snapshot.tiles.forEach((tile, id) => {
       const near = this.sideStates(tile, byKey);
-      const signature = `${tile.q},${tile.r}/${snapshot.region}/${tile.kind}/${tile.edges.join()}/${tile.paths.join()}/${tile.variation}/${tile.elevation}/${near
+      const signature = `${tile.q},${tile.r}/${snapshot.seed}/${snapshot.region}/${tile.kind}/${tile.edges.join()}/${tile.paths.join()}/${tile.variation}/${tile.elevation}/${near
         .map((n) => `${n.meet}${n.rise}`)
         .join()}`;
       const previous = this.tiles.get(id);
@@ -388,7 +392,19 @@ export class World {
       this.reconciled++;
     });
     this.ground.geometry.dispose();
-    this.ground.geometry = groundGeometry(snapshot.tiles, snapshot.region);
+    const environment = environmentFor(this.environment, snapshot.region);
+    setEnvironment(environment && { environment, seed: snapshot.seed });
+    this.ground.geometry = groundGeometry(
+      snapshot.tiles,
+      snapshot.region,
+      environment ? new GroundField(environment, snapshot.seed) : undefined,
+      new Map(
+        snapshot.tiles.map((tile) => [
+          key(tile.q, tile.r),
+          this.kit.plan(this.site(tile), this.sideStates(tile, byKey)).pedestrian.boundaries,
+        ]),
+      ),
+    );
     this.lights.setRegion(snapshot.region);
     this.showFrontier(snapshot.frontier);
     this.rebuildPicking(snapshot);
@@ -535,6 +551,7 @@ export class World {
 
   /** The current view as a PNG. Renders a fresh frame first, since the drawing buffer is not preserved. */
   capture(): Promise<Blob | null> {
+    this.lights.fitFog(this.camera);
     this.renderer.render(this.scene, this.camera);
     return new Promise((resolve) => this.canvas.toBlob(resolve, 'image/png'));
   }
@@ -751,6 +768,7 @@ export class World {
       this.lastFrame = time;
       if (this.renderer.shadowMap.needsUpdate) this.shadowUpdates++;
       const start = this.profile ? performance.now() : 0;
+      this.lights.fitFog(this.camera);
       this.renderer.render(this.scene, this.camera);
       if (this.profile) {
         // Reading one pixel waits for the GPU process to finish the frame; finish() alone returns early in Chrome.
@@ -781,6 +799,11 @@ export class World {
       continuousRendering: this.continuousRendering,
       graphics: this.graphics,
       lighting: this.lighting,
+      environment: {
+        candidate: this.environment.kind === 'candidate' ? this.environment.candidate : 'legacy',
+        toneMapping: this.environment.toneMapping,
+        exposure: this.renderer.toneMappingExposure,
+      },
       shadowUpdates: this.shadowUpdates,
       shadowAutoUpdate: this.renderer.shadowMap.autoUpdate,
       shadowNeedsUpdate: this.renderer.shadowMap.needsUpdate,

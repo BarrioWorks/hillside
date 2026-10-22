@@ -7,6 +7,8 @@
       "tools/benchmark.mjs",
       "tools/benchmark-core.mjs",
       "tools/verify-wasm.mjs",
+      "tools/environment-*.mjs",
+      "tools/pedestrian-*.mjs",
       "tools/asset-pipeline/**",
       "*.ts",
       "!web/src/wasm/**",

@@ -1,0 +1,22 @@
+
+ RUN  v3.2.7 /home/agent/code/OVH/barrio.works/web
+
+stderr | tests/environment.test.ts > environment material and output > keeps legacy output: sRGB, Neutral, and per-preset exposure
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+stderr | tests/environment.test.ts > environment material and output > takes each preset exposure, honors the tone override, and relights every preset by region
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ ✓ tests/environment.test.ts (31 tests) 1602ms
+   ✓ canopy families > cover the board in the authored shares as broad, seeded, deterministic patches  522ms
+
+ Test Files  1 passed (1)
+      Tests  31 passed (31)
+   Start at  20:26:13
+   Duration  3.47s (transform 327ms, setup 0ms, collect 574ms, tests 1.60s, environment 877ms, prepare 112ms)
+

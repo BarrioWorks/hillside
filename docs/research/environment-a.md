@@ -1,0 +1,76 @@
+# Painterly Colombian environments
+
+Research date 2026-10-21. Recommendation for the environment pass, with deterministic generation and the existing buildings retained. Research only. No rendering changes or new agents.
+
+throughput checkpoint: n/a, read-only investigation
+
+## Recommendation
+
+Start with regional vegetation and coherent patches of color. Then tune silhouette, surface marks, and light. Barrio already has continuous terrain, vertex colors, seeded decoration, shared geometry, an orthographic camera, and a single shadow-casting sun. An environment pass can use these foundations without replacing buildings or introducing a postprocessing pipeline.
+
+All techniques below are proposals. Complexity, visual gain, and runtime cost are estimates, not measured results. Screenshot checks are acceptance work for implementation, not claims that this research rendered a changed scene.
+
+## Verified reference evidence
+
+The following sources contain developer statements or material published by the developer. Interview answers count as primary testimony. Editorial introductions do not establish technical facts.
+
+- **S1. Official press kit.** Toukana describes a painterly board-game aesthetic and supplies screenshots. This establishes intended presentation, not a shader recipe. [Dorfromantik press kit](https://www.toukana.com/de/dorfromantik/presskit).
+- **S2. Developer interview.** Toukana names Romantic-era art, Impressionism, and classic board games as design influences. [Pegasus interview, video-game studio section](https://news.pegasus.de/en/interview-dorfromantik-the-board-game-authors-and-toukana-interactive/).
+- **S3. Developer art interview, 2026-05-25.** The team describes an early style sheet covering shape, proportion, atmosphere, light, color, texture, and perspective. Assets are tested from the gameplay view. Their reported pipeline uses up to five vertex-color masks with biome palettes, grayscale albedo, outline textures, and AO maps. They check values in grayscale. They report one main sun and subtle biome fog, with mood primarily designed through color. Night Mode changes color sets. These are documented details, not deductions from screenshots. [80 Level interview, art pipeline, clarity, and lighting answers](https://80.lv/articles/how-dorfromantik-expands-its-cozy-world-through-minimalist-design).
+- **S4. Published visual development, 2020-11-28.** Toukana publishes an early-to-later visual comparison and gameplay images while explicitly discussing visual variety and performance. [Devlog #3](https://toukana.itch.io/dorfromantik-prototype/devlog/199581/devlogromantik-3-how-things-have-evolved). Inspected the [gray-to-color comparison](https://img.itch.zone/aW1nLzQ2ODM0NTQucG5n/original/k%2Fodo%2B.png) and [warm landscape screenshot](https://img.itch.zone/aW1nLzQ2ODM1NzYucG5n/original/PKGUJz.png).
+- **S5. Biomes, 2020-11-23.** Toukana identifies European, Tuscany/Provence-inspired, and northern settings with different moods. This documents spatial biome variation, not an annual seasonal simulation. [Devlog #2](https://toukana.itch.io/dorfromantik-prototype/devlog/198346/devlogromantik-2-biomes-boats-and-more-big-news-soon).
+
+S3 documents the team's workflow at that interview date. Do not assume every technique applied identically to every historical version. Do not describe Barrio's procedural noise as Dorfromantik's technique. None of these sources establishes a need for watercolor simulation, screen-space paint filters, dynamic global illumination, or scanned paint textures.
+
+## Visual interpretation
+
+These are my readings of the inspected S4 images, not developer explanations.
+
+**Painterly shape.** Trees read as uneven upright masses with spare internal marks. Fields read as broad, slightly irregular slabs. Large silhouettes carry identity before small texture. The gray-to-color comparison suggests that shape, broad color, and edge treatment work together. Adding noise alone would not recreate that effect.
+
+**Harmony.** Ochre, orange, and muted green repeat across substantial areas. Small cooler roofs act as accents. Fields contain directional color strokes, but their large color grouping remains legible. The transferable idea is a restrained relationship among colors, not copying those colors or European scenery.
+
+**Composition.** Dense woodland, open fields, and small settlements alternate. Trees collect into masses rather than evenly filling every available space. Track and field boundaries guide the eye. These are observations of selected compositions, not evidence of a hidden procedural composition algorithm.
+
+**Seasons.** Warm foliage and cooler vegetation can evoke seasons, but a screenshot does not prove seasonal mechanics. For Barrio, propose authored humid, drier, or flowering moods as art direction. Do not treat a uniform European autumn as a default Colombian environment or claim botanical accuracy without local references.
+
+**Light.** The warm screenshot feels cohesive because terrain, foliage, structures, and background share a color mood. Broad shadows anchor forms. This visual reading agrees with S3's explicit emphasis on palette design, but does not identify individual shadow or texture settings.
+
+## Observed Barrio foundations and gaps
+
+Source inspected in `web/src/render`. Line numbers refer to the research checkout.
+
+- [ground.ts](../../web/src/render/ground.ts) has continuous terraced tops, same-level corner-color blending, regional meadow shifts, and deterministic per-cell variation. It does not need a replacement terrain system.
+- [models.ts](../../web/src/render/models.ts) builds tree crowns from four or five scaled icosahedra. [builder.ts](../../web/src/render/builder.ts) provides seeded `random()` and shared geometry construction.
+- [tiles.ts](../../web/src/render/tiles.ts) seeds decoration from coordinates and variation. `start` around line 888 gates regional palm treatment to `inicio`. Later nature sectors use shared trees and shrubs. Forest sectors use three repeated distance/spread pairs around line 1005.
+- [material.ts](../../web/src/render/material.ts) already applies procedural foliage, grass, water, and soil patterns. `setPatterns()` removes the pattern branch for low quality. Painterly identity therefore needs shape and vertex-color support too.
+- [lighting.ts](../../web/src/render/lighting.ts) has three light presets, region-specific afternoon backgrounds, a hemisphere fill, and fixed fog distances. Daylight and evening backgrounds are shared among regions.
+- [world.ts](../../web/src/render/world.ts) uses an orthographic camera, shared batching, and shadow updates on demand. Preserve those properties.
+
+Inspected the existing [Classic thirty-tile screenshot](../screenshots/classic/10-thirty-tiles.png). My interpretation is that repeated rounded crowns and scattered warm tree accents dominate the vegetation, while the surrounding background is quiet. The image already reads as a miniature. Also inspected `docs/screenshots/after/10-daylight.png`, but that older square-terrace image is not evidence of the current hex renderer. Existing screenshots are archived evidence, not a newly verified runtime baseline.
+
+## Applied-to-Barrio recommendations
+
+Each row translates reference evidence into a specific proposed change. It does not claim that the change is implemented.
+
+| Priority and source URL | Observed Barrio problem | Proposed technique | Complexity and expected gain | Estimated runtime cost | Verification screenshot or test |
+|---|---|---|---|---|---|
+| 1. Regional identity. [S5](https://toukana.itch.io/dorfromantik-prototype/devlog/198346/devlogromantik-2-biomes-boats-and-more-big-news-soon) | `tiles.ts` applies Salento/Cartagena palms through `start`, which is null outside `inicio`. Most later vegetation is shared. | Extend authored regional vegetation mixes through ordinary nature sectors. Reuse the existing palm, tree, shrub, and bougainvillea models initially. Include region in affected geometry cache keys. Treat species choices as art direction pending Colombian reference validation. | Medium. High gain as a regional miniature grows beyond its opening tile. | Similar instance count if replacements are one-for-one. More cached variants and batches are possible. | Capture starts and a developed run for all four regions. Confirm identity survives beyond `inicio`. Verify region switching in both orders cannot reuse another region's colored geometry. |
+| 2. Coherent ground color. [S4](https://toukana.itch.io/dorfromantik-prototype/devlog/199581/devlogromantik-3-how-things-have-evolved) | `ground.ts:106` varies individual tile tone over a narrow range. Its broad palette distinction is mainly forest versus meadow. Existing continuity is valuable. | Add a low-frequency world-coordinate color field to existing vertex colors. Use restrained meadow/light/low tones in patches spanning several cells. Keep shared-edge samples identical. Do not deform playable tops. | Medium. High gain in larger scenes through broad color masses. | Extra CPU work during ground rebuild. No added triangles or per-frame work if baked into existing colors. | Same seed at opening, ten, and thirty placements. Inspect equal-height seams and grayscale ground/path separation. Run `ground.test.ts` for flat tops and continuous terrain. |
+| 3. Vegetation composition. [S4](https://toukana.itch.io/dorfromantik-prototype/devlog/199581/devlogromantik-3-how-things-have-evolved) | Forests repeat three anchors per green sector. Nonforest sectors usually choose a tree or shrub, which limits deliberate open space. | Use a coordinate-stable density field to select clustered and open sectors. Vary cluster scale as a group. Keep stream edges, paths, entrances, and placement cues clear. Do not alter tile connectivity. | Medium. High gain in composition and readability. | Can reduce instances. Added neighbor lookups are a build-time cost. Avoid recomputing layout during camera movement. | Thirty-tile and low-angle captures with path debug overlays. Run `tiles.test.ts` extent and clearance checks. Compare replay after neighbor insertion so established decorations do not unexpectedly reroll. |
+| 4. Crown silhouettes. [S4](https://toukana.itch.io/dorfromantik-prototype/devlog/199581/devlogromantik-3-how-things-have-evolved) | `models.ts:5` produces crowns from similarly proportioned blobs. `Builder.blob()` scales an icosahedron without irregular vertex deformation. | Author a small cached family of asymmetric broadleaf crowns. Change proportions and lobe spacing before adding polygons. Preserve clear palm silhouettes and retain buildings. | Medium. High gain in close and middle views. | Similar geometry budget if lobes replace existing lobes. Cache by bounded variant, not tile coordinate. | Isolated vegetation and developed scene at gameplay, reverse, and low angles. Check silhouettes at mobile size. Run tile reach and triangle-budget checks. |
+| 5. Broader paint marks. [S4](https://toukana.itch.io/dorfromantik-prototype/devlog/199581/devlogromantik-3-how-things-have-evolved) | `material.ts:101–112` uses scalar foliage/grass noise and normal-based tint. High-quality surface variation is absent when patterns are disabled. | Replace some fine variation with a few broad, directional tonal marks on environment surfaces only. Keep amplitude low. Bake the main color grouping into vertices so low quality remains convincing. This is a proposed Barrio technique, not a claim about Dorfromantik's shader. | Medium. Medium gain after silhouette and palette changes. | Replacing existing samples may be neutral. Additional noise octaves increase fragment cost. Avoid a full-screen pass. | Matching high/low-quality and near/far captures. Check for crawling marks while orbiting. Inspect low-quality foliage without patterns and record draw calls and triangles. |
+| 6. Color-led light. [S3](https://80.lv/articles/how-dorfromantik-expands-its-cozy-world-through-minimalist-design) | Regional atmosphere in `lighting.ts` mostly changes the afternoon sky. Ground, crown, water, and fill relationships are distributed across separate constants. | Tune a small set of environment color relationships together with existing sun/fill/fog. Keep sun direction and buildings initially fixed. Make water distinct in value and keep shadows open enough to read paths. | Low to medium. High gain in cohesion. | Parameter and color changes need no extra passes. Changing baked colors may require rebuilding affected geometry. | Same scene in all three presets, color and grayscale. Check stream, ground, and path separation. Confirm idle rendering and shadow updates remain on demand. |
+| 7. Regional mood variants, later. [S5](https://toukana.itch.io/dorfromantik-prototype/devlog/198346/devlogromantik-2-biomes-boats-and-more-big-news-soon) | `tree()` includes mustard/coral bloom variants, but selections are not a coherent regional flowering or moisture mood. | After the base environment works, define explicit green/drier/flowering art palettes per region. Couple foliage, ground, water, and sky. Persist the chosen variant as deterministic input. Do not add a simulated annual cycle. | Medium. Medium gain; defer until regional identity is strong. | Palette data is cheap. Concurrent cached variants can increase memory and batching. | Replay a seed after save/load and in both cache-construction orders. Verify stable positions/colors within each variant and unchanged gameplay snapshot across visual variants. |
+
+Type System Discipline shaped the proposed mood representation. Extend the existing finite region/preset model with explicit variants instead of independent optional color overrides. This avoids combinations that were never art-directed. No type changes were made.
+
+## Acceptance and handoff
+
+Use `tools/capture.mjs` as the starting capture harness. Its existing starts use seeds 2, 1, 4, and 3 for Medellín, Salento, Bogotá, and Cartagena. Its ten/thirty-tile shots use seed 2026. Capture to a new output directory so archived screenshots remain intact. Add developed regional cases when implementing; the current named developed shot does not cover all four regions.
+
+Run the affected `ground.test.ts` and `tiles.test.ts` suites after geometry changes. Their existing checks cover terrain shape, tile extents, cache reuse, and deterministic path geometry. They do not establish full vegetation determinism or aesthetic quality. Add focused comparisons of environment positions, colors, and transforms across fresh kits, repeated builds, and cache orders when those behaviors change.
+
+Keep the same seed, placements, camera, viewport, graphics tier, and lighting when comparing images. Inspect one whole neighborhood and one close crop. Record renderer metrics using the existing capture output, but measure costs on the target renderer before accepting performance claims. This research did not run benchmarks, tests, or a live browser session.
+
+Retain existing building geometry, entrances, walk layout, simulation, and placement behavior. The next implementation can deliver regional vegetation plus ground harmony first, then judge whether crown changes add enough value. S3 explains one successful production pipeline; it does not make reproducing that pipeline a requirement for Barrio.

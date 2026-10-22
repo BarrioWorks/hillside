@@ -1,0 +1,13 @@
+import { readFile, writeFile } from 'node:fs/promises';
+import { sceneNames } from './pedestrian-scenes.mjs';
+
+const root = process.cwd();
+const report = JSON.parse(await readFile('docs/verification/pedestrian/validation.json', 'utf8'));
+const rows = sceneNames
+  .map(
+    (name) =>
+      `<section><h2>${name.replaceAll('-', ' ')}</h2><div class="pair"><figure><div class="shot ${name.startsWith('E-') ? 'settlement' : ''}"><img src="${root}/docs/screenshots/pedestrian/baseline/${name}-closeup.png" alt="Original paths"></div><figcaption>Before</figcaption></figure><figure><div class="shot ${name.startsWith('E-') ? 'settlement' : ''}"><img src="${root}/docs/screenshots/pedestrian/final/${name}-closeup.png" alt="Planned paths"></div><figcaption>Planned network</figcaption></figure></div><details><summary>Gameplay view and route graph</summary><div class="pair"><img src="${root}/docs/screenshots/pedestrian/final/${name}-gameplay.png" alt="Gameplay view"><img src="${root}/docs/screenshots/pedestrian/final/${name}-graph.png" alt="Spatial graph overlay"></div></details></section>`,
+  )
+  .join('');
+const html = `<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;color:var(--foreground,#263a36);font:14px var(--font-sans,system-ui)}section{margin-bottom:24px}h2{font-size:17px;margin:14px 0 8px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}figure{margin:0}.shot{overflow:hidden;aspect-ratio:1.35;border-radius:8px}.shot img{height:100%;object-fit:cover;transform:scale(1.7);transform-origin:50% 53%}.shot.settlement img{transform:none}img{width:100%;display:block;border-radius:8px}figcaption{padding:6px 0;color:var(--muted-foreground,#52645d)}summary{padding:8px 0;cursor:pointer}p{line-height:1.5}pre{white-space:pre-wrap;font-size:12px;padding:16px;background:var(--muted,#eee);border-radius:8px}@media(max-width:480px){.pair{grid-template-columns:1fr}}</style></head><body><p>Fixed seed 909352. The same tile layouts are rendered before and after the pedestrian replacement.</p>${rows}<details><summary>Uphill expansion: existing five-house routes stay in place</summary><div class="pair"><img src="${root}/docs/screenshots/pedestrian/final/B-uphill-expansion-closeup.png" alt="Five houses after uphill expansion"><img src="${root}/docs/screenshots/pedestrian/final/B-uphill-expansion-graph.png" alt="Uphill expansion graph"></div></details><details><summary>Validation report</summary><pre>${JSON.stringify(report, null, 2).replaceAll('&', '&amp;').replaceAll('<', '&lt;')}</pre></details></body></html>`;
+await writeFile('docs/verification/pedestrian/comparison.html', html);

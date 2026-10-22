@@ -1,0 +1,16 @@
+salento 10 high 25abd0b1 24080 valid triangles
+salento 10 low 25abd0b1 24080 valid triangles
+salento 43 high 9f71a712 54258 valid triangles
+salento 43 low 9f71a712 54258 valid triangles
+medellin 10 high cd8e26ab 25442 valid triangles
+medellin 10 low cd8e26ab 25442 valid triangles
+medellin 59 high cfdfd69b 61749 valid triangles
+medellin 59 low cfdfd69b 61749 valid triangles
+bogota 10 high a5a357ec 30783 valid triangles
+bogota 10 low a5a357ec 30783 valid triangles
+bogota 51 high 8c263ad5 57533 valid triangles
+bogota 51 low 8c263ad5 57533 valid triangles
+cartagena 10 high 3526f1c7 22763 valid triangles
+cartagena 10 low 3526f1c7 22763 valid triangles
+cartagena 51 high 9c0e02cf 57446 valid triangles
+cartagena 51 low 9c0e02cf 57446 valid triangles

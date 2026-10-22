@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Builder, facePoint, type Paint, random, type Side } from './builder';
+import { type DoorAnchor, setBuildingDoor } from './building-door';
 import { PALETTE, type PaletteName, PLASTER, Surface, TRIM } from './palette';
 
 /**
@@ -129,7 +130,7 @@ function window(
   }
 }
 
-const doors = new WeakMap<Builder, { x: number; z: number }>();
+const doors = new WeakMap<Builder, DoorAnchor>();
 
 function door(b: Builder, s: Style, side: Side, m: Mass, u: number, y0: number): void {
   const [x, z, r] = facePoint(side, m.w / 2, m.d / 2, u, 0.012);
@@ -137,7 +138,8 @@ function door(b: Builder, s: Style, side: Side, m: Mass, u: number, y0: number):
   const [dx, dz] = facePoint(side, m.w / 2, m.d / 2, u, 0.024);
   b.box(0.21, 0.46, 0.02, m.x + dx, y0 + 0.23, m.z + dz, s.trim, Surface.metal, r);
   const [kx, kz] = facePoint(side, m.w / 2, m.d / 2, u, 0.08);
-  if (side === 0 && y0 === 0) doors.set(b, { x: m.x + kx, z: m.z + kz + 0.071 });
+  if (side === 0 && y0 === 0)
+    doors.set(b, { x: m.x + kx, z: m.z + kz + 0.071, y: 0, heading: { x: 0, z: 1 }, width: 0.21 });
   b.box(0.32, 0.04, 0.14, m.x + kx, y0 + 0.02, m.z + kz, 'concrete', Surface.concrete, r);
 }
 
@@ -587,7 +589,8 @@ export function building(
     b.box(0.16, 0.12, 0.09, x, STOREY * 1.25, z, 'offWhite', Surface.paint, r);
   }
   const geometry = b.finish();
-  geometry.userData.door = doors.get(b);
+  const anchor = doors.get(b);
+  if (anchor) setBuildingDoor(geometry, anchor);
   return geometry;
 }
 

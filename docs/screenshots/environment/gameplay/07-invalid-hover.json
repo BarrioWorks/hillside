@@ -1,0 +1,153 @@
+{
+  "found": null,
+  "frames": 36,
+  "renderFrames": 3,
+  "continuousRendering": false,
+  "graphics": {
+    "quality": "high",
+    "software": true,
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "shadowSize": 2048
+  },
+  "lighting": "afternoon",
+  "environment": {
+    "candidate": "balanced",
+    "toneMapping": "neutral",
+    "exposure": 1
+  },
+  "shadowUpdates": 2,
+  "shadowAutoUpdate": false,
+  "shadowNeedsUpdate": false,
+  "frameMs": 283.344,
+  "p95FrameMs": 283.344,
+  "frameSamples": 1,
+  "renderMs": 0,
+  "renderSamples": 0,
+  "drawCalls": 87,
+  "triangles": 38380,
+  "geometries": 81,
+  "textures": 2,
+  "tiles": 13,
+  "tileParts": 133,
+  "cachedGeometries": 70,
+  "batchCount": 66,
+  "allocatedBatchCount": 67,
+  "groundTriangles": 414,
+  "renderObjectCount": 82,
+  "reconciled": 14,
+  "reconcileMs": 408.5,
+  "pixelRatio": 1,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "coreMilliseconds": 12.5,
+  "revision": 1,
+  "networks": [
+    {
+      "id": 0,
+      "pathSides": 7,
+      "homes": 6,
+      "homeTiles": [
+        {
+          "q": 0,
+          "r": 0
+        },
+        {
+          "q": -1,
+          "r": 1
+        },
+        {
+          "q": 2,
+          "r": -1
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "pathSides": 0,
+      "homes": 0,
+      "homeTiles": []
+    },
+    {
+      "id": 5,
+      "pathSides": 3,
+      "homes": 4,
+      "homeTiles": [
+        {
+          "q": -1,
+          "r": 0
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "pathSides": 0,
+      "homes": 0,
+      "homeTiles": []
+    },
+    {
+      "id": 10,
+      "pathSides": 1,
+      "homes": 0,
+      "homeTiles": []
+    },
+    {
+      "id": 13,
+      "pathSides": 1,
+      "homes": 0,
+      "homeTiles": []
+    },
+    {
+      "id": 14,
+      "pathSides": 5,
+      "homes": 7,
+      "homeTiles": [
+        {
+          "q": 0,
+          "r": -1
+        },
+        {
+          "q": -1,
+          "r": -1
+        }
+      ]
+    }
+  ],
+  "disconnectedHomes": 2,
+  "run": {
+    "seed": 7,
+    "region": "cartagena",
+    "score": 860,
+    "placements": 12,
+    "remaining": 24,
+    "finished": false,
+    "last": {
+      "q": -1,
+      "r": -1,
+      "points": {
+        "base": 10,
+        "matches": 2,
+        "matchPoints": 40,
+        "perfect": false,
+        "perfectBonus": 0,
+        "total": 50
+      },
+      "label": null,
+      "completed": [],
+      "questPoints": 0,
+      "milestone": null,
+      "victory": false
+    },
+    "stats": {
+      "tiles": 13,
+      "homes": 19,
+      "homesConnected": 7,
+      "walks": 5,
+      "largestNature": 11,
+      "largestWater": 1,
+      "levels": 1
+    }
+  }
+}

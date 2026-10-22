@@ -1,0 +1,3077 @@
+{
+  "host": {
+    "cpu": "AMD EPYC 7B13 64-Core Processor",
+    "logicalCPUs": 8,
+    "loadAverage": [
+      10.35,
+      9.26,
+      6.01
+    ]
+  },
+  "method": {
+    "repeats": 5,
+    "frameCount": 20,
+    "resolution": [
+      1440,
+      900
+    ],
+    "quality": "high",
+    "warmupFrames": 4,
+    "alternating": true,
+    "limiter": "SwiftShader software rasterization; profiled GPU synchronization included. No hardware GPU claim.",
+    "gpuMemoryBytes": null
+  },
+  "errors": [],
+  "groups": [
+    {
+      "seed": 909352,
+      "placements": 9,
+      "variant": "legacy",
+      "runs": 5,
+      "medianFrameMs": {
+        "average": 236.7,
+        "median": 250,
+        "p95": 250.10000000000036,
+        "min": 216.69999999999982,
+        "max": 250.10000000000036,
+        "samples": 5
+      },
+      "averageFrameMs": {
+        "average": 244.59523809523807,
+        "median": 246.0238095238095,
+        "p95": 281.7380952380952,
+        "min": 215.07619047619045,
+        "max": 281.7380952380952,
+        "samples": 5
+      },
+      "p95FrameMs": {
+        "average": 313.3400000000003,
+        "median": 283.3000000000011,
+        "p95": 400,
+        "min": 250.09999999999945,
+        "max": 400,
+        "samples": 5
+      },
+      "drawCalls": [
+        59
+      ],
+      "triangles": [
+        38286
+      ]
+    },
+    {
+      "seed": 909352,
+      "placements": 9,
+      "variant": "balanced",
+      "runs": 5,
+      "medianFrameMs": {
+        "average": 220,
+        "median": 216.69999999999982,
+        "p95": 250,
+        "min": 183.30000000000018,
+        "max": 250,
+        "samples": 5
+      },
+      "averageFrameMs": {
+        "average": 230.62571428571428,
+        "median": 234.90952380952382,
+        "p95": 254.75238095238097,
+        "min": 183.3238095238095,
+        "max": 254.75238095238097,
+        "samples": 5
+      },
+      "p95FrameMs": {
+        "average": 323.2999999999997,
+        "median": 299.89999999999964,
+        "p95": 416.6999999999998,
+        "min": 216.5999999999999,
+        "max": 416.6999999999998,
+        "samples": 5
+      },
+      "drawCalls": [
+        59
+      ],
+      "triangles": [
+        38286
+      ]
+    },
+    {
+      "seed": 909352,
+      "placements": 59,
+      "variant": "legacy",
+      "runs": 5,
+      "medianFrameMs": {
+        "average": 439.9600000000004,
+        "median": 433.39999999999964,
+        "p95": 483.2000000000007,
+        "min": 416.5,
+        "max": 483.2000000000007,
+        "samples": 5
+      },
+      "averageFrameMs": {
+        "average": 455.8533333333333,
+        "median": 441.2476190476191,
+        "p95": 534.1047619047617,
+        "min": 416.647619047619,
+        "max": 534.1047619047617,
+        "samples": 5
+      },
+      "p95FrameMs": {
+        "average": 540.0199999999998,
+        "median": 500,
+        "p95": 716.6999999999998,
+        "min": 483.3000000000002,
+        "max": 716.6999999999998,
+        "samples": 5
+      },
+      "drawCalls": [
+        152
+      ],
+      "triangles": [
+        170100
+      ]
+    },
+    {
+      "seed": 909352,
+      "placements": 59,
+      "variant": "balanced",
+      "runs": 5,
+      "medianFrameMs": {
+        "average": 443.34000000000015,
+        "median": 450,
+        "p95": 450,
+        "min": 433.3000000000011,
+        "max": 450,
+        "samples": 5
+      },
+      "averageFrameMs": {
+        "average": 462.9971428571429,
+        "median": 462.6809523809524,
+        "p95": 485.69523809523804,
+        "min": 444.42380952380944,
+        "max": 485.69523809523804,
+        "samples": 5
+      },
+      "p95FrameMs": {
+        "average": 566.6600000000001,
+        "median": 566.6999999999998,
+        "p95": 633.3000000000011,
+        "min": 500,
+        "max": 633.3000000000011,
+        "samples": 5
+      },
+      "drawCalls": [
+        152
+      ],
+      "triangles": [
+        170100
+      ]
+    },
+    {
+      "seed": 2,
+      "placements": 9,
+      "variant": "legacy",
+      "runs": 5,
+      "medianFrameMs": {
+        "average": 196.64000000000004,
+        "median": 199.90000000000055,
+        "p95": 200,
+        "min": 183.39999999999964,
+        "max": 200,
+        "samples": 5
+      },
+      "averageFrameMs": {
+        "average": 196.5,
+        "median": 198.4047619047619,
+        "p95": 200.78095238095236,
+        "min": 189.6761904761905,
+        "max": 200.78095238095236,
+        "samples": 5
+      },
+      "p95FrameMs": {
+        "average": 220.03999999999988,
+        "median": 216.69999999999982,
+        "p95": 233.4000000000001,
+        "min": 216.69999999999982,
+        "max": 233.4000000000001,
+        "samples": 5
+      },
+      "drawCalls": [
+        72
+      ],
+      "triangles": [
+        34852
+      ]
+    },
+    {
+      "seed": 2,
+      "placements": 9,
+      "variant": "balanced",
+      "runs": 5,
+      "medianFrameMs": {
+        "average": 193.36000000000004,
+        "median": 200,
+        "p95": 200.09999999999945,
+        "min": 183.30000000000018,
+        "max": 200.09999999999945,
+        "samples": 5
+      },
+      "averageFrameMs": {
+        "average": 201.10190476190473,
+        "median": 203.16190476190474,
+        "p95": 211.90000000000003,
+        "min": 186.5,
+        "max": 211.90000000000003,
+        "samples": 5
+      },
+      "p95FrameMs": {
+        "average": 250.00000000000028,
+        "median": 233.40000000000055,
+        "p95": 316.60000000000036,
+        "min": 216.69999999999982,
+        "max": 316.60000000000036,
+        "samples": 5
+      },
+      "drawCalls": [
+        72
+      ],
+      "triangles": [
+        34852
+      ]
+    },
+    {
+      "seed": 2,
+      "placements": 59,
+      "variant": "legacy",
+      "runs": 5,
+      "medianFrameMs": {
+        "average": 476.61999999999955,
+        "median": 483.1999999999998,
+        "p95": 533.2999999999993,
+        "min": 433.2999999999993,
+        "max": 533.2999999999993,
+        "samples": 5
+      },
+      "averageFrameMs": {
+        "average": 523.472380952381,
+        "median": 496.0095238095238,
+        "p95": 695.2095238095237,
+        "min": 430.93333333333334,
+        "max": 695.2095238095237,
+        "samples": 5
+      },
+      "p95FrameMs": {
+        "average": 683.3200000000003,
+        "median": 616.6000000000004,
+        "p95": 1033.2999999999993,
+        "min": 483.3000000000002,
+        "max": 1033.2999999999993,
+        "samples": 5
+      },
+      "drawCalls": [
+        188
+      ],
+      "triangles": [
+        196858
+      ]
+    },
+    {
+      "seed": 2,
+      "placements": 59,
+      "variant": "balanced",
+      "runs": 5,
+      "medianFrameMs": {
+        "average": 506.64000000000016,
+        "median": 516.6000000000004,
+        "p95": 550,
+        "min": 450,
+        "max": 550,
+        "samples": 5
+      },
+      "averageFrameMs": {
+        "average": 509.82,
+        "median": 531.7238095238097,
+        "p95": 543.6285714285713,
+        "min": 455.53333333333336,
+        "max": 543.6285714285713,
+        "samples": 5
+      },
+      "p95FrameMs": {
+        "average": 606.6399999999991,
+        "median": 616.5999999999985,
+        "p95": 683.2999999999993,
+        "min": 500,
+        "max": 683.2999999999993,
+        "samples": 5
+      },
+      "drawCalls": [
+        188
+      ],
+      "triangles": [
+        196858
+      ]
+    }
+  ],
+  "results": [
+    {
+      "seed": 909352,
+      "placements": 9,
+      "repeat": 0,
+      "variant": "legacy",
+      "tiles": 10,
+      "frame": {
+        "average": 262.6857142857143,
+        "median": 250.10000000000036,
+        "p95": 350.0000000000009,
+        "min": 216.59999999999945,
+        "max": 366.6999999999998,
+        "samples": 21
+      },
+      "render": {
+        "average": 247.66190475793113,
+        "median": 251.5,
+        "p95": 280.09999999403954,
+        "min": 177.59999999403954,
+        "max": 329.69999998807907,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 46,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 250.10000000000036,
+        "p95FrameMs": 350.0000000000009,
+        "frameSamples": 21,
+        "renderMs": 251.5,
+        "renderSamples": 21,
+        "drawCalls": 59,
+        "triangles": 38286,
+        "geometries": 59,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 106,
+        "cachedGeometries": 53,
+        "batchCount": 51,
+        "allocatedBatchCount": 53,
+        "groundTriangles": 324,
+        "renderObjectCount": 56,
+        "reconciled": 11,
+        "reconcileMs": 296.30000001192093,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 10,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 9,
+      "repeat": 0,
+      "variant": "balanced",
+      "tiles": 10,
+      "frame": {
+        "average": 234.90952380952382,
+        "median": 216.69999999999982,
+        "p95": 399.99999999999955,
+        "min": 166.60000000000036,
+        "max": 416.60000000000036,
+        "samples": 21
+      },
+      "render": {
+        "average": 236.66666666666666,
+        "median": 216.5,
+        "p95": 392.30000001192093,
+        "min": 165.40000000596046,
+        "max": 426.19999998807907,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 44,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 216.69999999999982,
+        "p95FrameMs": 399.99999999999955,
+        "frameSamples": 21,
+        "renderMs": 216.5,
+        "renderSamples": 21,
+        "drawCalls": 59,
+        "triangles": 38286,
+        "geometries": 59,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 106,
+        "cachedGeometries": 53,
+        "batchCount": 51,
+        "allocatedBatchCount": 53,
+        "groundTriangles": 324,
+        "renderObjectCount": 56,
+        "reconciled": 11,
+        "reconcileMs": 268.40000000596046,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 12.600000023841858,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 9,
+      "repeat": 1,
+      "variant": "balanced",
+      "tiles": 10,
+      "frame": {
+        "average": 254.75238095238092,
+        "median": 250,
+        "p95": 299.89999999999964,
+        "min": 183.30000000000018,
+        "max": 383.39999999999964,
+        "samples": 21
+      },
+      "render": {
+        "average": 254.61428571456955,
+        "median": 248.19999998807907,
+        "p95": 297.09999999403954,
+        "min": 195.59999999403954,
+        "max": 385.90000000596046,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 44,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 250,
+        "p95FrameMs": 299.89999999999964,
+        "frameSamples": 21,
+        "renderMs": 248.19999998807907,
+        "renderSamples": 21,
+        "drawCalls": 59,
+        "triangles": 38286,
+        "geometries": 59,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 106,
+        "cachedGeometries": 53,
+        "batchCount": 51,
+        "allocatedBatchCount": 53,
+        "groundTriangles": 324,
+        "renderObjectCount": 56,
+        "reconciled": 11,
+        "reconcileMs": 324.7000000178814,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 10,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 9,
+      "repeat": 1,
+      "variant": "legacy",
+      "tiles": 10,
+      "frame": {
+        "average": 246.0238095238095,
+        "median": 250,
+        "p95": 283.3000000000011,
+        "min": 183.39999999999964,
+        "max": 300,
+        "samples": 21
+      },
+      "render": {
+        "average": 245.6761904756228,
+        "median": 244.19999998807907,
+        "p95": 291.80000001192093,
+        "min": 176.7999999821186,
+        "max": 293.40000000596046,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 42,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 250,
+        "p95FrameMs": 283.3000000000011,
+        "frameSamples": 21,
+        "renderMs": 244.19999998807907,
+        "renderSamples": 21,
+        "drawCalls": 59,
+        "triangles": 38286,
+        "geometries": 59,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 106,
+        "cachedGeometries": 53,
+        "batchCount": 51,
+        "allocatedBatchCount": 53,
+        "groundTriangles": 324,
+        "renderObjectCount": 56,
+        "reconciled": 11,
+        "reconcileMs": 341.5,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 9.400000005960464,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 9,
+      "repeat": 2,
+      "variant": "legacy",
+      "tiles": 10,
+      "frame": {
+        "average": 217.45238095238096,
+        "median": 216.69999999999982,
+        "p95": 250.09999999999945,
+        "min": 183.29999999999927,
+        "max": 266.60000000000036,
+        "samples": 21
+      },
+      "render": {
+        "average": 217.2523809572061,
+        "median": 216.40000000596046,
+        "p95": 244.5,
+        "min": 185.2000000178814,
+        "max": 256.80000001192093,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 40,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 216.69999999999982,
+        "p95FrameMs": 250.09999999999945,
+        "frameSamples": 21,
+        "renderMs": 216.40000000596046,
+        "renderSamples": 21,
+        "drawCalls": 59,
+        "triangles": 38286,
+        "geometries": 59,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 106,
+        "cachedGeometries": 53,
+        "batchCount": 51,
+        "allocatedBatchCount": 53,
+        "groundTriangles": 324,
+        "renderObjectCount": 56,
+        "reconciled": 11,
+        "reconcileMs": 360.90000000596046,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 25.5,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 9,
+      "repeat": 2,
+      "variant": "balanced",
+      "tiles": 10,
+      "frame": {
+        "average": 254.75238095238097,
+        "median": 233.30000000000018,
+        "p95": 416.6999999999998,
+        "min": 166.60000000000036,
+        "max": 433.39999999999964,
+        "samples": 21
+      },
+      "render": {
+        "average": 247.02857142686844,
+        "median": 227.59999999403954,
+        "p95": 375.40000000596046,
+        "min": 167.90000000596046,
+        "max": 416.19999998807907,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 43,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 233.30000000000018,
+        "p95FrameMs": 416.6999999999998,
+        "frameSamples": 21,
+        "renderMs": 227.59999999403954,
+        "renderSamples": 21,
+        "drawCalls": 59,
+        "triangles": 38286,
+        "geometries": 59,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 106,
+        "cachedGeometries": 53,
+        "batchCount": 51,
+        "allocatedBatchCount": 53,
+        "groundTriangles": 324,
+        "renderObjectCount": 56,
+        "reconciled": 11,
+        "reconcileMs": 329.90000000596046,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 12.400000005960464,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 9,
+      "repeat": 3,
+      "variant": "balanced",
+      "tiles": 10,
+      "frame": {
+        "average": 183.3238095238095,
+        "median": 183.30000000000018,
+        "p95": 216.5999999999999,
+        "min": 150,
+        "max": 216.60000000000036,
+        "samples": 21
+      },
+      "render": {
+        "average": 183.37142857057708,
+        "median": 181.59999999403954,
+        "p95": 207.5,
+        "min": 147.69999998807907,
+        "max": 213.59999999403954,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 45,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 183.30000000000018,
+        "p95FrameMs": 216.5999999999999,
+        "frameSamples": 21,
+        "renderMs": 181.59999999403954,
+        "renderSamples": 21,
+        "drawCalls": 59,
+        "triangles": 38286,
+        "geometries": 59,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 106,
+        "cachedGeometries": 53,
+        "batchCount": 51,
+        "allocatedBatchCount": 53,
+        "groundTriangles": 324,
+        "renderObjectCount": 56,
+        "reconciled": 11,
+        "reconcileMs": 260.09999999403954,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 9.5,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 9,
+      "repeat": 3,
+      "variant": "legacy",
+      "tiles": 10,
+      "frame": {
+        "average": 215.07619047619045,
+        "median": 216.69999999999982,
+        "p95": 283.3000000000002,
+        "min": 166.60000000000036,
+        "max": 300,
+        "samples": 21
+      },
+      "render": {
+        "average": 213.30476191072236,
+        "median": 210.90000000596046,
+        "p95": 270.5,
+        "min": 165.7000000178814,
+        "max": 296.7000000178814,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 44,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 216.69999999999982,
+        "p95FrameMs": 283.3000000000002,
+        "frameSamples": 21,
+        "renderMs": 210.90000000596046,
+        "renderSamples": 21,
+        "drawCalls": 59,
+        "triangles": 38286,
+        "geometries": 59,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 106,
+        "cachedGeometries": 53,
+        "batchCount": 51,
+        "allocatedBatchCount": 53,
+        "groundTriangles": 324,
+        "renderObjectCount": 56,
+        "reconciled": 11,
+        "reconcileMs": 377.19999998807907,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 34.599999994039536,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 9,
+      "repeat": 4,
+      "variant": "legacy",
+      "tiles": 10,
+      "frame": {
+        "average": 281.7380952380952,
+        "median": 250,
+        "p95": 400,
+        "min": 200,
+        "max": 583.3000000000002,
+        "samples": 21
+      },
+      "render": {
+        "average": 285.16666666240917,
+        "median": 254.7999999821186,
+        "p95": 394,
+        "min": 214.19999998807907,
+        "max": 583.1999999880791,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 42,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 250,
+        "p95FrameMs": 400,
+        "frameSamples": 21,
+        "renderMs": 254.7999999821186,
+        "renderSamples": 21,
+        "drawCalls": 59,
+        "triangles": 38286,
+        "geometries": 59,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 106,
+        "cachedGeometries": 53,
+        "batchCount": 51,
+        "allocatedBatchCount": 53,
+        "groundTriangles": 324,
+        "renderObjectCount": 56,
+        "reconciled": 11,
+        "reconcileMs": 283.69999998807907,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 9.300000011920929,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 9,
+      "repeat": 4,
+      "variant": "balanced",
+      "tiles": 10,
+      "frame": {
+        "average": 225.39047619047614,
+        "median": 216.69999999999982,
+        "p95": 283.2999999999997,
+        "min": 183.29999999999927,
+        "max": 283.39999999999964,
+        "samples": 21
+      },
+      "render": {
+        "average": 220.1238095206874,
+        "median": 213.09999999403954,
+        "p95": 266.59999999403954,
+        "min": 177.2000000178814,
+        "max": 288.40000000596046,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 40,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 216.69999999999982,
+        "p95FrameMs": 283.2999999999997,
+        "frameSamples": 21,
+        "renderMs": 213.09999999403954,
+        "renderSamples": 21,
+        "drawCalls": 59,
+        "triangles": 38286,
+        "geometries": 59,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 106,
+        "cachedGeometries": 53,
+        "batchCount": 51,
+        "allocatedBatchCount": 53,
+        "groundTriangles": 324,
+        "renderObjectCount": 56,
+        "reconciled": 11,
+        "reconcileMs": 340.2999999821186,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 16.400000005960464,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 59,
+      "repeat": 0,
+      "variant": "legacy",
+      "tiles": 43,
+      "frame": {
+        "average": 534.1047619047617,
+        "median": 483.2000000000007,
+        "p95": 716.6999999999998,
+        "min": 416.60000000000036,
+        "max": 866.5999999999995,
+        "samples": 21
+      },
+      "render": {
+        "average": 521.4380952361084,
+        "median": 478.09999999403954,
+        "p95": 667.2999999821186,
+        "min": 410,
+        "max": 871.2999999821186,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 31,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 483.2000000000007,
+        "p95FrameMs": 716.6999999999998,
+        "frameSamples": 21,
+        "renderMs": 478.09999999403954,
+        "renderSamples": 21,
+        "drawCalls": 152,
+        "triangles": 170100,
+        "geometries": 155,
+        "textures": 2,
+        "tiles": 43,
+        "tileParts": 440,
+        "cachedGeometries": 152,
+        "batchCount": 150,
+        "allocatedBatchCount": 152,
+        "groundTriangles": 1232,
+        "renderObjectCount": 152,
+        "reconciled": 44,
+        "reconcileMs": 703.6999999880791,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 38.20000001788139,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 59,
+      "repeat": 0,
+      "variant": "balanced",
+      "tiles": 43,
+      "frame": {
+        "average": 445.2190476190476,
+        "median": 433.39999999999964,
+        "p95": 566.6999999999998,
+        "min": 350,
+        "max": 649.8999999999996,
+        "samples": 21
+      },
+      "render": {
+        "average": 449.8809523837907,
+        "median": 445.90000000596046,
+        "p95": 555.3999999761581,
+        "min": 347.2000000178814,
+        "max": 653.6999999880791,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 30,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 433.39999999999964,
+        "p95FrameMs": 566.6999999999998,
+        "frameSamples": 21,
+        "renderMs": 445.90000000596046,
+        "renderSamples": 21,
+        "drawCalls": 152,
+        "triangles": 170100,
+        "geometries": 155,
+        "textures": 2,
+        "tiles": 43,
+        "tileParts": 440,
+        "cachedGeometries": 152,
+        "batchCount": 150,
+        "allocatedBatchCount": 152,
+        "groundTriangles": 1232,
+        "renderObjectCount": 152,
+        "reconciled": 44,
+        "reconcileMs": 559.6999999880791,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 45.20000001788139,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 59,
+      "repeat": 1,
+      "variant": "balanced",
+      "tiles": 43,
+      "frame": {
+        "average": 444.42380952380944,
+        "median": 433.3000000000011,
+        "p95": 500,
+        "min": 400,
+        "max": 516.5999999999995,
+        "samples": 21
+      },
+      "render": {
+        "average": 440.1380952369599,
+        "median": 437.69999998807907,
+        "p95": 502.40000000596046,
+        "min": 386.59999999403954,
+        "max": 518.4000000059605,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 30,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 433.3000000000011,
+        "p95FrameMs": 500,
+        "frameSamples": 21,
+        "renderMs": 437.69999998807907,
+        "renderSamples": 21,
+        "drawCalls": 152,
+        "triangles": 170100,
+        "geometries": 155,
+        "textures": 2,
+        "tiles": 43,
+        "tileParts": 440,
+        "cachedGeometries": 152,
+        "batchCount": 150,
+        "allocatedBatchCount": 152,
+        "groundTriangles": 1232,
+        "renderObjectCount": 152,
+        "reconciled": 44,
+        "reconcileMs": 567.5,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 28.30000001192093,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 59,
+      "repeat": 1,
+      "variant": "legacy",
+      "tiles": 43,
+      "frame": {
+        "average": 441.2476190476191,
+        "median": 433.40000000000055,
+        "p95": 500,
+        "min": 366.59999999999945,
+        "max": 500,
+        "samples": 21
+      },
+      "render": {
+        "average": 442.4714285745507,
+        "median": 439.7000000178814,
+        "p95": 493.90000000596046,
+        "min": 363.5,
+        "max": 498.19999998807907,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 31,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 433.40000000000055,
+        "p95FrameMs": 500,
+        "frameSamples": 21,
+        "renderMs": 439.7000000178814,
+        "renderSamples": 21,
+        "drawCalls": 152,
+        "triangles": 170100,
+        "geometries": 155,
+        "textures": 2,
+        "tiles": 43,
+        "tileParts": 440,
+        "cachedGeometries": 152,
+        "batchCount": 150,
+        "allocatedBatchCount": 152,
+        "groundTriangles": 1232,
+        "renderObjectCount": 152,
+        "reconciled": 44,
+        "reconcileMs": 542.5,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 38.599999994039536,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 59,
+      "repeat": 2,
+      "variant": "legacy",
+      "tiles": 43,
+      "frame": {
+        "average": 453.15714285714284,
+        "median": 433.3000000000011,
+        "p95": 516.6999999999989,
+        "min": 400,
+        "max": 566.6999999999989,
+        "samples": 21
+      },
+      "render": {
+        "average": 452.68571428032146,
+        "median": 440.69999998807907,
+        "p95": 514.1999999880791,
+        "min": 405.90000000596046,
+        "max": 567.2999999821186,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 31,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 433.3000000000011,
+        "p95FrameMs": 516.6999999999989,
+        "frameSamples": 21,
+        "renderMs": 440.69999998807907,
+        "renderSamples": 21,
+        "drawCalls": 152,
+        "triangles": 170100,
+        "geometries": 155,
+        "textures": 2,
+        "tiles": 43,
+        "tileParts": 440,
+        "cachedGeometries": 152,
+        "batchCount": 150,
+        "allocatedBatchCount": 152,
+        "groundTriangles": 1232,
+        "renderObjectCount": 152,
+        "reconciled": 44,
+        "reconcileMs": 587,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 35.80000001192093,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 59,
+      "repeat": 2,
+      "variant": "balanced",
+      "tiles": 43,
+      "frame": {
+        "average": 462.6809523809524,
+        "median": 450,
+        "p95": 500,
+        "min": 416.5,
+        "max": 583.1999999999989,
+        "samples": 21
+      },
+      "render": {
+        "average": 457.6523809503941,
+        "median": 451.30000001192093,
+        "p95": 505.90000000596046,
+        "min": 402.90000000596046,
+        "max": 576.8999999761581,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 30,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 450,
+        "p95FrameMs": 500,
+        "frameSamples": 21,
+        "renderMs": 451.30000001192093,
+        "renderSamples": 21,
+        "drawCalls": 152,
+        "triangles": 170100,
+        "geometries": 155,
+        "textures": 2,
+        "tiles": 43,
+        "tileParts": 440,
+        "cachedGeometries": 152,
+        "batchCount": 150,
+        "allocatedBatchCount": 152,
+        "groundTriangles": 1232,
+        "renderObjectCount": 152,
+        "reconciled": 44,
+        "reconcileMs": 726.0999999940395,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 41.69999998807907,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 59,
+      "repeat": 3,
+      "variant": "balanced",
+      "tiles": 43,
+      "frame": {
+        "average": 485.69523809523804,
+        "median": 450,
+        "p95": 633.2999999999993,
+        "min": 400,
+        "max": 733.3000000000002,
+        "samples": 21
+      },
+      "render": {
+        "average": 483.8761904722168,
+        "median": 444.09999999403954,
+        "p95": 624.5,
+        "min": 395.69999998807907,
+        "max": 742.1999999880791,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 31,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 450,
+        "p95FrameMs": 633.2999999999993,
+        "frameSamples": 21,
+        "renderMs": 444.09999999403954,
+        "renderSamples": 21,
+        "drawCalls": 152,
+        "triangles": 170100,
+        "geometries": 155,
+        "textures": 2,
+        "tiles": 43,
+        "tileParts": 440,
+        "cachedGeometries": 152,
+        "batchCount": 150,
+        "allocatedBatchCount": 152,
+        "groundTriangles": 1232,
+        "renderObjectCount": 152,
+        "reconciled": 44,
+        "reconcileMs": 646.0999999940395,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 36,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 59,
+      "repeat": 3,
+      "variant": "legacy",
+      "tiles": 43,
+      "frame": {
+        "average": 416.647619047619,
+        "median": 416.5,
+        "p95": 483.3000000000002,
+        "min": 366.60000000000036,
+        "max": 483.3000000000002,
+        "samples": 21
+      },
+      "render": {
+        "average": 414.5142857134342,
+        "median": 410.69999998807907,
+        "p95": 472.59999999403954,
+        "min": 376.90000000596046,
+        "max": 479.59999999403954,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 31,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 416.5,
+        "p95FrameMs": 483.3000000000002,
+        "frameSamples": 21,
+        "renderMs": 410.69999998807907,
+        "renderSamples": 21,
+        "drawCalls": 152,
+        "triangles": 170100,
+        "geometries": 155,
+        "textures": 2,
+        "tiles": 43,
+        "tileParts": 440,
+        "cachedGeometries": 152,
+        "batchCount": 150,
+        "allocatedBatchCount": 152,
+        "groundTriangles": 1232,
+        "renderObjectCount": 152,
+        "reconciled": 44,
+        "reconcileMs": 569,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 49.400000005960464,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 59,
+      "repeat": 4,
+      "variant": "legacy",
+      "tiles": 43,
+      "frame": {
+        "average": 434.10952380952375,
+        "median": 433.39999999999964,
+        "p95": 483.39999999999964,
+        "min": 383.3000000000002,
+        "max": 483.40000000000055,
+        "samples": 21
+      },
+      "render": {
+        "average": 431.8047619064649,
+        "median": 430.2000000178814,
+        "p95": 469.5,
+        "min": 392,
+        "max": 486.89999997615814,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 31,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 433.39999999999964,
+        "p95FrameMs": 483.39999999999964,
+        "frameSamples": 21,
+        "renderMs": 430.2000000178814,
+        "renderSamples": 21,
+        "drawCalls": 152,
+        "triangles": 170100,
+        "geometries": 155,
+        "textures": 2,
+        "tiles": 43,
+        "tileParts": 440,
+        "cachedGeometries": 152,
+        "batchCount": 150,
+        "allocatedBatchCount": 152,
+        "groundTriangles": 1232,
+        "renderObjectCount": 152,
+        "reconciled": 44,
+        "reconcileMs": 656.5999999940395,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 37.099999994039536,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 909352,
+      "placements": 59,
+      "repeat": 4,
+      "variant": "balanced",
+      "tiles": 43,
+      "frame": {
+        "average": 476.96666666666664,
+        "median": 450,
+        "p95": 633.3000000000011,
+        "min": 400,
+        "max": 666.6000000000004,
+        "samples": 21
+      },
+      "render": {
+        "average": 475.185714284579,
+        "median": 453.89999997615814,
+        "p95": 636.9000000059605,
+        "min": 387.80000001192093,
+        "max": 658,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 31,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 450,
+        "p95FrameMs": 633.3000000000011,
+        "frameSamples": 21,
+        "renderMs": 453.89999997615814,
+        "renderSamples": 21,
+        "drawCalls": 152,
+        "triangles": 170100,
+        "geometries": 155,
+        "textures": 2,
+        "tiles": 43,
+        "tileParts": 440,
+        "cachedGeometries": 152,
+        "batchCount": 150,
+        "allocatedBatchCount": 152,
+        "groundTriangles": 1232,
+        "renderObjectCount": 152,
+        "reconciled": 44,
+        "reconcileMs": 683.0999999940395,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 36.900000005960464,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 9,
+      "repeat": 0,
+      "variant": "legacy",
+      "tiles": 10,
+      "frame": {
+        "average": 189.6761904761905,
+        "median": 183.39999999999964,
+        "p95": 216.69999999999982,
+        "min": 150,
+        "max": 216.69999999999982,
+        "samples": 21
+      },
+      "render": {
+        "average": 187.27619047675813,
+        "median": 186.69999998807907,
+        "p95": 219.09999999403954,
+        "min": 160.10000002384186,
+        "max": 220.7000000178814,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 43,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 183.39999999999964,
+        "p95FrameMs": 216.69999999999982,
+        "frameSamples": 21,
+        "renderMs": 186.69999998807907,
+        "renderSamples": 21,
+        "drawCalls": 72,
+        "triangles": 34852,
+        "geometries": 71,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 99,
+        "cachedGeometries": 65,
+        "batchCount": 64,
+        "allocatedBatchCount": 65,
+        "groundTriangles": 372,
+        "renderObjectCount": 69,
+        "reconciled": 11,
+        "reconcileMs": 265.90000000596046,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 10.799999982118607,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 9,
+      "repeat": 0,
+      "variant": "balanced",
+      "tiles": 10,
+      "frame": {
+        "average": 200.78095238095236,
+        "median": 200,
+        "p95": 216.70000000000027,
+        "min": 166.69999999999982,
+        "max": 216.70000000000073,
+        "samples": 21
+      },
+      "render": {
+        "average": 198.25714286310333,
+        "median": 200.5,
+        "p95": 213.5,
+        "min": 168.10000002384186,
+        "max": 215.09999999403954,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 44,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 200,
+        "p95FrameMs": 216.70000000000027,
+        "frameSamples": 21,
+        "renderMs": 200.5,
+        "renderSamples": 21,
+        "drawCalls": 72,
+        "triangles": 34852,
+        "geometries": 71,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 99,
+        "cachedGeometries": 65,
+        "batchCount": 64,
+        "allocatedBatchCount": 65,
+        "groundTriangles": 372,
+        "renderObjectCount": 69,
+        "reconciled": 11,
+        "reconcileMs": 287.09999999403954,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 12.5,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 9,
+      "repeat": 1,
+      "variant": "balanced",
+      "tiles": 10,
+      "frame": {
+        "average": 211.90000000000003,
+        "median": 200.09999999999945,
+        "p95": 266.60000000000036,
+        "min": 166.59999999999945,
+        "max": 266.60000000000036,
+        "samples": 21
+      },
+      "render": {
+        "average": 210.94761904932204,
+        "median": 202.10000002384186,
+        "p95": 260.90000000596046,
+        "min": 177.69999998807907,
+        "max": 266.09999999403954,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 45,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 200.09999999999945,
+        "p95FrameMs": 266.60000000000036,
+        "frameSamples": 21,
+        "renderMs": 202.10000002384186,
+        "renderSamples": 21,
+        "drawCalls": 72,
+        "triangles": 34852,
+        "geometries": 71,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 99,
+        "cachedGeometries": 65,
+        "batchCount": 64,
+        "allocatedBatchCount": 65,
+        "groundTriangles": 372,
+        "renderObjectCount": 69,
+        "reconciled": 11,
+        "reconcileMs": 343.2999999821186,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 14.699999988079071,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 9,
+      "repeat": 1,
+      "variant": "legacy",
+      "tiles": 10,
+      "frame": {
+        "average": 198.40952380952382,
+        "median": 199.90000000000055,
+        "p95": 216.69999999999982,
+        "min": 183.19999999999982,
+        "max": 283.39999999999964,
+        "samples": 21
+      },
+      "render": {
+        "average": 196.41904761961527,
+        "median": 195.10000002384186,
+        "p95": 223,
+        "min": 173.19999998807907,
+        "max": 283.19999998807907,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 44,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 199.90000000000055,
+        "p95FrameMs": 216.69999999999982,
+        "frameSamples": 21,
+        "renderMs": 195.10000002384186,
+        "renderSamples": 21,
+        "drawCalls": 72,
+        "triangles": 34852,
+        "geometries": 71,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 99,
+        "cachedGeometries": 65,
+        "batchCount": 64,
+        "allocatedBatchCount": 65,
+        "groundTriangles": 372,
+        "renderObjectCount": 69,
+        "reconciled": 11,
+        "reconcileMs": 285.59999999403954,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 12.200000017881393,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 9,
+      "repeat": 2,
+      "variant": "legacy",
+      "tiles": 10,
+      "frame": {
+        "average": 198.4047619047619,
+        "median": 199.9000000000001,
+        "p95": 233.4000000000001,
+        "min": 183.29999999999927,
+        "max": 233.40000000000055,
+        "samples": 21
+      },
+      "render": {
+        "average": 196.46666666581518,
+        "median": 196.59999999403954,
+        "p95": 221.30000001192093,
+        "min": 176.09999999403954,
+        "max": 223.90000000596046,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 46,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 199.9000000000001,
+        "p95FrameMs": 233.4000000000001,
+        "frameSamples": 21,
+        "renderMs": 196.59999999403954,
+        "renderSamples": 21,
+        "drawCalls": 72,
+        "triangles": 34852,
+        "geometries": 71,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 99,
+        "cachedGeometries": 65,
+        "batchCount": 64,
+        "allocatedBatchCount": 65,
+        "groundTriangles": 372,
+        "renderObjectCount": 69,
+        "reconciled": 11,
+        "reconcileMs": 273.69999998807907,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 17.700000017881393,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 9,
+      "repeat": 2,
+      "variant": "balanced",
+      "tiles": 10,
+      "frame": {
+        "average": 203.16666666666666,
+        "median": 183.40000000000055,
+        "p95": 316.60000000000036,
+        "min": 166.60000000000036,
+        "max": 350.0999999999999,
+        "samples": 21
+      },
+      "render": {
+        "average": 200.97619047477133,
+        "median": 188.69999998807907,
+        "p95": 304.19999998807907,
+        "min": 164.7000000178814,
+        "max": 352.69999998807907,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 46,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 183.40000000000055,
+        "p95FrameMs": 316.60000000000036,
+        "frameSamples": 21,
+        "renderMs": 188.69999998807907,
+        "renderSamples": 21,
+        "drawCalls": 72,
+        "triangles": 34852,
+        "geometries": 71,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 99,
+        "cachedGeometries": 65,
+        "batchCount": 64,
+        "allocatedBatchCount": 65,
+        "groundTriangles": 372,
+        "renderObjectCount": 69,
+        "reconciled": 11,
+        "reconcileMs": 344.7000000178814,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 13.400000005960464,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 9,
+      "repeat": 3,
+      "variant": "balanced",
+      "tiles": 10,
+      "frame": {
+        "average": 186.5,
+        "median": 183.30000000000018,
+        "p95": 216.69999999999982,
+        "min": 150,
+        "max": 216.69999999999982,
+        "samples": 21
+      },
+      "render": {
+        "average": 186.8571428557237,
+        "median": 189,
+        "p95": 222,
+        "min": 148.59999999403954,
+        "max": 230.5,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 45,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 183.30000000000018,
+        "p95FrameMs": 216.69999999999982,
+        "frameSamples": 21,
+        "renderMs": 189,
+        "renderSamples": 21,
+        "drawCalls": 72,
+        "triangles": 34852,
+        "geometries": 71,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 99,
+        "cachedGeometries": 65,
+        "batchCount": 64,
+        "allocatedBatchCount": 65,
+        "groundTriangles": 372,
+        "renderObjectCount": 69,
+        "reconciled": 11,
+        "reconcileMs": 248,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 12.599999994039536,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 9,
+      "repeat": 3,
+      "variant": "legacy",
+      "tiles": 10,
+      "frame": {
+        "average": 195.22857142857143,
+        "median": 200,
+        "p95": 216.69999999999982,
+        "min": 166.70000000000073,
+        "max": 216.69999999999982,
+        "samples": 21
+      },
+      "render": {
+        "average": 193.61904761620931,
+        "median": 195.40000000596046,
+        "p95": 217.19999998807907,
+        "min": 174.2999999821186,
+        "max": 224.5,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 44,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 200,
+        "p95FrameMs": 216.69999999999982,
+        "frameSamples": 21,
+        "renderMs": 195.40000000596046,
+        "renderSamples": 21,
+        "drawCalls": 72,
+        "triangles": 34852,
+        "geometries": 71,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 99,
+        "cachedGeometries": 65,
+        "batchCount": 64,
+        "allocatedBatchCount": 65,
+        "groundTriangles": 372,
+        "renderObjectCount": 69,
+        "reconciled": 11,
+        "reconcileMs": 265.69999998807907,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 11.900000005960464,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 9,
+      "repeat": 4,
+      "variant": "legacy",
+      "tiles": 10,
+      "frame": {
+        "average": 200.78095238095236,
+        "median": 200,
+        "p95": 216.69999999999982,
+        "min": 183.29999999999973,
+        "max": 233.29999999999927,
+        "samples": 21
+      },
+      "render": {
+        "average": 198.2999999991485,
+        "median": 201.80000001192093,
+        "p95": 223.09999999403954,
+        "min": 159.59999999403954,
+        "max": 233.5,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 46,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 200,
+        "p95FrameMs": 216.69999999999982,
+        "frameSamples": 21,
+        "renderMs": 201.80000001192093,
+        "renderSamples": 21,
+        "drawCalls": 72,
+        "triangles": 34852,
+        "geometries": 71,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 99,
+        "cachedGeometries": 65,
+        "batchCount": 64,
+        "allocatedBatchCount": 65,
+        "groundTriangles": 372,
+        "renderObjectCount": 69,
+        "reconciled": 11,
+        "reconcileMs": 261.5,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 11.699999988079071,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 9,
+      "repeat": 4,
+      "variant": "balanced",
+      "tiles": 10,
+      "frame": {
+        "average": 203.16190476190474,
+        "median": 200,
+        "p95": 233.40000000000055,
+        "min": 166.69999999999982,
+        "max": 250,
+        "samples": 21
+      },
+      "render": {
+        "average": 201.3190476170608,
+        "median": 198.69999998807907,
+        "p95": 227.7000000178814,
+        "min": 180.2999999821186,
+        "max": 249.59999999403954,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 44,
+        "renderFrames": 30,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 200,
+        "p95FrameMs": 233.40000000000055,
+        "frameSamples": 21,
+        "renderMs": 198.69999998807907,
+        "renderSamples": 21,
+        "drawCalls": 72,
+        "triangles": 34852,
+        "geometries": 71,
+        "textures": 2,
+        "tiles": 10,
+        "tileParts": 99,
+        "cachedGeometries": 65,
+        "batchCount": 64,
+        "allocatedBatchCount": 65,
+        "groundTriangles": 372,
+        "renderObjectCount": 69,
+        "reconciled": 11,
+        "reconcileMs": 280.59999999403954,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 16.899999976158142,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 59,
+      "repeat": 0,
+      "variant": "legacy",
+      "tiles": 59,
+      "frame": {
+        "average": 519.0333333333334,
+        "median": 483.2999999999993,
+        "p95": 700,
+        "min": 416.60000000000036,
+        "max": 716.6000000000004,
+        "samples": 21
+      },
+      "render": {
+        "average": 513.3476190481867,
+        "median": 479.2999999821186,
+        "p95": 703.5,
+        "min": 412.59999999403954,
+        "max": 707.7999999821186,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 30,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 483.2999999999993,
+        "p95FrameMs": 700,
+        "frameSamples": 21,
+        "renderMs": 479.2999999821186,
+        "renderSamples": 21,
+        "drawCalls": 188,
+        "triangles": 196858,
+        "geometries": 190,
+        "textures": 2,
+        "tiles": 59,
+        "tileParts": 584,
+        "cachedGeometries": 187,
+        "batchCount": 186,
+        "allocatedBatchCount": 187,
+        "groundTriangles": 1784,
+        "renderObjectCount": 188,
+        "reconciled": 60,
+        "reconcileMs": 611.2000000178814,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 49.5,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 59,
+      "repeat": 0,
+      "variant": "balanced",
+      "tiles": 59,
+      "frame": {
+        "average": 486.4857142857143,
+        "median": 466.60000000000036,
+        "p95": 616.6999999999989,
+        "min": 400,
+        "max": 700,
+        "samples": 21
+      },
+      "render": {
+        "average": 483.3571428599812,
+        "median": 460.59999999403954,
+        "p95": 620.9000000059605,
+        "min": 408.19999998807907,
+        "max": 705.3000000119209,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 30,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 466.60000000000036,
+        "p95FrameMs": 616.6999999999989,
+        "frameSamples": 21,
+        "renderMs": 460.59999999403954,
+        "renderSamples": 21,
+        "drawCalls": 188,
+        "triangles": 196858,
+        "geometries": 190,
+        "textures": 2,
+        "tiles": 59,
+        "tileParts": 584,
+        "cachedGeometries": 187,
+        "batchCount": 186,
+        "allocatedBatchCount": 187,
+        "groundTriangles": 1784,
+        "renderObjectCount": 188,
+        "reconciled": 60,
+        "reconcileMs": 629.0999999940395,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 45.099999994039536,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 59,
+      "repeat": 1,
+      "variant": "balanced",
+      "tiles": 59,
+      "frame": {
+        "average": 455.53333333333336,
+        "median": 450,
+        "p95": 500,
+        "min": 416.7000000000007,
+        "max": 516.6999999999998,
+        "samples": 21
+      },
+      "render": {
+        "average": 454.5761904759066,
+        "median": 455.2000000178814,
+        "p95": 490,
+        "min": 413.80000001192093,
+        "max": 509.40000000596046,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 31,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 450,
+        "p95FrameMs": 500,
+        "frameSamples": 21,
+        "renderMs": 455.2000000178814,
+        "renderSamples": 21,
+        "drawCalls": 188,
+        "triangles": 196858,
+        "geometries": 190,
+        "textures": 2,
+        "tiles": 59,
+        "tileParts": 584,
+        "cachedGeometries": 187,
+        "batchCount": 186,
+        "allocatedBatchCount": 187,
+        "groundTriangles": 1784,
+        "renderObjectCount": 188,
+        "reconciled": 60,
+        "reconcileMs": 609.2000000178814,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 40,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 59,
+      "repeat": 1,
+      "variant": "legacy",
+      "tiles": 59,
+      "frame": {
+        "average": 430.93333333333334,
+        "median": 433.2999999999993,
+        "p95": 483.3000000000002,
+        "min": 383.3000000000002,
+        "max": 483.3000000000011,
+        "samples": 21
+      },
+      "render": {
+        "average": 426.5285714254493,
+        "median": 425.59999999403954,
+        "p95": 481.40000000596046,
+        "min": 383.7999999821186,
+        "max": 482.5,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 30,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 433.2999999999993,
+        "p95FrameMs": 483.3000000000002,
+        "frameSamples": 21,
+        "renderMs": 425.59999999403954,
+        "renderSamples": 21,
+        "drawCalls": 188,
+        "triangles": 196858,
+        "geometries": 190,
+        "textures": 2,
+        "tiles": 59,
+        "tileParts": 584,
+        "cachedGeometries": 187,
+        "batchCount": 186,
+        "allocatedBatchCount": 187,
+        "groundTriangles": 1784,
+        "renderObjectCount": 188,
+        "reconciled": 60,
+        "reconcileMs": 621.9000000059605,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 46.39999997615814,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 59,
+      "repeat": 2,
+      "variant": "legacy",
+      "tiles": 59,
+      "frame": {
+        "average": 695.2095238095237,
+        "median": 533.2999999999993,
+        "p95": 1033.2999999999993,
+        "min": 466.59999999999945,
+        "max": 3099.8999999999996,
+        "samples": 21
+      },
+      "render": {
+        "average": 706.1285714322612,
+        "median": 531.5,
+        "p95": 1029.6000000238419,
+        "min": 463.7999999821186,
+        "max": 3102.5999999940395,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 29,
+        "renderFrames": 28,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 533.2999999999993,
+        "p95FrameMs": 1033.2999999999993,
+        "frameSamples": 21,
+        "renderMs": 531.5,
+        "renderSamples": 21,
+        "drawCalls": 188,
+        "triangles": 196858,
+        "geometries": 190,
+        "textures": 2,
+        "tiles": 59,
+        "tileParts": 584,
+        "cachedGeometries": 187,
+        "batchCount": 186,
+        "allocatedBatchCount": 187,
+        "groundTriangles": 1784,
+        "renderObjectCount": 188,
+        "reconciled": 60,
+        "reconcileMs": 564.5999999940395,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 39.099999994039536,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 59,
+      "repeat": 2,
+      "variant": "balanced",
+      "tiles": 59,
+      "frame": {
+        "average": 531.7285714285715,
+        "median": 550,
+        "p95": 616.5999999999985,
+        "min": 416.6999999999998,
+        "max": 633.3000000000011,
+        "samples": 21
+      },
+      "render": {
+        "average": 534.7571428560075,
+        "median": 553.8000000119209,
+        "p95": 614.9000000059605,
+        "min": 414.59999999403954,
+        "max": 626.5,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 30,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 550,
+        "p95FrameMs": 616.5999999999985,
+        "frameSamples": 21,
+        "renderMs": 553.8000000119209,
+        "renderSamples": 21,
+        "drawCalls": 188,
+        "triangles": 196858,
+        "geometries": 190,
+        "textures": 2,
+        "tiles": 59,
+        "tileParts": 584,
+        "cachedGeometries": 187,
+        "batchCount": 186,
+        "allocatedBatchCount": 187,
+        "groundTriangles": 1784,
+        "renderObjectCount": 188,
+        "reconciled": 60,
+        "reconcileMs": 691.7000000178814,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 60.69999998807907,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 59,
+      "repeat": 3,
+      "variant": "balanced",
+      "tiles": 59,
+      "frame": {
+        "average": 543.6285714285713,
+        "median": 550,
+        "p95": 616.5999999999985,
+        "min": 433.3000000000002,
+        "max": 650,
+        "samples": 21
+      },
+      "render": {
+        "average": 541.9000000002839,
+        "median": 541.5,
+        "p95": 623.3000000119209,
+        "min": 431.09999999403954,
+        "max": 643.7000000178814,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 30,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 550,
+        "p95FrameMs": 616.5999999999985,
+        "frameSamples": 21,
+        "renderMs": 541.5,
+        "renderSamples": 21,
+        "drawCalls": 188,
+        "triangles": 196858,
+        "geometries": 190,
+        "textures": 2,
+        "tiles": 59,
+        "tileParts": 584,
+        "cachedGeometries": 187,
+        "batchCount": 186,
+        "allocatedBatchCount": 187,
+        "groundTriangles": 1784,
+        "renderObjectCount": 188,
+        "reconciled": 60,
+        "reconcileMs": 608.0999999940395,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 41.69999998807907,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 59,
+      "repeat": 3,
+      "variant": "legacy",
+      "tiles": 59,
+      "frame": {
+        "average": 476.1761904761904,
+        "median": 450,
+        "p95": 616.6000000000004,
+        "min": 416.59999999999945,
+        "max": 633.2999999999993,
+        "samples": 21
+      },
+      "render": {
+        "average": 476.97619047477133,
+        "median": 456,
+        "p95": 629.3999999761581,
+        "min": 417.2999999821186,
+        "max": 632.4000000059605,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 31,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 450,
+        "p95FrameMs": 616.6000000000004,
+        "frameSamples": 21,
+        "renderMs": 456,
+        "renderSamples": 21,
+        "drawCalls": 188,
+        "triangles": 196858,
+        "geometries": 190,
+        "textures": 2,
+        "tiles": 59,
+        "tileParts": 584,
+        "cachedGeometries": 187,
+        "batchCount": 186,
+        "allocatedBatchCount": 187,
+        "groundTriangles": 1784,
+        "renderObjectCount": 188,
+        "reconciled": 60,
+        "reconcileMs": 665.0999999940395,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 50.19999998807907,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 59,
+      "repeat": 4,
+      "variant": "legacy",
+      "tiles": 59,
+      "frame": {
+        "average": 496.0095238095238,
+        "median": 483.1999999999998,
+        "p95": 583.4000000000015,
+        "min": 400.10000000000036,
+        "max": 783.3000000000011,
+        "samples": 21
+      },
+      "render": {
+        "average": 496.77142856660345,
+        "median": 482,
+        "p95": 570.0999999940395,
+        "min": 395.80000001192093,
+        "max": 774.3999999761581,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 30,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "legacy",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 483.1999999999998,
+        "p95FrameMs": 583.4000000000015,
+        "frameSamples": 21,
+        "renderMs": 482,
+        "renderSamples": 21,
+        "drawCalls": 188,
+        "triangles": 196858,
+        "geometries": 190,
+        "textures": 2,
+        "tiles": 59,
+        "tileParts": 584,
+        "cachedGeometries": 187,
+        "batchCount": 186,
+        "allocatedBatchCount": 187,
+        "groundTriangles": 1784,
+        "renderObjectCount": 188,
+        "reconciled": 60,
+        "reconcileMs": 630.5,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 57.29999998211861,
+        "revision": 1
+      }
+    },
+    {
+      "seed": 2,
+      "placements": 59,
+      "repeat": 4,
+      "variant": "balanced",
+      "tiles": 59,
+      "frame": {
+        "average": 531.7238095238097,
+        "median": 516.6000000000004,
+        "p95": 683.2999999999993,
+        "min": 449.89999999999964,
+        "max": 716.6000000000004,
+        "samples": 21
+      },
+      "render": {
+        "average": 526.4142857122989,
+        "median": 507.69999998807907,
+        "p95": 693.4000000059605,
+        "min": 448,
+        "max": 702.5,
+        "samples": 21
+      },
+      "metrics": {
+        "frames": 30,
+        "renderFrames": 29,
+        "continuousRendering": true,
+        "graphics": {
+          "quality": "high",
+          "software": true,
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "shadowSize": 2048
+        },
+        "lighting": "afternoon",
+        "environment": {
+          "candidate": "balanced",
+          "toneMapping": "neutral",
+          "exposure": 1
+        },
+        "shadowUpdates": 2,
+        "shadowAutoUpdate": false,
+        "shadowNeedsUpdate": false,
+        "frameMs": 516.6000000000004,
+        "p95FrameMs": 683.2999999999993,
+        "frameSamples": 21,
+        "renderMs": 507.69999998807907,
+        "renderSamples": 21,
+        "drawCalls": 188,
+        "triangles": 196858,
+        "geometries": 190,
+        "textures": 2,
+        "tiles": 59,
+        "tileParts": 584,
+        "cachedGeometries": 187,
+        "batchCount": 186,
+        "allocatedBatchCount": 187,
+        "groundTriangles": 1784,
+        "renderObjectCount": 188,
+        "reconciled": 60,
+        "reconcileMs": 779.5999999940395,
+        "pixelRatio": 1,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "coreMilliseconds": 48.10000002384186,
+        "revision": 1
+      }
+    }
+  ]
+}

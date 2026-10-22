@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /home/agent/code/OVH/barrio.works/web
+
+ ✓ tests/vegetation.test.ts (12 tests | 11 skipped) 8680ms
+   ✓ world-space vegetation > keeps overhanging crowns clear of neighboring homes and walks on developed boards  8677ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 11 skipped (12)
+   Start at  20:03:59
+   Duration  11.16s (transform 419ms, setup 0ms, collect 1.08s, tests 8.68s, environment 695ms, prepare 152ms)
+

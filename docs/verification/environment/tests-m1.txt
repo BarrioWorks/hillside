@@ -1,0 +1,69 @@
+
+> barrio-builder@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /home/agent/code/OVH/barrio.works/web
+
+ ✓ tests/ground.test.ts (13 tests) 861ms
+   ✓ leaves both coping faces open across every matched staircase  452ms
+ ✓ tests/panels.test.ts (14 tests) 1310ms
+   ✓ the quest panel > marks a quest whose progress rose, and briefly shows a completed quest before its successor  302ms
+stdout | tests/tiles.test.ts > path layout inside a tile > connects two compatible path edges logically and visually across all six sides
+seam deviation by walk shape {"straight":{"angle":2.220446049250313e-16,"corner":3.111009679531307e-8},"bent":{"angle":0.03683547569520414,"corner":3.111009679531307e-8},"dead end":{"angle":1.1102230246251565e-16,"corner":3.111009679531307e-8},"junction":{"angle":4.996003610813204e-16,"corner":3.111009679531307e-8},"T junction":{"angle":0.009625810465300401,"corner":3.111009679531307e-8}}
+
+stderr | tests/environment.test.ts > environment material and output > keeps legacy output: sRGB, Neutral, and per-preset exposure
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+stderr | tests/environment.test.ts > environment material and output > holds candidate exposure at 1, honors the tone override, and relights the afternoon
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ ✓ tests/environment.test.ts (23 tests) 1889ms
+   ✓ environment ground > has no color seams where tiles share a ground position (cool)  378ms
+   ✓ environment ground > has no color seams where tiles share a ground position (warm)  346ms
+   ✓ environment ground > has no color seams where tiles share a ground position (balanced)  362ms
+stdout | tests/batches.test.ts > shared structure batches > preserves all geometry for autoplayed hillsides of composed tiles
+hillside batches {"tiles":248,"parts":2577,"triangles":903010,"batches":533}
+
+ ✓ tests/batches.test.ts (8 tests) 2757ms
+   ✓ shared structure batches > preserves all geometry for autoplayed hillsides of composed tiles  2714ms
+ ✓ tests/controller.test.ts (27 tests) 715ms
+ ✓ tests/hex.test.ts (7 tests) 289ms
+ ✓ tests/ui.test.ts (10 tests) 102ms
+ ✓ tests/input.test.ts (4 tests) 20ms
+ ✓ tests/debug.test.ts (5 tests) 5268ms
+   ✓ connectivity overlay from real runs > agrees with visible ribbon ends, networks and doors for seed 1  1601ms
+   ✓ connectivity overlay from real runs > agrees with visible ribbon ends, networks and doors for seed 2  1007ms
+   ✓ connectivity overlay from real runs > agrees with visible ribbon ends, networks and doors for seed 3  1198ms
+   ✓ connectivity overlay from real runs > agrees with visible ribbon ends, networks and doors for seed 4  629ms
+   ✓ connectivity overlay from real runs > agrees with visible ribbon ends, networks and doors for seed 5  826ms
+ ✓ tests/simulation.test.ts (26 tests) 254ms
+ ✓ tests/quests.test.ts (39 tests) 2728ms
+   ✓ quests against the real Rust core > draws the same reward tiles in the same order, behind the starting deck, whatever the play  2266ms
+stdout | tests/tiles.test.ts > tile composition > composes every kind, variation and context with finite parts inside its hex and above ground
+tile part extent {"cases":1112,"radius":1.9178370255588746,"low":-0.5799999833106995}
+
+stdout | tests/tiles.test.ts > tile composition > keeps every composed tile within 15300 triangles
+max triangles per composed tile {"inicio":5318,"quebrada":1352,"monte":6902,"casas":9604,"sendero":3368,"plaza":4546,"tienda":6166,"parque":1540,"capilla":3136}
+
+stdout | tests/tiles.test.ts > real core path geometry > keeps ground-floor vertices, tree crowns and every decoration clear of walks and access
+path occlusion seeds 1..10 autoplay 40 {"houses":627,"housesInside":0,"trees":1627,"treesOver":0,"decorations":2028}
+
+ ✓ tests/tiles.test.ts (22 tests) 38202ms
+   ✓ buildings and walkways > keeps house footprints and door access clear across templates, regions and contexts  18396ms
+   ✓ tile composition > composes every kind, variation and context with finite parts inside its hex and above ground  5097ms
+   ✓ tile composition > produces identical path geometry for the same site from two kits  1347ms
+   ✓ tile composition > keeps every composed tile within 15300 triangles  2743ms
+   ✓ real core path geometry > keeps real house footprints, doors and access clear and reports disconnected homes  912ms
+   ✓ real core path geometry > keeps ground-floor vertices, tree crowns and every decoration clear of walks and access  7343ms
+   ✓ real core path geometry > matches Rust groups and network ids and joins actual ribbon and stair vertices across every Match seam  1966ms
+
+ Test Files  12 passed (12)
+      Tests  198 passed (198)
+   Start at  19:29:32
+   Duration  41.34s (transform 1.41s, setup 0ms, collect 12.51s, tests 54.39s, environment 11.71s, prepare 2.16s)
+

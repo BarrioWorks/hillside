@@ -2,9 +2,33 @@ import * as THREE from 'three';
 import type { Edge, Kind, Meet, Region } from '../domain';
 import { building, buildingStyle } from './architecture';
 import { Builder, random } from './builder';
-import { edgeAngle, facing, INRADIUS, LEVEL } from './hex';
-import { tree } from './models';
+import { buildingDoor, type DoorAnchor, setBuildingDoor } from './building-door';
+import { edgeAngle, facing, HEX, INRADIUS, LEVEL } from './hex';
+import { detailKey, detailModel, type Plant, plantKey, plantModel, VARIANTS, type Variant } from './models';
 import { type PaletteName, Surface } from './palette';
+import {
+  type BlockedRegion,
+  boundary,
+  COPING,
+  footprintDistance,
+  type PathGraph,
+  PedestrianPlanner,
+  pave,
+  pavementClearance,
+  segmentDistance,
+  WIDTH,
+  withBoundaries,
+} from './pedestrian';
+import { type Candidate, DENSITY, details, type Ground, plantFor, plants } from './vegetation';
+
+export {
+  COPING,
+  footprintDistance,
+  insideFootprint,
+  STAIR_RUN,
+  segmentDistance,
+  segmentsDistance,
+} from './pedestrian';
 
 /**
  * What a tile needs to know to dress itself. Per-side arrays are already rotated into world directions and
@@ -21,6 +45,8 @@ export interface TileSite {
   variation: number;
   elevation: number;
   region: Region;
+  /** The run's seed for world-space vegetation fields; plant placement is still deterministic without it. */
+  seed?: number;
 }
 /** How one side meets its neighbor: the Rust meet and the neighbor's height above this tile. */
 export interface SideState {
@@ -36,14 +62,9 @@ export type Point = { x: number; z: number };
 /** Houses are the existing shape-grammar buildings, scaled to sit two to four on a tile. */
 const HOUSE_SCALE = 0.74;
 const HOUSE_DISTANCE = 1.12;
-export const PATH_WIDTH = 0.56;
-export const COPING = 0.08;
+export const PATH_WIDTH = WIDTH.primary;
 const WATER_WIDTH = 0.62;
 const BANK = 0.16;
-export const STAIR_RUN = 0.8;
-const STAIR_STEPS = 5;
-const DEAD_END = 0.45;
-const CLIFF_END = 0.38;
 const HOMES = ['casa', 'casa', 'esquina', 'torre', 'casa', 'taller', 'esquina', 'casa'] as const;
 const CURVE_STEPS = 12;
 
@@ -70,78 +91,67 @@ function bezier(from: Point, control: Point, to: Point, steps = CURVE_STEPS): Po
 export type PathEnd = 'edge' | 'stairs' | 'deadEnd' | 'cliff';
 
 export function pathEnd(state: SideState | undefined): PathEnd {
-  if (!state || state.meet === 'open') return 'edge';
-  if (state.meet === 'steep') return 'cliff';
-  if (state.meet !== 'match') return 'deadEnd';
-  return state.rise > 0 ? 'stairs' : 'edge';
-}
-
-function endDistance(end: PathEnd): number {
-  switch (end) {
-    case 'stairs':
-      return INRADIUS - STAIR_RUN;
-    case 'deadEnd':
-      return INRADIUS - DEAD_END;
-    case 'cliff':
-      return INRADIUS - CLIFF_END;
-    default:
-      return INRADIUS;
-  }
+  const kind = boundary(0, 1, state).kind;
+  return kind === 'stairs' ? 'stairs' : kind === 'stop' ? 'deadEnd' : kind === 'cliff' ? 'cliff' : 'edge';
 }
 
 export interface Walk {
-  group: number;
-  sides: number[];
+  readonly group: number;
+  readonly sides: readonly number[];
   /** Centerlines in tile space, each starting at a side's end point. */
-  curves: Point[][];
+  readonly curves: readonly (readonly Point[])[];
   /** Where three or more sides meet, a small paved landing. */
-  hub: Point | null;
+  readonly hub: Point | null;
 }
 
-/**
- * Lays out each path group as curves between its edges. Two edges make one curve through the tile; three
- * or more meet at a landing; one edge leads in to a doorstep. Different groups never share a point.
- */
+function graphWalks(graph: PathGraph): Walk[] {
+  return [...new Set(graph.boundaries.map((p) => p.group))].map((group) => {
+    const ports = graph.nodes.filter(
+      (n) => n.kind === 'crossing' && n.location === 'boundary' && n.group === group,
+    );
+    const first = ports[0];
+    const root = graph.nodes.find(
+      (n) => n.group === group && n.kind === 'crossing' && n.location === 'interior',
+    );
+    const trace = (start: string, end: string): Point[] => {
+      const visit = (id: string, previous: string | null): Point[] | null => {
+        const node = graph.nodes.find((n) => n.id === id);
+        if (!node) return null;
+        if (id === end) return [node.at];
+        for (const edge of graph.edges) {
+          if (edge.class !== 'primary' || (edge.from !== id && edge.to !== id)) continue;
+          const next = edge.from === id ? edge.to : edge.from;
+          if (next === previous) continue;
+          const path = visit(next, id);
+          if (path) return [node.at, ...path];
+        }
+        return null;
+      };
+      return visit(start, null) ?? [];
+    };
+    const second = ports[1];
+    return {
+      group,
+      sides: ports.flatMap((n) => (n.kind === 'crossing' ? [n.side] : [])),
+      hub: null,
+      curves:
+        ports.length === 2 && first && second
+          ? [trace(first.id, second.id)]
+          : ports.map((n) => (root ? trace(n.id, root.id) : [])),
+    };
+  });
+}
 export function walks(
   site: Pick<TileSite, 'edges' | 'paths'>,
   sides: readonly (SideState | undefined)[],
 ): Walk[] {
-  const groups = new Map<number, number[]>();
-  site.paths.forEach((group, side) => {
-    if (group && site.edges[side] === 'path') groups.set(group, [...(groups.get(group) ?? []), side]);
-  });
-  return [...groups.entries()].map(([group, members]) => {
-    const ends = members.map((side) => anchor(side, endDistance(pathEnd(sides[side]))));
-    if (members.length === 1) {
-      const side = members[0] as number;
-      return { group, sides: members, curves: [[ends[0] as Point, anchor(side, 0.5)]], hub: null };
-    }
-    if (members.length === 2)
-      return {
-        group,
-        sides: members,
-        curves: [bezier(ends[0] as Point, { x: 0, z: 0 }, ends[1] as Point)],
-        hub: null,
-      };
-    const mean = members
-      .map((side) => anchor(side))
-      .reduce((sum, p) => ({ x: sum.x + p.x / members.length, z: sum.z + p.z / members.length }), {
-        x: 0,
-        z: 0,
-      });
-    const hub = { x: mean.x * 0.35, z: mean.z * 0.35 };
-    return {
-      group,
-      sides: members,
-      curves: members.map((side, i) => bezier(ends[i] as Point, anchor(side, 0.55), hub, 8)),
-      hub,
-    };
-  });
+  return graphWalks(new PedestrianPlanner({ ...site, kind: 'sendero' }, waterRegions(site)).finish(sides));
 }
 
 /** The nearest centerline point of a walk to `p`. */
 function nearestOn(walk: Walk, p: Point): Point {
-  let best = walk.hub ?? (walk.curves[0]?.[0] as Point);
+  let best = walk.hub ?? walk.curves[0]?.[0];
+  if (!best) return { x: Infinity, z: Infinity };
   for (const curve of walk.curves)
     for (let i = 1; i < curve.length; i++) {
       const a = curve[i - 1] as Point,
@@ -220,120 +230,23 @@ function disc(radius: number, y: number, segments = 14): THREE.BufferGeometry {
   return new THREE.CircleGeometry(radius, segments).rotateX(-Math.PI / 2).translate(0, y, 0);
 }
 
-function stairs(b: Builder, side: number, rise: number): void {
-  const angle = edgeAngle(side);
-  const turn = facing(angle);
-  const start = INRADIUS - STAIR_RUN;
-  const depth = STAIR_RUN / STAIR_STEPS;
-  for (let i = 0; i < STAIR_STEPS; i++) {
-    const height = ((i + 1) * LEVEL * rise) / STAIR_STEPS;
-    const d = start + depth * (i + 0.5);
-    b.block(
-      PATH_WIDTH,
-      height + 0.045,
-      depth,
-      Math.cos(angle) * d,
-      0,
-      Math.sin(angle) * d,
-      'walkway',
-      Surface.concrete,
-      turn,
-    );
-    const nose = start + depth * (i + 1) - 0.02;
-    b.block(
-      PATH_WIDTH,
-      0.025,
-      0.04,
-      Math.cos(angle) * nose,
-      height + 0.02,
-      Math.sin(angle) * nose,
-      'retaining',
-      Surface.concrete,
-      turn,
-    );
-  }
-  for (const offset of [-1, 1]) {
-    const lateral = (PATH_WIDTH / 2 + 0.06) * offset;
-    const d = INRADIUS - STAIR_RUN / 2;
-    const x = Math.cos(angle) * d + Math.cos(angle + Math.PI / 2) * lateral;
-    const z = Math.sin(angle) * d + Math.sin(angle + Math.PI / 2) * lateral;
-    b.block(0.1, LEVEL * rise * 0.6 + 0.08, STAIR_RUN, x, 0, z, 'retaining', Surface.stone, turn);
-  }
-}
-
-/** A planter where a path stops against homes or gardens: the walk ends here on purpose. */
-function deadEnd(b: Builder, side: number): void {
-  const angle = edgeAngle(side);
-  const d = INRADIUS - DEAD_END + 0.12;
-  const [x, z] = [Math.cos(angle) * d, Math.sin(angle) * d];
-  b.block(0.5, 0.18, 0.2, x, 0, z, 'terracotta', Surface.plaster, facing(angle));
-  b.blob(0.13, x, 0.26, z, 'leaf', Surface.foliage, 0.8, 0);
-}
-
-/** A railing where a path meets a drop too tall for stairs. */
-function cliffRail(b: Builder, side: number): void {
-  const angle = edgeAngle(side);
-  const d = INRADIUS - CLIFF_END + 0.06;
-  const across = { x: Math.cos(angle + Math.PI / 2), z: Math.sin(angle + Math.PI / 2) };
-  const at = (lateral: number, y: number) =>
-    new THREE.Vector3(Math.cos(angle) * d + across.x * lateral, y, Math.sin(angle) * d + across.z * lateral);
-  const half = PATH_WIDTH / 2 + 0.06;
-  b.block(
-    PATH_WIDTH + 0.16,
-    0.12,
-    0.1,
-    Math.cos(angle) * d,
-    0,
-    Math.sin(angle) * d,
-    'retaining',
-    Surface.stone,
-    facing(angle),
-  );
-  b.bar(at(-half, 0.42), at(half, 0.42), 0.035, 'metal', Surface.metal);
-  for (const lateral of [-half, 0, half])
-    b.bar(at(lateral, 0.1), at(lateral, 0.42), 0.03, 'metal', Surface.metal);
-}
-
 function surface(
   site: TileSite,
   sides: readonly (SideState | undefined)[],
-  layout: readonly Walk[],
+  graph: PathGraph,
 ): THREE.BufferGeometry | null {
   const b = new Builder(false);
-  const paved = site.kind === 'plaza' || site.kind === 'capilla';
-  if (paved) {
-    b.add(disc(1.22, 0.035, 12), 'coping', Surface.concrete);
-    b.add(disc(1.12, 0.045, 12), 'walkway', Surface.paving);
-  }
-  for (const walk of layout) {
-    for (const curve of walk.curves) {
-      b.add(ribbon(curve, PATH_WIDTH + COPING, 0.028), 'coping', Surface.concrete);
-      b.add(ribbon(curve, PATH_WIDTH, 0.045), 'walkway', Surface.paving);
-    }
-    if (walk.hub) {
-      b.add(disc(0.44, 0.028).translate(walk.hub.x, 0, walk.hub.z), 'coping', Surface.concrete);
-      b.add(disc(0.4, 0.046).translate(walk.hub.x, 0, walk.hub.z), 'walkway', Surface.paving);
-    }
-    if (walk.sides.length === 1) {
-      const end = walk.curves[0]?.[1] as Point;
-      b.add(disc(0.33, 0.028).translate(end.x, 0, end.z), 'coping', Surface.concrete);
-      b.add(disc(0.29, 0.046).translate(end.x, 0, end.z), 'walkway', Surface.paving);
-    }
-    for (const side of walk.sides) {
-      const end = pathEnd(sides[side]);
-      if (end === 'stairs') stairs(b, side, sides[side]?.rise ?? 1);
-      if (end === 'deadEnd') deadEnd(b, side);
-      if (end === 'cliff') cliffRail(b, side);
-    }
-  }
+  pave(b, graph);
   const water = site.edges.flatMap((edge, side) => (edge === 'water' ? [side] : []));
   const channel = (curve: Point[]) => {
     b.add(ribbon(curve, WATER_WIDTH + BANK * 2, 0.012), 'bank', Surface.soil);
-    b.add(ribbon(curve, WATER_WIDTH, 0.024), 'water', Surface.water);
+    b.add(ribbon(curve, WATER_WIDTH, 0.024), 'waterDeep', Surface.water);
+    b.add(ribbon(curve, WATER_WIDTH * 0.76, 0.025), 'water', Surface.water);
   };
   const pond = (at: Point, radius: number) => {
     b.add(disc(radius + BANK, 0.012).translate(at.x, 0, at.z), 'bank', Surface.soil);
-    b.add(disc(radius, 0.026).translate(at.x, 0, at.z), 'water', Surface.water);
+    b.add(disc(radius, 0.0245).translate(at.x, 0, at.z), 'waterDeep', Surface.water);
+    b.add(disc(radius * 0.8, 0.026).translate(at.x, 0, at.z), 'water', Surface.water);
   };
   if (water.length === 1) {
     const side = water[0] as number;
@@ -388,48 +301,8 @@ function chapel(variation: number): THREE.BufferGeometry {
   b.cylinder(0.12, 0.03, -0.08, 0.72, 0.66, trim, Surface.paint, 0.12, 12);
   b.block(0.36, 0.06, 0.26, -0.08, -0.02, 0.8, 'stone', Surface.concrete);
   const geometry = b.finish();
-  geometry.userData.door = { x: -0.08, z: 0.931 };
+  setBuildingDoor(geometry, { x: -0.08, z: 0.931, y: 0, heading: { x: 0, z: 1 }, width: 0.3 });
   return geometry;
-}
-
-/** A tall wax palm (Salento) or a coconut palm (Cartagena). */
-function palm(variation: number, wax: boolean): THREE.BufferGeometry {
-  const b = new Builder(false);
-  const rng = random(variation * 53 + (wax ? 1 : 2));
-  const height = wax ? 2.3 + rng() * 0.4 : 1.4 + rng() * 0.3;
-  const lean = wax ? 0 : 0.18;
-  b.bar(
-    new THREE.Vector3(0, 0, 0),
-    new THREE.Vector3(lean, height, 0),
-    wax ? 0.07 : 0.08,
-    wax ? 'stone' : 'wood',
-    Surface.wood,
-  );
-  for (let i = 0; i < 7; i++) {
-    const a = (i / 7) * Math.PI * 2 + rng() * 0.3;
-    const reach = wax ? 0.42 : 0.55;
-    b.bar(
-      new THREE.Vector3(lean, height, 0),
-      new THREE.Vector3(lean + Math.cos(a) * reach, height - 0.22, Math.sin(a) * reach),
-      0.06,
-      i % 2 ? 'leaf' : 'leafDeep',
-      Surface.foliage,
-    );
-  }
-  b.blob(0.12, lean, height, 0, 'leafDeep', Surface.foliage, 0.8, 0);
-  return b.finish();
-}
-
-function shrub(variation: number): THREE.BufferGeometry {
-  const b = new Builder(false);
-  const rng = random(variation * 97 + 13);
-  const tones: PaletteName[] = ['crownLight', 'crownMid', 'crownDeep'];
-  for (let i = 0; i < 3; i++) {
-    const tone = tones[Math.floor(rng() * 3)] ?? 'crownMid';
-    b.blob(0.16 + rng() * 0.1, (rng() - 0.5) * 0.3, 0.1, (rng() - 0.5) * 0.3, tone, Surface.foliage, 0.75, 1);
-  }
-  if (variation % 4 === 1) b.blob(0.05, 0.08, 0.26, 0.05, 'coral', Surface.paint, 1, 0);
-  return b.finish();
 }
 
 /** Bougainvillea spilling over a courtyard wall. */
@@ -465,23 +338,6 @@ function lamp(): THREE.BufferGeometry {
   return b.finish();
 }
 
-function rock(variation: number): THREE.BufferGeometry {
-  const b = new Builder(false);
-  const rng = random(variation * 31 + 5);
-  for (let i = 0; i < 2 + (variation % 2); i++)
-    b.blob(
-      0.08 + rng() * 0.08,
-      (rng() - 0.5) * 0.25,
-      0.02,
-      (rng() - 0.5) * 0.25,
-      'stone',
-      Surface.stone,
-      0.6,
-      0,
-    );
-  return b.finish();
-}
-
 /** A whitewashed coffee-country farmhouse (Salento): one storey, clay roof, colored trim and a veranda. */
 function finca(variation: number): THREE.BufferGeometry {
   const b = new Builder();
@@ -506,7 +362,7 @@ function finca(variation: number): THREE.BufferGeometry {
   }
   b.block(0.2, 0.42, 0.02, 0, 0.05, 0.3, 'wood', Surface.wood);
   const geometry = b.finish();
-  geometry.userData.door = { x: 0, z: 0.601 };
+  setBuildingDoor(geometry, { x: 0, z: 0.601, y: 0, heading: { x: 0, z: 1 }, width: 0.24 });
   return geometry;
 }
 
@@ -531,7 +387,7 @@ function casona(variation: number): THREE.BufferGeometry {
   b.block(0.36, 0.34, 0.06, 0.53, 0, -0.27, wall, Surface.plaster);
   b.block(0.14, 0.34, 0.06, 0.62, 0, 0.17, wall, Surface.plaster);
   const geometry = b.finish();
-  geometry.userData.door = { x: -0.1, z: 0.241 };
+  setBuildingDoor(geometry, { x: -0.1, z: 0.241, y: 0, heading: { x: 0, z: 1 }, width: 0.24 });
   return geometry;
 }
 
@@ -575,13 +431,18 @@ export interface HomePlan {
   scale: number;
   y: number;
   door: Point;
-  access: Point[] | null;
+  doorAnchor: DoorAnchor;
+  public: boolean;
+  readonly access: readonly Point[] | null;
   connected: boolean;
   footprint: Point[];
+  /** The whole model's outline on the ground, overhangs and roofs included. */
+  body: Point[];
   model: THREE.BufferGeometry;
 }
 export interface TilePlan {
-  walks: Walk[];
+  pedestrian: PathGraph;
+  readonly walks: readonly Walk[];
   homes: HomePlan[];
 }
 
@@ -591,32 +452,6 @@ const transform = (p: Point, at: Point, turn: number, scale: number): Point => (
   z: at.z + scale * (-p.x * Math.sin(turn) + p.z * Math.cos(turn)),
 });
 
-export function segmentDistance(p: Point, a: Point, b: Point): number {
-  const dx = b.x - a.x,
-    dz = b.z - a.z;
-  const t = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.z - a.z) * dz) / (dx * dx + dz * dz || 1)));
-  return distance(p, { x: a.x + dx * t, z: a.z + dz * t });
-}
-const cross = (a: Point, b: Point, c: Point) => (b.x - a.x) * (c.z - a.z) - (b.z - a.z) * (c.x - a.x);
-export function segmentsDistance(a: Point, b: Point, c: Point, d: Point): number {
-  if (cross(a, b, c) * cross(a, b, d) < 0 && cross(c, d, a) * cross(c, d, b) < 0) return 0;
-  return Math.min(
-    segmentDistance(a, c, d),
-    segmentDistance(b, c, d),
-    segmentDistance(c, a, b),
-    segmentDistance(d, a, b),
-  );
-}
-export function insideFootprint(p: Point, polygon: readonly Point[]): boolean {
-  const signs = polygon.map((a, i) => cross(a, polygon[(i + 1) % polygon.length] as Point, p));
-  return signs.every((v) => v >= -1e-9) || signs.every((v) => v <= 1e-9);
-}
-export function footprintDistance(polygon: readonly Point[], a: Point, b: Point): number {
-  if (insideFootprint(a, polygon) || insideFootprint(b, polygon)) return 0;
-  return Math.min(
-    ...polygon.map((p, i) => segmentsDistance(p, polygon[(i + 1) % polygon.length] as Point, a, b)),
-  );
-}
 function groundBox(model: THREE.BufferGeometry): Point[] {
   const p = model.getAttribute('position');
   let minX = Infinity,
@@ -653,7 +488,7 @@ function planAtScale(
   lookup: ModelLookup = (_key, make) => make(),
   maxScale = Infinity,
 ): TilePlan {
-  const layout = walks(site, sides);
+  const pedestrian = new PedestrianPlanner(site, waterRegions(site));
   const homes: HomePlan[] = [];
   const start = site.kind === 'inicio' ? site.region : null;
   const landmark = site.kind === 'capilla' ? site.edges.indexOf('nature') : -1;
@@ -679,7 +514,7 @@ function planAtScale(
           : start === 'cartagena' && index === 0
             ? lookup(`casona/${site.variation % 3}`, () => casona(site.variation))
             : lookup(`building/${kind}/${variant}`, () => building(kind, 1, 1, variant));
-    const localDoor: Point = model.userData.door;
+    const localDoor = buildingDoor(model);
     const box = groundBox(model);
     if (start === 'medellin') {
       box[0] = { x: Math.min(box[0]?.x ?? 0, -0.57), z: Math.min(box[0]?.z ?? 0, -0.52) };
@@ -700,8 +535,10 @@ function planAtScale(
       { x: maxX, z: maxZ },
       { x: minX, z: maxZ },
     ];
-    const group = site.entrances[side] ?? null;
-    const walk = layout.find((w) => w.group === group);
+    const group =
+      side === landmark ? (site.paths.find((p) => p > 0) ?? null) : (site.entrances[side] ?? null);
+    const nearestRoute = (p: Point) =>
+      group === null ? { x: 0, z: 0 } : (pedestrian.nearest(group, p) ?? { x: 0, z: 0 });
     let selected: HomePlan | undefined;
     for (const scale of [
       side === landmark
@@ -720,12 +557,12 @@ function planAtScale(
         for (const d of [HOUSE_DISTANCE, 1.2, 1.28, 1.36, 1.44, 1.5, 1.04, 0.96]) {
           const angle = edgeAngle(side) + spread;
           const at = { x: Math.cos(angle) * d, z: Math.sin(angle) * d };
-          let target = walk ? nearestOn(walk, at) : { x: 0, z: 0 };
+          let target = nearestRoute(at);
           let turn = facing(Math.atan2(target.z - at.z, target.x - at.x));
           // Aim the facade normal from its offset door, rather than from the center of the house.
           for (let i = 0; i < 8; i++) {
             const door = transform(localDoor, at, turn, scale);
-            target = walk ? nearestOn(walk, door) : { x: 0, z: 0 };
+            target = nearestRoute(door);
             turn = facing(Math.atan2(target.z - door.z, target.x - door.x));
           }
           const footprint = box.map((p) => transform(p, at, turn, scale));
@@ -738,65 +575,33 @@ function planAtScale(
             )
           )
             continue;
-          if (
-            layout.some((w) =>
-              w.curves.some((c) =>
-                c
-                  .slice(1)
-                  .some(
-                    (b, i) =>
-                      footprintDistance(footprint, c[i] as Point, b) < (PATH_WIDTH + COPING) / 2 + 0.02,
-                  ),
-              ),
-            )
-          )
-            continue;
-          if (layout.some((w) => w.hub && footprintDistance(footprint, w.hub, w.hub) < 0.46)) continue;
-          if (
-            homes.some((h) =>
-              footprint.some(
-                (p, i) => footprintDistance(h.footprint, p, footprint[(i + 1) % 4] as Point) < 0.02,
-              ),
-            )
-          )
-            continue;
+          if (!pedestrian.roomFor(footprint)) continue;
           const door = transform(localDoor, at, turn, scale);
-          const access = walk ? [door, nearestOn(walk, door)] : null;
-          if (access) {
-            const [a, b] = access as [Point, Point];
-            if (footprintDistance(footprint, a, b) < 0.0001) continue;
-            if (homes.some((h) => footprintDistance(h.footprint, a, b) < 0.14)) continue;
-            if (
-              homes.some(
-                (h) =>
-                  h.access && footprintDistance(footprint, h.access[0] as Point, h.access[1] as Point) < 0.14,
-              )
-            )
-              continue;
-            if (
-              layout.some(
-                (w) =>
-                  w !== walk &&
-                  w.curves.some((c) =>
-                    c
-                      .slice(1)
-                      .some((q, i) => segmentsDistance(a, b, c[i] as Point, q) < PATH_WIDTH / 2 + 0.12),
-                  ),
-              )
-            )
-              continue;
-          }
+          const y = start === 'medellin' ? 0.32 * scale : 0;
+          const doorAnchor: DoorAnchor = {
+            ...door,
+            y: y + localDoor.y * scale,
+            heading: {
+              x: localDoor.heading.x * Math.cos(turn) + localDoor.heading.z * Math.sin(turn),
+              z: -localDoor.heading.x * Math.sin(turn) + localDoor.heading.z * Math.cos(turn),
+            },
+            width: localDoor.width * scale,
+          };
+          if (!pedestrian.connectDoor(side, group, doorAnchor, footprint, side === landmark)) continue;
           selected = {
             side,
             group,
             at,
             turn,
             scale,
-            y: start === 'medellin' ? 0.32 * scale : 0,
+            y,
             door,
-            access,
-            connected: !!walk,
+            doorAnchor,
+            public: side === landmark,
+            access: null,
+            connected: group !== null,
             footprint,
+            body: full,
             model,
           };
           break;
@@ -817,13 +622,138 @@ function planAtScale(
     }
     homes.push(selected);
   }
-  return { walks: layout, homes };
+  const graph = pedestrian.finish(sides);
+  const connectedHomes = homes.map((home) => {
+    const door = graph.nodes.find((n) => n.kind === 'door' && n.side === home.side);
+    if (!home.connected || !door) return home;
+    const visit = (id: string, previous: string | null): Point[] | null => {
+      const node = graph.nodes.find((n) => n.id === id);
+      if (!node) return null;
+      if (
+        node.kind === 'crossing' ||
+        graph.edges.some((e) => e.class === 'primary' && (e.from === id || e.to === id))
+      )
+        return [node.at];
+      for (const edge of graph.edges) {
+        if (edge.from !== id && edge.to !== id) continue;
+        const next = edge.from === id ? edge.to : edge.from;
+        if (next === previous) continue;
+        const path = visit(next, id);
+        if (path) return [node.at, ...path];
+      }
+      return null;
+    };
+    return { ...home, access: visit(door.id, null) };
+  });
+  return { pedestrian: graph, walks: graphWalks(graph), homes: connectedHomes };
 }
+
+type Rule = 'prop' | 'garden' | 'plant' | 'detail';
+interface Disc extends Point {
+  radius: number;
+}
+const outlines = new WeakMap<THREE.BufferGeometry, { hull: Point[]; radius: number }>();
+/** A model's convex outline on the ground and its widest horizontal extent about its origin. */
+const cross = (a: Point, b: Point, c: Point) => (b.x - a.x) * (c.z - a.z) - (b.z - a.z) * (c.x - a.x);
+
+function outlineOf(geometry: THREE.BufferGeometry): { hull: Point[]; radius: number } {
+  let outline = outlines.get(geometry);
+  if (!outline) {
+    const p = geometry.getAttribute('position');
+    const points = Array.from({ length: p.count }, (_, i) => ({ x: p.getX(i), z: p.getZ(i) })).sort(
+      (a, b) => a.x - b.x || a.z - b.z,
+    );
+    const half = (list: Point[]) => {
+      const out: Point[] = [];
+      for (const point of list) {
+        while (
+          out.length > 1 &&
+          cross(out[out.length - 2] as Point, out[out.length - 1] as Point, point) <= 0
+        )
+          out.pop();
+        out.push(point);
+      }
+      return out.slice(0, -1);
+    };
+    const hull = [...half(points), ...half([...points].reverse())];
+    outline = { hull, radius: Math.max(0, ...hull.map((v) => Math.hypot(v.x, v.z))) };
+    outlines.set(geometry, outline);
+  }
+  return outline;
+}
+/** The nature sector a tile-local point lies in: the side whose edge it faces. */
+function sectorOf(x: number, z: number): number {
+  const side = Math.round((Math.atan2(z, x) - Math.PI / 6) / (Math.PI / 3));
+  return ((side % 6) + 6) % 6;
+}
+const variantOf = (n: number): Variant => VARIANTS[n % VARIANTS.length] ?? 0;
+
+/** Stream centerlines and ponds, as `surface()` lays them out, for keeping plants on the banks. */
+function waterways(site: Pick<TileSite, 'edges'>): { curves: Point[][]; ponds: Disc[] } {
+  const water = site.edges.flatMap((edge, side) => (edge === 'water' ? [side] : []));
+  if (water.length === 1) {
+    const side = water[0] as number;
+    return { curves: [[anchor(side), anchor(side, 0.5)]], ponds: [{ ...anchor(side, 0.45), radius: 0.5 }] };
+  }
+  if (water.length === 2)
+    return {
+      curves: [bezier(anchor(water[0] as number), { x: 0, z: 0 }, anchor(water[1] as number))],
+      ponds: [],
+    };
+  if (water.length > 2)
+    return {
+      curves: water.map((side) => [anchor(side), anchor(side, 0.3)]),
+      ponds: [{ x: 0, z: 0, radius: 0.62 }],
+    };
+  return { curves: [], ponds: [] };
+}
+function waterRegions(site: Pick<TileSite, 'edges'>): BlockedRegion[] {
+  const water = waterways(site);
+  const regions: BlockedRegion[] = [];
+  for (const curve of water.curves) {
+    for (const [width, kind] of [
+      [WATER_WIDTH + BANK * 2, 'bank'],
+      [WATER_WIDTH, 'water'],
+    ] as const) {
+      const geometry = ribbon(curve, width, 0);
+      const p = geometry.getAttribute('position');
+      for (let i = 0; i < p.count; i += 3)
+        regions.push({ kind, polygon: [0, 1, 2].map((j) => ({ x: p.getX(i + j), z: p.getZ(i + j) })) });
+      geometry.dispose();
+    }
+  }
+  for (const pond of water.ponds)
+    for (const [radius, kind] of [
+      [pond.radius + BANK, 'bank'],
+      [pond.radius, 'water'],
+    ] as const)
+      regions.push({
+        kind,
+        polygon: Array.from({ length: 14 }, (_, i) => ({
+          x: pond.x + Math.cos((i * Math.PI) / 7) * radius,
+          z: pond.z + Math.sin((i * Math.PI) / 7) * radius,
+        })),
+      });
+  return regions;
+}
+function waterDistance(water: ReturnType<typeof waterways>, p: Point): number {
+  let best = Infinity;
+  for (const curve of water.curves)
+    for (let i = 1; i < curve.length; i++)
+      best = Math.min(best, segmentDistance(p, curve[i - 1] as Point, curve[i] as Point));
+  for (const pond of water.ponds) best = Math.min(best, distance(pond, p) - pond.radius + WATER_WIDTH / 2);
+  return best;
+}
+
+const intrinsicKey = (site: TileSite): string =>
+  `pedestrian-v1/${site.q}/${site.r}/${site.seed ?? 0}/${site.elevation}/${site.kind}/${site.region}/${site.variation}/${site.edges.join()}/${site.paths.join()}/${site.entrances.join()}`;
+const boundaryKey = (sides: readonly (SideState | undefined)[]): string =>
+  sides.map((side) => (side ? `${side.meet}${side.rise}` : '-')).join();
 
 /** Builds and caches every geometry a tile can show, and lays out a tile from them. */
 export class TileKit {
   private readonly cache = new Map<string, THREE.BufferGeometry>();
-  /** The placement search is the costly part of composing; it depends only on these inputs, never on position. */
+  private readonly interiors = new Map<string, TilePlan>();
   private readonly plans = new Map<string, TilePlan>();
   private readonly used = new Set<THREE.BufferGeometry>();
   /** Surface layouts with no paths, paving, or water, which need no geometry at all. */
@@ -844,12 +774,17 @@ export class TileKit {
   }
 
   plan(site: TileSite, sides: readonly (SideState | undefined)[]): TilePlan {
-    const key = `${site.kind}/${site.region}/${site.variation}/${site.edges.join()}/${site.paths.join()}/${site.entrances.join()}/${sides
-      .map((side) => (side ? `${side.meet}${side.rise}` : '-'))
-      .join()}`;
+    const coreKey = intrinsicKey(site),
+      key = `${coreKey}/${boundaryKey(sides)}`;
     let layout = this.plans.get(key);
     if (!layout) {
-      layout = plan(site, sides, (name, make) => this.cached(name, make));
+      let core = this.interiors.get(coreKey);
+      if (!core) {
+        core = plan(site, [], (name, make) => this.cached(name, make));
+        this.interiors.set(coreKey, core);
+      }
+      const pedestrian = withBoundaries(core.pedestrian, sides);
+      layout = { ...core, pedestrian, walks: graphWalks(pedestrian) };
       this.plans.set(key, layout);
     }
     return layout;
@@ -869,11 +804,9 @@ export class TileKit {
           new THREE.Vector3(scale, scale, scale),
         ),
       });
-    const surfaceKey = `surface/${site.kind === 'plaza' || site.kind === 'capilla' ? 'paved' : 'plain'}/${site.edges.join()}/${site.paths.join()}/${sides
-      .map((side) => (side ? `${side.meet}${side.rise}` : '-'))
-      .join()}`;
+    const surfaceKey = `surface/${intrinsicKey(site)}/${boundaryKey(sides)}`;
     if (!this.bare.has(surfaceKey)) {
-      const geometry = this.cache.get(surfaceKey) ?? surface(site, sides, layout);
+      const geometry = this.cache.get(surfaceKey) ?? surface(site, sides, tilePlan.pedestrian);
       if (geometry) {
         this.cache.set(surfaceKey, geometry);
         parts.push({ geometry, matrix: new THREE.Matrix4() });
@@ -886,6 +819,7 @@ export class TileKit {
     };
     const greens: number[] = [];
     const start = site.kind === 'inicio' ? site.region : null;
+    const forest = site.kind === 'monte';
     site.edges.forEach((edge, side) => {
       if (edge === 'nature' && !tilePlan.homes.some((h) => h.side === side)) greens.push(side);
     });
@@ -901,50 +835,52 @@ export class TileKit {
           home.scale,
           home.y,
         );
-      if (home.access) {
-        const key = `access/${JSON.stringify(home.access)}/${home.y}`;
-        add(
-          this.cached(key, () => {
-            const b = new Builder(false);
-            b.add(ribbon(home.access ?? [], 0.24, 0.05), 'walkway', Surface.paving);
-            if (home.y && home.access)
-              for (let i = 0; i < 3; i++) {
-                const p = lerp(home.access[0] as Point, home.access[1] as Point, (i + 0.5) / 3);
-                b.block(
-                  0.24,
-                  home.y * (1 - i / 3),
-                  distance(home.access[0] as Point, home.access[1] as Point) / 3,
-                  p.x,
-                  0,
-                  p.z,
-                  'walkway',
-                  Surface.concrete,
-                  home.turn,
-                );
-              }
-            return b.finish();
-          }),
-          0,
-          0,
-          0,
-        );
-      }
     }
-    const decorate = (geometry: THREE.BufferGeometry, x: number, z: number, turn: number, scale = 1) => {
-      const p = geometry.getAttribute('position');
-      let radius = 0;
-      for (let i = 0; i < p.count; i++) radius = Math.max(radius, Math.hypot(p.getX(i), p.getZ(i)) * scale);
-      if (clearance(layout, { x, z }) < (PATH_WIDTH + COPING) / 2 + radius + 0.02) return;
-      if (layout.some((w) => w.hub && distance(w.hub, { x, z }) < 0.44 + radius + 0.02)) return;
-      if (
-        tilePlan.homes.some(
-          (h) =>
-            h.access && segmentDistance({ x, z }, h.access[0] as Point, h.access[1] as Point) < radius + 0.14,
-        )
-      )
-        return;
-      add(geometry, x, z, turn, scale);
+    const ground: Ground = {
+      q: site.q,
+      r: site.r,
+      kind: site.kind,
+      region: site.region,
+      seed: site.seed ?? 0,
     };
+    const water = waterways(site);
+    const props: Disc[] = [];
+    const trunks: Disc[] = [];
+    // A crown may lean across a side only onto a level or lower nature neighbor that is already there.
+    const closed = [0, 1, 2, 3, 4, 5].map(
+      (side) =>
+        !(site.edges[side] === 'nature' && sides[side]?.meet === 'match' && (sides[side]?.rise ?? 0) <= 0),
+    );
+    const limit = forest ? HEX + 0.12 : HEX - 0.02;
+    const decorate = (
+      geometry: THREE.BufferGeometry,
+      x: number,
+      z: number,
+      turn: number,
+      scale = 1,
+      rule: Rule = 'prop',
+    ): boolean => {
+      const outline = outlineOf(geometry);
+      const radius = outline.radius * scale;
+      const at = { x, z };
+      if (pavementClearance(tilePlan.pedestrian, at) < radius + 0.02) return false;
+      const placed = outline.hull.map((p) => transform(p, at, turn, scale));
+      if (placed.some((p) => Math.hypot(p.x, p.z) > limit)) return false;
+      for (let side = 0; side < 6; side++) {
+        const n = anchor(side, 1);
+        if (closed[side] && placed.some((p) => p.x * n.x + p.z * n.z > INRADIUS - 0.02)) return false;
+      }
+      if (rule !== 'garden' && tilePlan.homes.some((h) => footprintDistance(h.body, at, at) < radius + 0.05))
+        return false;
+      const wet = WATER_WIDTH / 2 + (rule === 'plant' ? BANK * 0.5 : 0) + radius * 0.6;
+      if (waterDistance(water, at) < wet) return false;
+      if (rule !== 'prop' && props.some((d) => distance(d, at) < (d.radius + radius) * 0.6)) return false;
+      if (rule === 'detail' && trunks.some((d) => distance(d, at) < 0.16 + radius * 0.5)) return false;
+      add(geometry, x, z, turn, scale);
+      (rule === 'plant' ? trunks : props).push({ x, z, radius });
+      return true;
+    };
+    const grow = (plant: Plant) => this.cached(plantKey(plant), () => plantModel(plant));
     if (start === 'cartagena') {
       const home = tilePlan.homes[0];
       if (home) {
@@ -954,92 +890,31 @@ export class TileKit {
           home.at.x + Math.cos(toward + 1.4) * 0.38,
           home.at.z + Math.sin(toward + 1.4) * 0.38,
           toward,
+          1,
+          'garden',
         );
       }
     }
-    const treeAt = (x: number, z: number, scale: number) => {
-      const variant = Math.floor(rng() * 16);
-      decorate(
-        this.cached(`tree/${variant % 10}`, () => tree(variant % 10 === 9 ? 14 : variant % 10, false)),
-        x,
-        z,
-        rng() * Math.PI * 2,
-        scale,
-      );
-    };
-    const shrubAt = (x: number, z: number) => {
-      const variant = Math.floor(rng() * 8);
-      decorate(
-        this.cached(`shrub/${variant}`, () => shrub(variant)),
-        x,
-        z,
-        rng() * 6.28,
-        0.9 + rng() * 0.4,
-      );
-    };
-    const forest = site.kind === 'monte';
-    greens.forEach((side, index) => {
-      if (start === 'salento' || start === 'cartagena') {
-        if (index < 2) {
-          const [x, z] = sector(side, 1.15, (rng() - 0.5) * 0.4);
-          decorate(
-            this.cached(`palm/${start}/${site.variation % 3}`, () =>
-              palm(site.variation, start === 'salento'),
-            ),
-            x,
-            z,
-            rng() * 6.28,
-          );
-        } else {
-          const [x, z] = sector(side, 1.1);
-          shrubAt(x, z);
-        }
-        return;
+    if (start === 'salento' || start === 'cartagena')
+      for (const side of greens.slice(0, 2)) {
+        const [x, z] = sector(side, 1.15, (rng() - 0.5) * 0.4);
+        const plant: Plant = {
+          kind: 'palm',
+          palm: start === 'salento' ? 'wax' : 'coconut',
+          variant: variantOf(site.variation),
+        };
+        decorate(grow(plant), x, z, rng() * 6.28);
       }
-      if (start === 'bogota' && index === 0) {
+    if (start === 'bogota' && greens[0] !== undefined) {
+      const [x, z, angle] = sector(greens[0], 0.95);
+      decorate(this.cached('bench', bench), x, z, facing(angle + Math.PI));
+    }
+    if (site.kind === 'parque')
+      for (const side of greens) {
         const [x, z, angle] = sector(side, 0.95);
-        decorate(this.cached('bench', bench), x, z, facing(angle + Math.PI));
-        return;
-      }
-      if (forest) {
-        for (const [d, spread] of [
-          [1.08, -0.34],
-          [1.12, 0.32],
-          [0.75, 0.05],
-        ] as const) {
-          const [x, z] = sector(side, d + (rng() - 0.5) * 0.15, spread + (rng() - 0.5) * 0.15);
-          treeAt(x, z, 0.95 + rng() * 0.35);
-        }
-        return;
-      }
-      const roll = rng();
-      if (site.kind === 'parque' && roll < 0.35) {
-        const [x, z, angle] = sector(side, 0.95);
-        if (clearance(layout, { x, z }) > 0.5)
+        if (rng() < 0.35 && clearance(layout, { x, z }) > 0.5)
           decorate(this.cached('bench', bench), x, z, facing(angle + Math.PI));
-        const [sx, sz] = sector(side, 1.35, 0.35);
-        shrubAt(sx, sz);
-      } else if (roll < (site.kind === 'parque' ? 0.85 : 0.55)) {
-        const [x, z] = sector(side, 1.1 + (rng() - 0.5) * 0.3, (rng() - 0.5) * 0.4);
-        treeAt(x, z, 0.85 + rng() * 0.3);
-      } else {
-        const [x, z] = sector(side, 1.15, (rng() - 0.5) * 0.5);
-        shrubAt(x, z);
       }
-      if (site.kind === 'quebrada' && rng() < 0.6) {
-        const [x, z] = sector(side, 0.55, (rng() - 0.5) * 0.6);
-        if (clearance(layout, { x, z }) > 0.5) {
-          const variant = Math.floor(rng() * 4);
-          decorate(
-            this.cached(`rock/${variant}`, () => rock(variant)),
-            x,
-            z,
-            rng() * 6.28,
-          );
-        }
-      }
-    });
-    if (forest && greens.length === 6) treeAt((rng() - 0.5) * 0.3, (rng() - 0.5) * 0.3, 1.2);
     if (start === 'bogota' || start === 'medellin')
       for (const walk of layout)
         for (const curve of walk.curves) {
@@ -1058,9 +933,27 @@ export class TileKit {
       const free = [0, 1, 2, 3, 4, 5].filter((side) => site.edges[side] !== 'path');
       free.slice(0, 2).forEach((side, index) => {
         const [x, z, angle] = sector(side, 0.78);
-        if (index === 0) treeAt(x, z, 0.9);
+        if (index === 0) decorate(grow(plantFor(ground, x, z, side)), x, z, rng() * 6.28, 0.9, 'plant');
         else decorate(this.cached('bench', bench), x, z, facing(angle + Math.PI));
       });
+    }
+    // World-lattice vegetation, kept to the tile's free nature sectors; the middle only on tiles without homes.
+    const growable = (x: number, z: number) =>
+      greens.includes(sectorOf(x, z)) && (Math.hypot(x, z) > 0.8 || tilePlan.homes.length === 0);
+    const density = DENSITY[site.kind];
+    let grown = 0;
+    for (const candidate of plants(ground)) {
+      if (grown >= density.cap) break;
+      if (growable(candidate.x, candidate.z) && place(candidate, grow(candidate.item), 'plant')) grown++;
+    }
+    let covered = 0;
+    for (const candidate of details(ground)) {
+      if (covered >= density.detailCap) break;
+      const model = this.cached(detailKey(candidate.item), () => detailModel(candidate.item));
+      if (growable(candidate.x, candidate.z) && place(candidate, model, 'detail')) covered++;
+    }
+    function place<T>(candidate: Candidate<T>, model: THREE.BufferGeometry, rule: Rule): boolean {
+      return decorate(model, candidate.x, candidate.z, candidate.turn, candidate.scale, rule);
     }
     for (const part of parts) this.used.add(part.geometry);
     return parts;
@@ -1070,6 +963,8 @@ export class TileKit {
     for (const geometry of this.cache.values()) geometry.dispose();
     this.cache.clear();
     this.plans.clear();
+    this.interiors.clear();
+    this.bare.clear();
     this.used.clear();
   }
 }

@@ -351,3 +351,7 @@ Buildings are stacked storey volumes 0.68 units tall with 0.07 slab bands, frame
 - Don't use pitched clay-tile roofs, colonial balconies, or national clichés.
 - Don't use the world palette on interface surfaces.
 - Don't infer hardware frame rates from SwiftShader measurements.
+
+## Environmental rendering
+
+The environment uses Warm Painterly with Neutral tone mapping: golden-green grass, olive foliage, warm Colombian architecture, calm blue-green water, and warm sunlight with cool shadows. Five reusable tree silhouettes and regional palms form seeded clusters. Environmental colors are separate from the brand and UI tokens. See [the art-direction record](docs/environment-art-direction.md) for palettes, fixed-camera comparisons, research, configuration and verification.

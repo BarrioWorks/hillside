@@ -1,0 +1,5 @@
+
+> barrio-builder@0.1.0 lint
+> biome check web tools/build-wasm.mjs tools/benchmark.mjs tools/benchmark-core.mjs tools/verify-wasm.mjs tools/capture.mjs tools/profile-layers.mjs tools/environment-capture.mjs tools/environment-benchmark.mjs tools/environment-review.mjs tools/environment-verify.mjs tools/environment-gallery.mjs vite.config.ts playwright.config.ts
+
+Checked 54 files in 288ms. No fixes applied.

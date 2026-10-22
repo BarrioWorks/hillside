@@ -1,0 +1,9 @@
+
+Running 2 tests using 1 worker
+
+(node:2573330) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 web/tests/game.spec.ts:316:3 › matches the opening neighborhood baseline (3.1s)
+  ✓  2 web/tests/game.spec.ts:316:3 › matches the developed neighborhood baseline (6.0s)
+
+  2 passed (10.1s)

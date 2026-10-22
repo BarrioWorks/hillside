@@ -1,0 +1,170 @@
+
+> barrio-builder@0.1.0 check
+> npm run typecheck && npm run lint && npm test
+
+
+> barrio-builder@0.1.0 typecheck
+> tsc --noEmit
+
+
+> barrio-builder@0.1.0 lint
+> biome check web tools/build-wasm.mjs tools/benchmark.mjs tools/benchmark-core.mjs tools/verify-wasm.mjs tools/capture.mjs tools/profile-layers.mjs tools/environment-capture.mjs tools/environment-benchmark.mjs tools/environment-review.mjs tools/environment-verify.mjs tools/environment-gallery.mjs vite.config.ts playwright.config.ts
+
+Checked 54 files in 276ms. No fixes applied.
+
+> barrio-builder@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /home/agent/code/OVH/barrio.works/web
+
+stdout | tests/tiles.test.ts > path layout inside a tile > connects two compatible path edges logically and visually across all six sides
+seam deviation by walk shape {"straight":{"angle":2.220446049250313e-16,"corner":3.111009679531307e-8},"bent":{"angle":0.03683547569520414,"corner":3.111009679531307e-8},"dead end":{"angle":1.1102230246251565e-16,"corner":3.111009679531307e-8},"junction":{"angle":4.996003610813204e-16,"corner":3.111009679531307e-8},"T junction":{"angle":0.009625810465300401,"corner":3.111009679531307e-8}}
+
+ ✓ tests/panels.test.ts (14 tests) 2691ms
+   ✓ the quest panel > marks a quest whose progress rose, and briefly shows a completed quest before its successor  424ms
+   ✓ the results panel > shows the standing best after a lower run, without replacing it  531ms
+stderr | tests/environment.test.ts > environment material and output > keeps legacy output: sRGB, Neutral, and per-preset exposure
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+stderr | tests/environment.test.ts > environment material and output > takes each preset exposure, honors the tone override, and relights every preset by region
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ ✓ tests/environment.test.ts (31 tests) 3754ms
+   ✓ environment ground > has no color seams where tiles share a ground position (cool)  833ms
+   ✓ environment ground > has no color seams where tiles share a ground position (warm)  306ms
+   ✓ environment ground > has no color seams where tiles share a ground position (balanced)  348ms
+   ✓ canopy families > cover the board in the authored shares as broad, seeded, deterministic patches  901ms
+stdout | tests/batches.test.ts > shared structure batches > preserves all geometry for autoplayed hillsides of composed tiles
+hillside batches {"tiles":248,"parts":2474,"triangles":765245,"batches":552}
+
+ ❯ tests/batches.test.ts (8 tests | 1 failed) 5392ms
+   ✓ shared structure batches > renders shared resources once and updates only a changed instance 28ms
+   ✓ shared structure batches > moves the last slot into a removed slot and keeps subsequent updates and picking correct 4ms
+   ✓ shared structure batches > flattens nested child transforms, duplicate shared parts, roof and overhang picking 7ms
+   ✓ shared structure batches > respects capacity and reuses empty batches and shared material arrays 3ms
+   ✓ shared structure batches > keeps different materials and shadow settings in distinct batches 2ms
+   ✓ shared structure batches > preserves mirrored surfaces with positive instance determinants, indexed=true 10ms
+   ✓ shared structure batches > preserves mirrored surfaces with positive instance determinants, indexed=false 4ms
+   × shared structure batches > preserves all geometry for autoplayed hillsides of composed tiles 5331ms
+     → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ✓ tests/quests.test.ts (39 tests) 2941ms
+   ✓ quests against the real Rust core > draws the same reward tiles in the same order, behind the starting deck, whatever the play  2266ms
+ ✓ tests/water.test.ts (1 test) 655ms
+   ✓ river continuity in actual composed boards > joins channel endpoints at equal width and elevation across matched water edges  653ms
+ ✓ tests/ground.test.ts (13 tests) 1237ms
+   ✓ leaves both coping faces open across every matched staircase  392ms
+ ✓ tests/debug.test.ts (5 tests) 8228ms
+   ✓ connectivity overlay from real runs > agrees with visible ribbon ends, networks and doors for seed 1  3398ms
+   ✓ connectivity overlay from real runs > agrees with visible ribbon ends, networks and doors for seed 2  892ms
+   ✓ connectivity overlay from real runs > agrees with visible ribbon ends, networks and doors for seed 3  932ms
+   ✓ connectivity overlay from real runs > agrees with visible ribbon ends, networks and doors for seed 4  1513ms
+   ✓ connectivity overlay from real runs > agrees with visible ribbon ends, networks and doors for seed 5  1486ms
+ ✓ tests/controller.test.ts (27 tests) 613ms
+ ✓ tests/hex.test.ts (7 tests) 446ms
+ ✓ tests/input.test.ts (4 tests) 8ms
+stderr | tests/atmosphere.test.ts > camera-relative fog > gives every board point the same haze at any camera distance with the same orthographic view
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ ✓ tests/ui.test.ts (10 tests) 98ms
+stderr | tests/atmosphere.test.ts > camera-relative fog > keeps the near half crisp and reaches only the preset haze at the far edge, for any orbit or zoom
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+stderr | tests/atmosphere.test.ts > camera-relative fog > ignores where the view target wanders: haze follows the board, not the camera
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+stderr | tests/atmosphere.test.ts > camera-relative fog > leaves legacy fog fixed in camera depth
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+stderr | tests/atmosphere.test.ts > regional light > relights, recolors the sky, and tints fog when the preset or region changes
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ ✓ tests/atmosphere.test.ts (9 tests) 223ms
+ ✓ tests/simulation.test.ts (26 tests) 265ms
+stdout | tests/tiles.test.ts > tile composition > composes every kind, variation and context with finite parts inside its hex and above ground
+tile part extent {"cases":1112,"radius":2.1188697457621832,"low":-0.5799999833106995}
+
+stdout | tests/tiles.test.ts > tile composition > keeps every composed tile within 15300 triangles
+max triangles per composed tile {"inicio":4742,"quebrada":2300,"monte":5454,"casas":9374,"sendero":3038,"plaza":4546,"tienda":5974,"parque":1590,"capilla":2876}
+
+stdout | tests/tiles.test.ts > real core path geometry > keeps ground-floor vertices, tree crowns and every decoration clear of walks and access
+path occlusion seeds 1..10 autoplay 40 {"houses":627,"housesInside":0,"trees":776,"treesOver":0,"decorations":1929}
+
+ ✓ tests/tiles.test.ts (22 tests) 57097ms
+   ✓ path layout inside a tile > connects two compatible path edges logically and visually across all six sides  465ms
+   ✓ buildings and walkways > keeps house footprints and door access clear across templates, regions and contexts  21560ms
+   ✓ tile composition > composes every kind, variation and context with finite parts inside its hex and above ground  6566ms
+   ✓ tile composition > produces identical path geometry for the same site from two kits  2175ms
+   ✓ tile composition > keeps every composed tile within 15300 triangles  4415ms
+   ✓ real core path geometry > keeps real house footprints, doors and access clear and reports disconnected homes  1532ms
+   ✓ real core path geometry > keeps ground-floor vertices, tree crowns and every decoration clear of walks and access  16678ms
+   ✓ real core path geometry > matches Rust groups and network ids and joins actual ribbon and stair vertices across every Match seam  3532ms
+stdout | tests/vegetation.test.ts > world-space vegetation > keeps vegetation out of homes, walks and water on real boards, within the old forest budget
+vegetation on real boards {"plantsSeen":825,"details":770,"forestMax":5373}
+
+ ✓ tests/vegetation.test.ts (11 tests) 65744ms
+   ✓ tree family library > builds finite, nondegenerate, bounded crowns with unit normals  861ms
+   ✓ world-space vegetation > reaches each region’s families with regional weights  816ms
+   ✓ world-space vegetation > gives each world candidate one owner, so neighboring forests continue across seams  877ms
+   ✓ world-space vegetation > never leans crowns into empty or mismatched neighbors  23379ms
+   ✓ world-space vegetation > keeps vegetation out of homes, walks and water on real boards, within the old forest budget  37046ms
+   ✓ world-space vegetation > reuses one cached geometry per plant key across a whole board  1645ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/batches.test.ts > shared structure batches > preserves all geometry for autoplayed hillsides of composed tiles
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/batches.test.ts:250:3
+    248|   );
+    249| 
+    250|   it('preserves all geometry for autoplayed hillsides of composed tile…
+       |   ^
+    251|     // Eight whole runs side by side, each shifted well clear of the o…
+    252|     const tiles = [11, 12, 13, 14, 15, 16, 17, 18].flatMap((seed, inde…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-worker]: Timeout calling "onTaskUpdate"
+ ❯ Object.onTimeoutError ../node_modules/vitest/dist/chunks/rpc.-pEldfrD.js:53:10
+ ❯ Timeout._onTimeout ../node_modules/vitest/dist/chunks/index.B521nVV-.js:59:62
+ ❯ listOnTimeout ../node:internal/timers:685:17
+ ❯ processTimers ../node:internal/timers:618:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed | 14 passed (15)
+      Tests  1 failed | 226 passed (227)
+     Errors  1 error
+   Start at  19:59:58
+   Duration  69.40s (transform 2.37s, setup 0ms, collect 18.78s, tests 149.39s, environment 21.31s, prepare 3.50s)
+

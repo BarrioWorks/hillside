@@ -1,0 +1,95 @@
+
+> barrio-builder@0.1.0 build
+> npm run build:wasm && npm run typecheck && vite build
+
+
+> barrio-builder@0.1.0 build:wasm
+> node tools/build-wasm.mjs
+
+[INFO]: 🎯  Checking for the Wasm target...
+[INFO]: 🌀  Compiling to Wasm...
+    Blocking waiting for file lock on package cache
+    Finished `release` profile [optimized] target(s) in 0.11s
+[INFO]: ⬇️  Installing wasm-bindgen...
+[INFO]: Optimizing wasm binaries with `wasm-opt`...
+[INFO]: Optional field missing from Cargo.toml: 'repository'. This is not necessary, but recommended
+[INFO]: ✨   Done in 4.66s
+[INFO]: 📦   Your wasm pkg is ready to publish at /home/agent/code/OVH/barrio.works/web/src/wasm.
+
+> barrio-builder@0.1.0 typecheck
+> tsc --noEmit
+
+vite v7.3.7 building client environment for production...
+transforming...
+node_modules/zod/v4/core/regexes.js (74:0): A comment
+
+"/** Anchors a pattern source. The interpolation lives here rather than at the call site because
+ * esbuild will not drop a `@__PURE__` call whose own argument interpolates a variable, but it
+ * will drop `anchor(dateSource)`. Keeping it inline pinned `date` into every bundle. */"
+
+in "node_modules/zod/v4/core/regexes.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/zod/v4/core/util.js (400:0): A comment
+
+"// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
+
+in "node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+✓ 128 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/index.html                                                   0.68 kB │ gzip:   0.42 kB
+../dist/assets/nunito-sans-vietnamese-400-normal-V2dSmW1H.woff2      5.28 kB
+../dist/assets/nunito-sans-vietnamese-700-normal-CZwaiz_e.woff2      5.29 kB
+../dist/assets/nunito-sans-vietnamese-600-normal-DD7cNabE.woff2      5.35 kB
+../dist/assets/nunito-sans-vietnamese-800-normal-CfdX2BhI.woff2      5.38 kB
+../dist/assets/fraunces-vietnamese-600-normal-BjlAJixd.woff2         6.28 kB
+../dist/assets/nunito-sans-cyrillic-700-normal-BJ2iHHyS.woff2        7.12 kB
+../dist/assets/nunito-sans-cyrillic-400-normal-DUb-KqT8.woff2        7.19 kB
+../dist/assets/nunito-sans-cyrillic-600-normal-D4TuIAT6.woff2        7.19 kB
+../dist/assets/nunito-sans-cyrillic-800-normal-COys2OwR.woff2        7.24 kB
+../dist/assets/nunito-sans-vietnamese-700-normal-BwTSkH1V.woff       7.35 kB
+../dist/assets/nunito-sans-vietnamese-400-normal-D5dwM7ZL.woff       7.37 kB
+../dist/assets/nunito-sans-vietnamese-600-normal-BW3IEr32.woff       7.41 kB
+../dist/assets/nunito-sans-vietnamese-800-normal-hO2TqS3m.woff       7.41 kB
+../dist/assets/fraunces-vietnamese-600-normal-DlAl5EAR.woff          7.93 kB
+../dist/assets/nunito-sans-cyrillic-ext-700-normal-GO46tfsI.woff2    8.90 kB
+../dist/assets/nunito-sans-cyrillic-ext-400-normal-El6lRT8b.woff2    8.90 kB
+../dist/assets/nunito-sans-cyrillic-ext-600-normal-CVjnjZn6.woff2    8.96 kB
+../dist/assets/nunito-sans-cyrillic-700-normal-DG2UZxR9.woff         8.99 kB
+../dist/assets/nunito-sans-cyrillic-400-normal-DDHmqnIJ.woff         9.04 kB
+../dist/assets/nunito-sans-cyrillic-600-normal-CKMyzy87.woff         9.05 kB
+../dist/assets/nunito-sans-cyrillic-ext-800-normal-suUH8DVf.woff2    9.06 kB
+../dist/assets/nunito-sans-cyrillic-800-normal-x7mxdBjZ.woff         9.08 kB
+../dist/assets/nunito-sans-cyrillic-ext-700-normal-Cqve7k0J.woff    11.39 kB
+../dist/assets/nunito-sans-cyrillic-ext-400-normal-fk07B0hk.woff    11.43 kB
+../dist/assets/nunito-sans-cyrillic-ext-600-normal-DZXkk6dX.woff    11.48 kB
+../dist/assets/nunito-sans-cyrillic-ext-800-normal-DlIrhRQ2.woff    11.50 kB
+../dist/assets/nunito-sans-latin-ext-400-normal-BoHsJHPR.woff2      13.70 kB
+../dist/assets/nunito-sans-latin-ext-700-normal-DBq_Pukt.woff2      13.72 kB
+../dist/assets/nunito-sans-latin-ext-600-normal-nHO2odcJ.woff2      13.77 kB
+../dist/assets/nunito-sans-latin-700-normal-CICRJDmU.woff2          13.84 kB
+../dist/assets/nunito-sans-latin-ext-800-normal-DWckPAf3.woff2      13.86 kB
+../dist/assets/nunito-sans-latin-800-normal-MgCk9Q3Y.woff2          13.88 kB
+../dist/assets/nunito-sans-latin-400-normal-AkRraKH2.woff2          13.89 kB
+../dist/assets/nunito-sans-latin-600-normal-BtVRvDNj.woff2          14.01 kB
+../dist/assets/fraunces-latin-ext-600-normal-BtzmzP0X.woff2         17.34 kB
+../dist/assets/nunito-sans-latin-700-normal-CLVG92B9.woff           17.41 kB
+../dist/assets/nunito-sans-latin-400-normal-DY9yCUyQ.woff           17.51 kB
+../dist/assets/nunito-sans-latin-800-normal-DOf_K5Iw.woff           17.52 kB
+../dist/assets/nunito-sans-latin-600-normal-DLks-Kj1.woff           17.64 kB
+../dist/assets/fraunces-latin-600-normal-BFCDtZfi.woff2             18.10 kB
+../dist/assets/nunito-sans-latin-ext-700-normal-jHN8vCOt.woff       18.49 kB
+../dist/assets/nunito-sans-latin-ext-400-normal-CHwj-NZB.woff       18.54 kB
+../dist/assets/nunito-sans-latin-ext-600-normal-DEh-VjuY.woff       18.59 kB
+../dist/assets/nunito-sans-latin-ext-800-normal-DG0lbXwA.woff       18.63 kB
+../dist/assets/fraunces-latin-ext-600-normal-B0Dy4lqi.woff          22.36 kB
+../dist/assets/fraunces-latin-600-normal-DL5QCzvS.woff              22.51 kB
+../dist/assets/barrio_core_bg-T-4oVMZb.wasm                        224.40 kB │ gzip:  92.18 kB
+../dist/assets/index-B2yLSBHV.css                                   26.33 kB │ gzip:   5.73 kB
+../dist/assets/debug-BrVyOzJq.js                                     3.46 kB │ gzip:   1.76 kB
+../dist/assets/index-ClRfweB0.js                                   789.07 kB │ gzip: 219.90 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.89s

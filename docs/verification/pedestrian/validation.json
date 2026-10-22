@@ -1,0 +1,194 @@
+{
+  "source": "Actual World renderer plans and composed pavement triangles",
+  "scenes": [
+    {
+      "name": "A-two-houses",
+      "tiles": 1,
+      "doors": 2,
+      "reachedDoors": 2,
+      "unservedHomes": [],
+      "classes": {
+        "primary": 1,
+        "secondary": 1,
+        "entrance": 4
+      },
+      "pavingArea": 0.7878131163291711,
+      "pairwiseOverlapArea": 0,
+      "footprintIntrusionArea": 0,
+      "waterIntrusionArea": 0,
+      "seamPairs": 0,
+      "maxSeamGap": 0,
+      "routeFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "B-five-houses",
+      "tiles": 1,
+      "doors": 5,
+      "reachedDoors": 5,
+      "unservedHomes": [],
+      "classes": {
+        "primary": 1,
+        "secondary": 4,
+        "entrance": 10
+      },
+      "pavingArea": 1.3757143457181091,
+      "pairwiseOverlapArea": 0,
+      "footprintIntrusionArea": 0,
+      "waterIntrusionArea": 0,
+      "seamPairs": 0,
+      "maxSeamGap": 0,
+      "routeFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "C-three-hexagons",
+      "tiles": 3,
+      "doors": 6,
+      "reachedDoors": 6,
+      "unservedHomes": [],
+      "classes": {
+        "primary": 19,
+        "secondary": 0,
+        "entrance": 12
+      },
+      "pavingArea": 6.068958002998639,
+      "pairwiseOverlapArea": 0,
+      "footprintIntrusionArea": 0,
+      "waterIntrusionArea": 0,
+      "seamPairs": 2,
+      "maxSeamGap": 2.482534153247273e-16,
+      "routeFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "D-hillside",
+      "tiles": 3,
+      "doors": 6,
+      "reachedDoors": 6,
+      "unservedHomes": [],
+      "classes": {
+        "primary": 19,
+        "secondary": 0,
+        "entrance": 12
+      },
+      "pavingArea": 6.068960948183663,
+      "pairwiseOverlapArea": 2.7341652442114395e-8,
+      "footprintIntrusionArea": 0,
+      "waterIntrusionArea": 0,
+      "seamPairs": 2,
+      "maxSeamGap": 2.482534153247273e-16,
+      "routeFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "E-settlement",
+      "tiles": 20,
+      "doors": 37,
+      "reachedDoors": 34,
+      "unservedHomes": [
+        {
+          "tile": [
+            0,
+            1
+          ],
+          "side": 4,
+          "reason": "Tile has no rule entrance or pedestrian crossing"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "side": 5,
+          "reason": "Tile has no rule entrance or pedestrian crossing"
+        },
+        {
+          "tile": [
+            2,
+            -3
+          ],
+          "side": 2,
+          "reason": "Tile has no rule entrance or pedestrian crossing"
+        }
+      ],
+      "classes": {
+        "primary": 64,
+        "secondary": 7,
+        "entrance": 76
+      },
+      "pavingArea": 23.299818475078155,
+      "pairwiseOverlapArea": 1.3016521832609484e-8,
+      "footprintIntrusionArea": 0,
+      "waterIntrusionArea": 0,
+      "seamPairs": 8,
+      "maxSeamGap": 1.047382306668854e-15,
+      "routeFailures": [
+        {
+          "tile": [
+            0,
+            1
+          ],
+          "group": null,
+          "side": 4,
+          "at": {
+            "x": -0.11626564238477417,
+            "z": -0.5499116278661003,
+            "y": 0,
+            "heading": {
+              "x": 0.13096780331570204,
+              "z": 0.9913866221079743
+            },
+            "width": 0.15539999999999998
+          },
+          "reason": "No Rust entrance assignment"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "group": null,
+          "side": 5,
+          "at": {
+            "x": 0.5981548190141093,
+            "z": -0.22018562950670556,
+            "y": 0,
+            "heading": {
+              "x": -0.9300616232047973,
+              "z": 0.36740356155276666
+            },
+            "width": 0.15539999999999998
+          },
+          "reason": "No Rust entrance assignment"
+        },
+        {
+          "tile": [
+            2,
+            -3
+          ],
+          "group": null,
+          "side": 2,
+          "at": {
+            "x": -0.4181046183761106,
+            "z": 0.37564481382558107,
+            "y": 0,
+            "heading": {
+              "x": 0.7930820980596981,
+              "z": -0.609114755803229
+            },
+            "width": 0.15539999999999998
+          },
+          "reason": "No Rust entrance assignment"
+        }
+      ],
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "passed": true
+}

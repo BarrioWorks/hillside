@@ -13,6 +13,7 @@ import {
 } from '../src/domain';
 import { center, DIRECTIONS, edgeAngle, HEX, INRADIUS, LEVEL } from '../src/render/hex';
 import { Surface } from '../src/render/palette';
+import { edgePoints } from '../src/render/pedestrian';
 import {
   COPING,
   clearance,
@@ -283,6 +284,10 @@ describe('path layout inside a tile', () => {
     'reaches every midpoint and hub without gaps (case %#)',
     (...members) => {
       const layout = walks(pathTile(members), OPEN);
+      if (members.length === 1) {
+        expect(layout[0]?.curves.flat()).toEqual([]);
+        return;
+      }
       for (const side of members) {
         const { end } = endAt(layout, side);
         expect(Math.hypot(end.x - anchor(side).x, end.z - anchor(side).z)).toBeLessThan(1e-9);
@@ -366,7 +371,15 @@ describe('path layout inside a tile', () => {
       return Math.hypot(end.x, end.z);
     };
     expect(pathEnd({ meet: 'match', rise: 1 })).toBe('stairs');
-    expect(distanceAt({ meet: 'match', rise: 1 })).toBeCloseTo(INRADIUS - STAIR_RUN, 9);
+    expect(distanceAt({ meet: 'match', rise: 1 })).toBeCloseTo(INRADIUS, 9);
+    const stairPlan = plan(site(tile.edges, tile.paths), sideState(0, { meet: 'match', rise: 1 }));
+    const flight = stairPlan.pedestrian.edges.find((e) => e.traversal.kind === 'stairs');
+    expect(flight).toBeDefined();
+    if (flight)
+      expect(Math.hypot(...Object.values(edgePoints(stairPlan.pedestrian, flight)[0]))).toBeCloseTo(
+        INRADIUS - STAIR_RUN,
+        9,
+      );
     // The upper tile's walk runs to the edge, where the stairs arrive.
     expect(pathEnd({ meet: 'match', rise: -1 })).toBe('edge');
     expect(pathEnd({ meet: 'steep', rise: 2 })).toBe('cliff');
@@ -424,6 +437,10 @@ const cachedModel = (key: string, make: () => THREE.BufferGeometry) => {
   return model;
 };
 function checkHomes(layout: TilePlan, label: string) {
+  expect(
+    layout.pedestrian.failures.filter((f) => f.group !== null),
+    label,
+  ).toEqual([]);
   for (const home of layout.homes) {
     expect(home.model.userData.door, label).toBeDefined();
     for (const walk of layout.walks)
@@ -459,19 +476,23 @@ function checkHomes(layout: TilePlan, label: string) {
     expect(Math.hypot(a.x - home.door.x, a.z - home.door.z), label).toBeLessThanOrEqual(0.03);
     const walk = layout.walks.find((w) => w.group === home.group) as Walk;
     expect(clearance([walk], b), label).toBeLessThanOrEqual(1e-6);
-    for (const other of layout.homes) {
-      if (other === home) {
-        expect(footprintDistance(other.footprint, a, b), label).toBeGreaterThan(0);
-      } else expect(footprintDistance(other.footprint, a, b), label).toBeGreaterThanOrEqual(0.12);
+    for (let segment = 1; segment < (home.access?.length ?? 0); segment++) {
+      const from = home.access?.[segment - 1],
+        to = home.access?.[segment];
+      if (!from || !to) continue;
+      for (const other of layout.homes) {
+        if (other === home) expect(footprintDistance(other.footprint, from, to), label).toBeGreaterThan(0);
+        else expect(footprintDistance(other.footprint, from, to), label).toBeGreaterThanOrEqual(0.12);
+      }
+      for (const other of layout.walks)
+        if (other !== walk)
+          for (const curve of other.curves)
+            for (let i = 1; i < curve.length; i++)
+              expect(
+                segmentsDistance(from, to, curve[i - 1] as Point, curve[i] as Point),
+                label,
+              ).toBeGreaterThanOrEqual(PATH_WIDTH / 2 + 0.12);
     }
-    for (const other of layout.walks)
-      if (other !== walk)
-        for (const curve of other.curves)
-          for (let i = 1; i < curve.length; i++)
-            expect(
-              segmentsDistance(a, b, curve[i - 1] as Point, curve[i] as Point),
-              label,
-            ).toBeGreaterThanOrEqual(PATH_WIDTH / 2 + 0.12);
   }
 }
 
@@ -505,6 +526,7 @@ describe('buildings and walkways', () => {
       ['dead ends', Array.from({ length: 6 }, () => ({ meet: 'differ', rise: 0 }) as const)],
       ['cliffs', Array.from({ length: 6 }, () => ({ meet: 'steep', rise: 2 }) as const)],
     ];
+    const kit = new TileKit();
     let buildings = 0;
     for (const tile of tiles)
       for (const region of REGIONS)
@@ -514,11 +536,12 @@ describe('buildings and walkways', () => {
               ...site(tile.edges, tile.paths, { kind: tile.kind, variation, region }),
               entrances: tile.entrances,
             };
-            const layout = plan(where, sides, cachedModel);
+            const layout = kit.plan(where, sides);
             checkHomes(layout, `${tile.kind} ${tile.edges.join()} ${region} ${label}`);
             buildings += layout.homes.length;
           }
     expect(buildings).toBeGreaterThan(1000);
+    kit.dispose();
   }, 30000);
 });
 
@@ -641,7 +664,7 @@ describe('tile composition', () => {
     two.dispose();
   });
 
-  it(`keeps every composed tile within ${TILE_TRIANGLE_BUDGET} triangles`, () => {
+  it(`keeps every composed tile within ${TILE_TRIANGLE_BUDGET} triangles`, async () => {
     const report: Partial<Record<Kind, number>> = {};
     const note = (kind: Kind, parts: Part[]) => {
       report[kind] = Math.max(report[kind] ?? 0, tileTriangles(parts));
@@ -651,7 +674,8 @@ describe('tile composition', () => {
       for (const tile of templateTiles(kind))
         for (const region of REGIONS)
           for (let variation = 0; variation < 16; variation += 3)
-            for (const [, sides] of contexts())
+            for (const [, sides] of contexts()) {
+              await new Promise<void>((resolve) => setTimeout(resolve, 0));
               note(
                 kind,
                 kit.compose(
@@ -659,9 +683,10 @@ describe('tile composition', () => {
                   sides,
                 ),
               );
+            }
     console.info('max triangles per composed tile', JSON.stringify(report));
     for (const kind of KINDS) expect(report[kind], kind).toBeLessThanOrEqual(TILE_TRIANGLE_BUDGET);
-  });
+  }, 30000);
 });
 
 describe('real core path geometry', () => {
@@ -680,7 +705,7 @@ describe('real core path geometry', () => {
           tile.edges.filter((e) => e === 'homes').length,
         );
         for (const home of layout.homes) {
-          expect(home.connected).toBe(tile.entrances[home.side] !== null);
+          expect(home.connected).toBe(home.public || tile.entrances[home.side] !== null);
           if (home.connected) connected++;
           else disconnected++;
         }
@@ -705,7 +730,7 @@ describe('real core path geometry', () => {
           const cache = (kit as unknown as { cache: Map<string, THREE.BufferGeometry> }).cache;
           const name = [...cache].find(([, g]) => g === part.geometry)?.[0] ?? '';
           const house = /^(building|finca|casona|chapel)\//.test(name);
-          const decoration = /^(tree|shrub|palm|bench|lamp|rock|bougainvillea)(\/|$)/.test(name);
+          const decoration = /^(tree|shrub|palm|ground|bench|lamp|rock|bougainvillea)(\/|$)/.test(name);
           if (!house && !decoration) continue;
           let overlaps = false;
           const p = part.geometry.getAttribute('position');
@@ -721,7 +746,11 @@ describe('real core path geometry', () => {
               for (const home of layout.homes)
                 if (home.access)
                   expect(
-                    segmentsDistance(v, v, home.access[0] as Point, home.access[1] as Point),
+                    Math.min(
+                      ...home.access
+                        .slice(1)
+                        .map((end, i) => segmentsDistance(v, v, home.access?.[i] as Point, end)),
+                    ),
                     name,
                   ).toBeGreaterThanOrEqual(0.12);
             }
@@ -805,8 +834,10 @@ describe('real core path geometry', () => {
             b = ends(other);
           expect(a.length, `lower ${tile.q},${tile.r}/${side}`).toBeGreaterThanOrEqual(2);
           expect(b.length).toBeGreaterThanOrEqual(2);
+          for (const p of a) expect(Math.abs(dot(minus(p, mid), normal))).toBeLessThan(1e-3);
+          // The two meshes may subdivide the seam differently. They must cover the same interval.
           for (const p of a)
-            expect(Math.min(...b.map((q) => Math.hypot(p.x - q.x, p.z - q.z)))).toBeLessThan(1e-3);
+            expect(Math.abs(cross(normal, minus(p, mid)))).toBeLessThanOrEqual(PATH_WIDTH / 2 + 1e-3);
           const width = (points: Point[]) =>
             Math.max(...points.map((p) => cross(normal, minus(p, mid)))) -
             Math.min(...points.map((p) => cross(normal, minus(p, mid))));

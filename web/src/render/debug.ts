@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import type { Snapshot } from '../domain';
 import { center, corner, DIRECTIONS, edgeAngle, INRADIUS, key, LEVEL } from './hex';
+import { edgePoints } from './pedestrian';
 import type { Point, SideState, TilePlan, TileSite } from './tiles';
 
 export const DEBUG_LIFT = 0.09;
@@ -82,7 +83,7 @@ export function buildDebug(
       meet: tile.meets[side] ?? 'open',
       rise: (byKey.get(key(tile.q + d.q, tile.r + d.r))?.elevation ?? tile.elevation) - tile.elevation,
     }));
-    const plan = layout({ ...tile, region: snapshot.region }, sides);
+    const plan = layout({ ...tile, region: snapshot.region, seed: snapshot.seed }, sides);
     line(
       tileRoot,
       Array.from({ length: 7 }, (_, i) => corner(i % 6)),
@@ -95,51 +96,101 @@ export function buildDebug(
         z: Math.sin(a) * (INRADIUS - 0.22),
       });
     }
-    for (const walk of plan.walks) {
-      const network = tile.networks[walk.sides[0] ?? 0];
-      const color = networkColor(network);
-      for (const curve of walk.curves) line(tileRoot, curve, color);
-      const middle = walk.hub ?? walk.curves[0]?.[Math.floor((walk.curves[0]?.length ?? 0) / 2)];
-      if (middle) {
-        if (walk.hub) dot(tileRoot, middle, color, 0.12);
-        label(tileRoot, `N${network ?? '∅'}`, middle);
-      }
-      walk.sides.forEach((side, index) => {
-        // Two-sided walks share one curve: the second side ends at its last sample.
-        const at = walk.sides.length === 2 && index === 1 ? walk.curves[0]?.at(-1) : walk.curves[index]?.[0];
-        if (!at) return;
-        const endpoint = dot(tileRoot, at, color);
-        endpoint.userData = { kind: 'path-endpoint', side, network };
-        const meet = tile.meets[side];
-        if (meet && meet !== 'match') {
-          const mark = line(
-            tileRoot,
-            Array.from({ length: 25 }, (_, i) => ({
-              x: at.x + Math.cos((i * Math.PI) / 12) * 0.11,
-              z: at.z + Math.sin((i * Math.PI) / 12) * 0.11,
-            })),
-            STATUS[meet],
-          );
-          mark.userData = { kind: meet, side };
-        }
-        const d = DIRECTIONS[side];
-        const other = d && byKey.get(key(tile.q + d.q, tile.r + d.r));
-        if (
-          meet === 'match' &&
-          other?.edges[(side + 3) % 6] === 'path' &&
-          other.networks[(side + 3) % 6] !== tile.networks[side]
-        ) {
-          const mark = dot(tileRoot, at, '#ff00ff', 0.16);
-          mark.userData = { kind: 'mismatch', side };
-          label(tileRoot, 'MISMATCH', at, '#ff00ff');
-        }
+    const colors = { primary: '#ffcd57', secondary: '#4ddaff', entrance: '#70efac' };
+    for (const region of plan.pedestrian.blocked) {
+      const first = region.polygon[0];
+      if (!first) continue;
+      const item = line(
+        tileRoot,
+        [...region.polygon, first],
+        region.kind === 'building' ? '#e77375' : '#478fff',
+      );
+      item.userData = { kind: 'blocked-region', reason: region.kind };
+    }
+    for (const edge of plan.pedestrian.edges) {
+      const item = line(tileRoot, [...edgePoints(plan.pedestrian, edge)], colors[edge.class]);
+      const endpoints = [edge.from, edge.to].map((id) => plan.pedestrian.nodes.find((n) => n.id === id));
+      const position = item.geometry.getAttribute('position');
+      endpoints.forEach((node, index) => {
+        position.setY(index, node?.height ?? 0);
       });
+      item.userData = {
+        kind: 'pedestrian-edge',
+        edge: edge.id,
+        class: edge.class,
+        traversal: edge.traversal.kind,
+      };
+      if (edge.traversal.kind === 'stairs') label(tileRoot, 'STAIRS', edgePoints(plan.pedestrian, edge)[0]);
+    }
+    for (const node of plan.pedestrian.nodes) {
+      if (node.kind === 'destination') {
+        const first = node.area[0];
+        if (first) line(tileRoot, [...node.area, first], '#d8b4ff');
+      }
+      if (node.kind === 'door') continue;
+      const degree = plan.pedestrian.adjacency[node.id]?.length ?? 0;
+      const item = dot(tileRoot, node.at, '#ffffff', degree > 2 ? 0.065 : 0.035);
+      item.position.y += node.height;
+      item.userData = { kind: 'pedestrian-node', id: node.id, degree };
+      if (node.kind !== 'crossing' || node.location !== 'boundary') continue;
+      const side = node.side;
+      const network = tile.networks[side];
+      item.userData = { kind: 'path-endpoint', side, network, degree };
+      label(
+        tileRoot,
+        `G${node.group}/N${network ?? '∅'}`,
+        { x: node.at.x * 0.88, z: node.at.z * 0.88 },
+        `#${networkColor(network).getHexString()}`,
+      );
+      const meet = tile.meets[side];
+      if (meet && meet !== 'match') {
+        const mark = line(
+          tileRoot,
+          Array.from({ length: 25 }, (_, i) => ({
+            x: node.at.x + Math.cos((i * Math.PI) / 12) * 0.11,
+            z: node.at.z + Math.sin((i * Math.PI) / 12) * 0.11,
+          })),
+          STATUS[meet],
+        );
+        mark.userData = { kind: meet, side };
+      }
+      const d = DIRECTIONS[side];
+      const other = d && byKey.get(key(tile.q + d.q, tile.r + d.r));
+      if (
+        meet === 'match' &&
+        other?.edges[(side + 3) % 6] === 'path' &&
+        other.networks[(side + 3) % 6] !== network
+      ) {
+        const mark = dot(tileRoot, node.at, '#ff00ff', 0.16);
+        mark.userData = { kind: 'mismatch', side };
+        label(tileRoot, 'MISMATCH', node.at, '#ff00ff');
+      }
+    }
+    for (const failure of plan.pedestrian.failures) {
+      const item = dot(tileRoot, failure.at, '#ff3030', 0.09);
+      item.userData = { kind: 'failed-route', ...failure };
+      label(tileRoot, failure.reason, failure.at, '#ff3030');
     }
     for (const home of plan.homes) {
-      const connected = home.connected && tile.networks[home.side] != null;
+      const connected = home.connected;
       const anchor = dot(tileRoot, home.door, '#ffffff');
+      anchor.position.y += home.doorAnchor.y;
       anchor.userData = { kind: 'door', side: home.side };
-      if (home.access) line(tileRoot, home.access, '#70efac');
+      const heading = home.doorAnchor.heading;
+      const tip = { x: home.door.x + heading.x * 0.24, z: home.door.z + heading.z * 0.24 };
+      line(tileRoot, [home.door, tip], '#ffffff').position.y = home.doorAnchor.y;
+      for (const sign of [-1, 1])
+        line(
+          tileRoot,
+          [
+            tip,
+            {
+              x: tip.x - heading.x * 0.08 - heading.z * 0.05 * sign,
+              z: tip.z - heading.z * 0.08 + heading.x * 0.05 * sign,
+            },
+          ],
+          '#ffffff',
+        );
       const at = home.door;
       if (connected) {
         const ring = line(

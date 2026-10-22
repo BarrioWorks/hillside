@@ -1,0 +1,1652 @@
+[
+  {
+    "q": 0,
+    "r": 0,
+    "homes": [
+      {
+        "side": 1,
+        "group": 1,
+        "door": {
+          "x": 0.07991174129088242,
+          "z": 0.622688803962892
+        },
+        "connected": true,
+        "access": [
+          {
+            "x": 0.07991174129088242,
+            "z": 0.622688803962892
+          },
+          {
+            "x": 0.21491174129088242,
+            "z": 0.3888619449410935
+          },
+          {
+            "x": 0.32956596741016814,
+            "z": 0.1902749999999999
+          }
+        ]
+      },
+      {
+        "side": 4,
+        "group": 1,
+        "door": {
+          "x": -0.07991174129088277,
+          "z": -0.622688803962892
+        },
+        "connected": true,
+        "access": [
+          {
+            "x": -0.07991174129088277,
+            "z": -0.622688803962892
+          },
+          {
+            "x": -0.21491174129088284,
+            "z": -0.38886194494109355
+          },
+          {
+            "x": -0.3295659674101685,
+            "z": -0.19027500000000042
+          }
+        ]
+      }
+    ],
+    "pedestrian": {
+      "nodes": [
+        {
+          "kind": "crossing",
+          "at": {
+            "x": 0.807179676972449,
+            "z": 0.4660254037844385
+          },
+          "height": 0,
+          "group": 1,
+          "side": 0,
+          "normal": {
+            "x": 0.8660254037844387,
+            "z": 0.49999999999999994
+          },
+          "location": "interior",
+          "id": "node:0"
+        },
+        {
+          "kind": "crossing",
+          "at": {
+            "x": -0.8071796769724489,
+            "z": -0.4660254037844387
+          },
+          "height": 0,
+          "group": 1,
+          "side": 3,
+          "normal": {
+            "x": -0.8660254037844386,
+            "z": -0.5000000000000001
+          },
+          "location": "interior",
+          "id": "node:1"
+        },
+        {
+          "kind": "door",
+          "side": 1,
+          "anchor": {
+            "x": 0.07991174129088242,
+            "z": 0.622688803962892,
+            "y": 0,
+            "heading": {
+              "x": 0.49999999999999994,
+              "z": -0.8660254037844387
+            },
+            "width": 0.15539999999999998
+          },
+          "at": {
+            "x": 0.07991174129088242,
+            "z": 0.622688803962892
+          },
+          "height": 0,
+          "group": 1,
+          "public": false,
+          "id": "node:2"
+        },
+        {
+          "kind": "landing",
+          "at": {
+            "x": 0.21491174129088242,
+            "z": 0.3888619449410935
+          },
+          "height": 0,
+          "group": 1,
+          "id": "node:3"
+        },
+        {
+          "kind": "junction",
+          "at": {
+            "x": 0.32956596741016814,
+            "z": 0.1902749999999999
+          },
+          "height": 0,
+          "group": 1,
+          "id": "node:4"
+        },
+        {
+          "kind": "door",
+          "side": 4,
+          "anchor": {
+            "x": -0.07991174129088277,
+            "z": -0.622688803962892,
+            "y": 0,
+            "heading": {
+              "x": -0.5000000000000002,
+              "z": 0.8660254037844385
+            },
+            "width": 0.15539999999999998
+          },
+          "at": {
+            "x": -0.07991174129088277,
+            "z": -0.622688803962892
+          },
+          "height": 0,
+          "group": 1,
+          "public": false,
+          "id": "node:5"
+        },
+        {
+          "kind": "landing",
+          "at": {
+            "x": -0.21491174129088284,
+            "z": -0.38886194494109355
+          },
+          "height": 0,
+          "group": 1,
+          "id": "node:6"
+        },
+        {
+          "kind": "junction",
+          "at": {
+            "x": -0.3295659674101685,
+            "z": -0.19027500000000042
+          },
+          "height": 0,
+          "group": 1,
+          "id": "node:7"
+        },
+        {
+          "id": "node:8",
+          "kind": "crossing",
+          "side": 0,
+          "location": "boundary",
+          "normal": {
+            "x": 0.8660254037844387,
+            "z": 0.49999999999999994
+          },
+          "at": {
+            "x": 1.5,
+            "z": 0.8660254037844385
+          },
+          "height": 0,
+          "group": 1
+        },
+        {
+          "id": "node:9",
+          "kind": "crossing",
+          "side": 3,
+          "location": "boundary",
+          "normal": {
+            "x": -0.8660254037844386,
+            "z": -0.5000000000000001
+          },
+          "at": {
+            "x": -1.4999999999999998,
+            "z": -0.8660254037844388
+          },
+          "height": 0,
+          "group": 1
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge:1",
+          "from": "node:2",
+          "to": "node:3",
+          "group": 1,
+          "class": "entrance",
+          "width": 0.24,
+          "purpose": {
+            "kind": "entrances",
+            "doors": [
+              1
+            ],
+            "threshold": true
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:3",
+          "from": "node:4",
+          "to": "node:0",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "crossings",
+            "sides": [
+              0,
+              3
+            ]
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:4",
+          "from": "node:3",
+          "to": "node:4",
+          "group": 1,
+          "class": "entrance",
+          "width": 0.24,
+          "purpose": {
+            "kind": "entrances",
+            "doors": [
+              1
+            ],
+            "threshold": false
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:5",
+          "from": "node:5",
+          "to": "node:6",
+          "group": 1,
+          "class": "entrance",
+          "width": 0.24,
+          "purpose": {
+            "kind": "entrances",
+            "doors": [
+              4
+            ],
+            "threshold": true
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:6",
+          "from": "node:1",
+          "to": "node:7",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "crossings",
+            "sides": [
+              0,
+              3
+            ]
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:7",
+          "from": "node:7",
+          "to": "node:4",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "crossings",
+            "sides": [
+              0,
+              3
+            ]
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:8",
+          "from": "node:6",
+          "to": "node:7",
+          "group": 1,
+          "class": "entrance",
+          "width": 0.24,
+          "purpose": {
+            "kind": "entrances",
+            "doors": [
+              4
+            ],
+            "threshold": false
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:9",
+          "from": "node:0",
+          "to": "node:8",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "boundary",
+            "side": 0
+          },
+          "interior": false,
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          }
+        },
+        {
+          "id": "edge:12",
+          "from": "node:1",
+          "to": "node:9",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "boundary",
+            "side": 3
+          },
+          "interior": false,
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          }
+        }
+      ],
+      "adjacency": {
+        "node:0": [
+          "edge:3",
+          "edge:9"
+        ],
+        "node:1": [
+          "edge:6",
+          "edge:12"
+        ],
+        "node:2": [
+          "edge:1"
+        ],
+        "node:3": [
+          "edge:1",
+          "edge:4"
+        ],
+        "node:4": [
+          "edge:3",
+          "edge:4",
+          "edge:7"
+        ],
+        "node:5": [
+          "edge:5"
+        ],
+        "node:6": [
+          "edge:5",
+          "edge:8"
+        ],
+        "node:7": [
+          "edge:6",
+          "edge:7",
+          "edge:8"
+        ],
+        "node:8": [
+          "edge:9"
+        ],
+        "node:9": [
+          "edge:12"
+        ]
+      },
+      "walkable": [
+        {
+          "x": 2,
+          "z": 0
+        },
+        {
+          "x": 1.0000000000000002,
+          "z": 1.7320508075688772
+        },
+        {
+          "x": -0.9999999999999996,
+          "z": 1.7320508075688774
+        },
+        {
+          "x": -2,
+          "z": 2.4492935982947064e-16
+        },
+        {
+          "x": -1.0000000000000009,
+          "z": -1.7320508075688767
+        },
+        {
+          "x": 1.0000000000000002,
+          "z": -1.7320508075688772
+        }
+      ],
+      "blocked": [
+        {
+          "kind": "building",
+          "side": 1,
+          "polygon": [
+            {
+              "x": 0.13461682539321843,
+              "z": 1.6223968319211193
+            },
+            {
+              "x": -0.502396831921119,
+              "z": 1.2546168253932184
+            },
+            {
+              "x": -0.08355683218576364,
+              "z": 0.5291646656094477
+            },
+            {
+              "x": 0.5534568251285737,
+              "z": 0.8969446721373484
+            }
+          ]
+        },
+        {
+          "kind": "building",
+          "side": 4,
+          "polygon": [
+            {
+              "x": -0.13905682336427627,
+              "z": -1.614706529849744
+            },
+            {
+              "x": 0.4979568339500609,
+              "z": -1.2469265233218434
+            },
+            {
+              "x": 0.08355683218576325,
+              "z": -0.5291646656094479
+            },
+            {
+              "x": -0.553456825128574,
+              "z": -0.8969446721373487
+            }
+          ]
+        }
+      ],
+      "boundaries": [
+        {
+          "side": 0,
+          "group": 1,
+          "inner": {
+            "x": 0.807179676972449,
+            "z": 0.4660254037844385
+          },
+          "seam": {
+            "x": 1.5,
+            "z": 0.8660254037844385
+          },
+          "normal": {
+            "x": 0.8660254037844387,
+            "z": 0.49999999999999994
+          },
+          "end": {
+            "x": 1.5,
+            "z": 0.8660254037844385
+          },
+          "kind": "level",
+          "rise": 0,
+          "opening": 0
+        },
+        {
+          "side": 3,
+          "group": 1,
+          "inner": {
+            "x": -0.8071796769724489,
+            "z": -0.4660254037844387
+          },
+          "seam": {
+            "x": -1.4999999999999998,
+            "z": -0.8660254037844388
+          },
+          "normal": {
+            "x": -0.8660254037844386,
+            "z": -0.5000000000000001
+          },
+          "end": {
+            "x": -1.4999999999999998,
+            "z": -0.8660254037844388
+          },
+          "kind": "open",
+          "rise": 0,
+          "opening": 0
+        }
+      ],
+      "failures": []
+    },
+    "geometry": {
+      "triangles": 17,
+      "area": 2.045164849732859,
+      "overlapArea": 0,
+      "blockedArea": 0,
+      "degenerate": 0,
+      "outsideVertices": 0,
+      "coverageGaps": []
+    }
+  },
+  {
+    "q": 1,
+    "r": 0,
+    "homes": [
+      {
+        "side": 1,
+        "group": 1,
+        "door": {
+          "x": 0.3907282587091176,
+          "z": 0.8021388039628922
+        },
+        "connected": true,
+        "access": [
+          {
+            "x": 0.3907282587091176,
+            "z": 0.8021388039628922
+          },
+          {
+            "x": 0.5257282587091177,
+            "z": 0.5683119449410938
+          },
+          {
+            "x": 0.6403824848284037,
+            "z": 0.3697250000000002
+          }
+        ]
+      },
+      {
+        "side": 4,
+        "group": 1,
+        "door": {
+          "x": -0.3907282587091177,
+          "z": -0.642138803962892
+        },
+        "connected": true,
+        "access": [
+          {
+            "x": -0.3907282587091177,
+            "z": -0.642138803962892
+          },
+          {
+            "x": -0.5257282587091178,
+            "z": -0.40831194494109363
+          },
+          {
+            "x": -0.5711004525256483,
+            "z": -0.32972500000000027
+          }
+        ]
+      }
+    ],
+    "pedestrian": {
+      "nodes": [
+        {
+          "kind": "crossing",
+          "at": {
+            "x": 0.807179676972449,
+            "z": 0.4660254037844385
+          },
+          "height": 0,
+          "group": 1,
+          "side": 0,
+          "normal": {
+            "x": 0.8660254037844387,
+            "z": 0.49999999999999994
+          },
+          "location": "interior",
+          "id": "node:0"
+        },
+        {
+          "kind": "crossing",
+          "at": {
+            "x": -0.8071796769724489,
+            "z": -0.4660254037844387
+          },
+          "height": 0,
+          "group": 1,
+          "side": 3,
+          "normal": {
+            "x": -0.8660254037844386,
+            "z": -0.5000000000000001
+          },
+          "location": "interior",
+          "id": "node:1"
+        },
+        {
+          "kind": "door",
+          "side": 1,
+          "anchor": {
+            "x": 0.3907282587091176,
+            "z": 0.8021388039628922,
+            "y": 0,
+            "heading": {
+              "x": 0.5000000000000003,
+              "z": -0.8660254037844385
+            },
+            "width": 0.15539999999999998
+          },
+          "at": {
+            "x": 0.3907282587091176,
+            "z": 0.8021388039628922
+          },
+          "height": 0,
+          "group": 1,
+          "public": false,
+          "id": "node:2"
+        },
+        {
+          "kind": "landing",
+          "at": {
+            "x": 0.5257282587091177,
+            "z": 0.5683119449410938
+          },
+          "height": 0,
+          "group": 1,
+          "id": "node:3"
+        },
+        {
+          "kind": "junction",
+          "at": {
+            "x": 0.6403824848284037,
+            "z": 0.3697250000000002
+          },
+          "height": 0,
+          "group": 1,
+          "id": "node:4"
+        },
+        {
+          "kind": "door",
+          "side": 4,
+          "anchor": {
+            "x": -0.3907282587091177,
+            "z": -0.642138803962892,
+            "y": 0,
+            "heading": {
+              "x": -0.5000000000000002,
+              "z": 0.8660254037844385
+            },
+            "width": 0.15539999999999998
+          },
+          "at": {
+            "x": -0.3907282587091177,
+            "z": -0.642138803962892
+          },
+          "height": 0,
+          "group": 1,
+          "public": false,
+          "id": "node:5"
+        },
+        {
+          "kind": "landing",
+          "at": {
+            "x": -0.5257282587091178,
+            "z": -0.40831194494109363
+          },
+          "height": 0,
+          "group": 1,
+          "id": "node:6"
+        },
+        {
+          "kind": "junction",
+          "at": {
+            "x": -0.5711004525256483,
+            "z": -0.32972500000000027
+          },
+          "height": 0,
+          "group": 1,
+          "id": "node:7"
+        },
+        {
+          "id": "node:8",
+          "kind": "crossing",
+          "side": 0,
+          "location": "boundary",
+          "normal": {
+            "x": 0.8660254037844387,
+            "z": 0.49999999999999994
+          },
+          "at": {
+            "x": 1.5,
+            "z": 0.8660254037844385
+          },
+          "height": 0,
+          "group": 1
+        },
+        {
+          "id": "node:9",
+          "kind": "crossing",
+          "side": 3,
+          "location": "boundary",
+          "normal": {
+            "x": -0.8660254037844386,
+            "z": -0.5000000000000001
+          },
+          "at": {
+            "x": -1.4999999999999998,
+            "z": -0.8660254037844388
+          },
+          "height": 0,
+          "group": 1
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge:1",
+          "from": "node:2",
+          "to": "node:3",
+          "group": 1,
+          "class": "entrance",
+          "width": 0.24,
+          "purpose": {
+            "kind": "entrances",
+            "doors": [
+              1
+            ],
+            "threshold": true
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:3",
+          "from": "node:4",
+          "to": "node:0",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "crossings",
+            "sides": [
+              0,
+              3
+            ]
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:4",
+          "from": "node:3",
+          "to": "node:4",
+          "group": 1,
+          "class": "entrance",
+          "width": 0.24,
+          "purpose": {
+            "kind": "entrances",
+            "doors": [
+              1
+            ],
+            "threshold": false
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:5",
+          "from": "node:5",
+          "to": "node:6",
+          "group": 1,
+          "class": "entrance",
+          "width": 0.24,
+          "purpose": {
+            "kind": "entrances",
+            "doors": [
+              4
+            ],
+            "threshold": true
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:6",
+          "from": "node:1",
+          "to": "node:7",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "crossings",
+            "sides": [
+              0,
+              3
+            ]
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:7",
+          "from": "node:7",
+          "to": "node:4",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "crossings",
+            "sides": [
+              0,
+              3
+            ]
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:8",
+          "from": "node:6",
+          "to": "node:7",
+          "group": 1,
+          "class": "entrance",
+          "width": 0.24,
+          "purpose": {
+            "kind": "entrances",
+            "doors": [
+              4
+            ],
+            "threshold": false
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:9",
+          "from": "node:0",
+          "to": "node:8",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "boundary",
+            "side": 0
+          },
+          "interior": false,
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          }
+        },
+        {
+          "id": "edge:12",
+          "from": "node:1",
+          "to": "node:9",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "boundary",
+            "side": 3
+          },
+          "interior": false,
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          }
+        }
+      ],
+      "adjacency": {
+        "node:0": [
+          "edge:3",
+          "edge:9"
+        ],
+        "node:1": [
+          "edge:6",
+          "edge:12"
+        ],
+        "node:2": [
+          "edge:1"
+        ],
+        "node:3": [
+          "edge:1",
+          "edge:4"
+        ],
+        "node:4": [
+          "edge:3",
+          "edge:4",
+          "edge:7"
+        ],
+        "node:5": [
+          "edge:5"
+        ],
+        "node:6": [
+          "edge:5",
+          "edge:8"
+        ],
+        "node:7": [
+          "edge:6",
+          "edge:7",
+          "edge:8"
+        ],
+        "node:8": [
+          "edge:9"
+        ],
+        "node:9": [
+          "edge:12"
+        ]
+      },
+      "walkable": [
+        {
+          "x": 2,
+          "z": 0
+        },
+        {
+          "x": 1.0000000000000002,
+          "z": 1.7320508075688772
+        },
+        {
+          "x": -0.9999999999999996,
+          "z": 1.7320508075688774
+        },
+        {
+          "x": -2,
+          "z": 2.4492935982947064e-16
+        },
+        {
+          "x": -1.0000000000000009,
+          "z": -1.7320508075688767
+        },
+        {
+          "x": 1.0000000000000002,
+          "z": -1.7320508075688772
+        }
+      ],
+      "blocked": [
+        {
+          "kind": "building",
+          "side": 1,
+          "polygon": [
+            {
+              "x": 0.13905682336427608,
+              "z": 1.614706529849744
+            },
+            {
+              "x": -0.4979568339500612,
+              "z": 1.2469265233218432
+            },
+            {
+              "x": -0.08355683218576335,
+              "z": 0.5291646656094479
+            },
+            {
+              "x": 0.5534568251285739,
+              "z": 0.8969446721373487
+            }
+          ]
+        },
+        {
+          "kind": "building",
+          "side": 4,
+          "polygon": [
+            {
+              "x": -0.21414686058255747,
+              "z": -1.6176867466038567
+            },
+            {
+              "x": 0.6317867492503026,
+              "z": -1.1292867492503027
+            },
+            {
+              "x": 0.1655867527788975,
+              "z": -0.3218046688733981
+            },
+            {
+              "x": -0.6803468570539627,
+              "z": -0.810204666226952
+            }
+          ]
+        }
+      ],
+      "boundaries": [
+        {
+          "side": 0,
+          "group": 1,
+          "inner": {
+            "x": 0.807179676972449,
+            "z": 0.4660254037844385
+          },
+          "seam": {
+            "x": 1.5,
+            "z": 0.8660254037844385
+          },
+          "normal": {
+            "x": 0.8660254037844387,
+            "z": 0.49999999999999994
+          },
+          "end": {
+            "x": 1.5,
+            "z": 0.8660254037844385
+          },
+          "kind": "level",
+          "rise": 0,
+          "opening": 0
+        },
+        {
+          "side": 3,
+          "group": 1,
+          "inner": {
+            "x": -0.8071796769724489,
+            "z": -0.4660254037844387
+          },
+          "seam": {
+            "x": -1.4999999999999998,
+            "z": -0.8660254037844388
+          },
+          "normal": {
+            "x": -0.8660254037844386,
+            "z": -0.5000000000000001
+          },
+          "end": {
+            "x": -1.4999999999999998,
+            "z": -0.8660254037844388
+          },
+          "kind": "level",
+          "rise": 0,
+          "opening": 0
+        }
+      ],
+      "failures": []
+    },
+    "geometry": {
+      "triangles": 16,
+      "area": 2.0119094945455704,
+      "overlapArea": 0,
+      "blockedArea": 0,
+      "degenerate": 0,
+      "outsideVertices": 0,
+      "coverageGaps": []
+    }
+  },
+  {
+    "q": 2,
+    "r": 0,
+    "homes": [
+      {
+        "side": 1,
+        "group": 1,
+        "door": {
+          "x": 0.3907282587091176,
+          "z": 0.8021388039628922
+        },
+        "connected": true,
+        "access": [
+          {
+            "x": 0.3907282587091176,
+            "z": 0.8021388039628922
+          },
+          {
+            "x": 0.5257282587091177,
+            "z": 0.5683119449410938
+          },
+          {
+            "x": 0.6403824848284037,
+            "z": 0.3697250000000002
+          }
+        ]
+      },
+      {
+        "side": 4,
+        "group": 1,
+        "door": {
+          "x": -0.3907282587091177,
+          "z": -0.642138803962892
+        },
+        "connected": true,
+        "access": [
+          {
+            "x": -0.3907282587091177,
+            "z": -0.642138803962892
+          },
+          {
+            "x": -0.5257282587091178,
+            "z": -0.40831194494109363
+          },
+          {
+            "x": -0.5711004525256483,
+            "z": -0.32972500000000027
+          }
+        ]
+      }
+    ],
+    "pedestrian": {
+      "nodes": [
+        {
+          "kind": "crossing",
+          "at": {
+            "x": 0.807179676972449,
+            "z": 0.4660254037844385
+          },
+          "height": 0,
+          "group": 1,
+          "side": 0,
+          "normal": {
+            "x": 0.8660254037844387,
+            "z": 0.49999999999999994
+          },
+          "location": "interior",
+          "id": "node:0"
+        },
+        {
+          "kind": "crossing",
+          "at": {
+            "x": -0.8071796769724489,
+            "z": -0.4660254037844387
+          },
+          "height": 0,
+          "group": 1,
+          "side": 3,
+          "normal": {
+            "x": -0.8660254037844386,
+            "z": -0.5000000000000001
+          },
+          "location": "interior",
+          "id": "node:1"
+        },
+        {
+          "kind": "door",
+          "side": 1,
+          "anchor": {
+            "x": 0.3907282587091176,
+            "z": 0.8021388039628922,
+            "y": 0,
+            "heading": {
+              "x": 0.5000000000000003,
+              "z": -0.8660254037844385
+            },
+            "width": 0.15539999999999998
+          },
+          "at": {
+            "x": 0.3907282587091176,
+            "z": 0.8021388039628922
+          },
+          "height": 0,
+          "group": 1,
+          "public": false,
+          "id": "node:2"
+        },
+        {
+          "kind": "landing",
+          "at": {
+            "x": 0.5257282587091177,
+            "z": 0.5683119449410938
+          },
+          "height": 0,
+          "group": 1,
+          "id": "node:3"
+        },
+        {
+          "kind": "junction",
+          "at": {
+            "x": 0.6403824848284037,
+            "z": 0.3697250000000002
+          },
+          "height": 0,
+          "group": 1,
+          "id": "node:4"
+        },
+        {
+          "kind": "door",
+          "side": 4,
+          "anchor": {
+            "x": -0.3907282587091177,
+            "z": -0.642138803962892,
+            "y": 0,
+            "heading": {
+              "x": -0.5000000000000002,
+              "z": 0.8660254037844385
+            },
+            "width": 0.15539999999999998
+          },
+          "at": {
+            "x": -0.3907282587091177,
+            "z": -0.642138803962892
+          },
+          "height": 0,
+          "group": 1,
+          "public": false,
+          "id": "node:5"
+        },
+        {
+          "kind": "landing",
+          "at": {
+            "x": -0.5257282587091178,
+            "z": -0.40831194494109363
+          },
+          "height": 0,
+          "group": 1,
+          "id": "node:6"
+        },
+        {
+          "kind": "junction",
+          "at": {
+            "x": -0.5711004525256483,
+            "z": -0.32972500000000027
+          },
+          "height": 0,
+          "group": 1,
+          "id": "node:7"
+        },
+        {
+          "id": "node:8",
+          "kind": "crossing",
+          "side": 0,
+          "location": "boundary",
+          "normal": {
+            "x": 0.8660254037844387,
+            "z": 0.49999999999999994
+          },
+          "at": {
+            "x": 1.5,
+            "z": 0.8660254037844385
+          },
+          "height": 0,
+          "group": 1
+        },
+        {
+          "id": "node:9",
+          "kind": "crossing",
+          "side": 3,
+          "location": "boundary",
+          "normal": {
+            "x": -0.8660254037844386,
+            "z": -0.5000000000000001
+          },
+          "at": {
+            "x": -1.4999999999999998,
+            "z": -0.8660254037844388
+          },
+          "height": 0,
+          "group": 1
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge:1",
+          "from": "node:2",
+          "to": "node:3",
+          "group": 1,
+          "class": "entrance",
+          "width": 0.24,
+          "purpose": {
+            "kind": "entrances",
+            "doors": [
+              1
+            ],
+            "threshold": true
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:3",
+          "from": "node:4",
+          "to": "node:0",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "crossings",
+            "sides": [
+              0,
+              3
+            ]
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:4",
+          "from": "node:3",
+          "to": "node:4",
+          "group": 1,
+          "class": "entrance",
+          "width": 0.24,
+          "purpose": {
+            "kind": "entrances",
+            "doors": [
+              1
+            ],
+            "threshold": false
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:5",
+          "from": "node:5",
+          "to": "node:6",
+          "group": 1,
+          "class": "entrance",
+          "width": 0.24,
+          "purpose": {
+            "kind": "entrances",
+            "doors": [
+              4
+            ],
+            "threshold": true
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:6",
+          "from": "node:1",
+          "to": "node:7",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "crossings",
+            "sides": [
+              0,
+              3
+            ]
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:7",
+          "from": "node:7",
+          "to": "node:4",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "crossings",
+            "sides": [
+              0,
+              3
+            ]
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:8",
+          "from": "node:6",
+          "to": "node:7",
+          "group": 1,
+          "class": "entrance",
+          "width": 0.24,
+          "purpose": {
+            "kind": "entrances",
+            "doors": [
+              4
+            ],
+            "threshold": false
+          },
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          },
+          "interior": true
+        },
+        {
+          "id": "edge:9",
+          "from": "node:0",
+          "to": "node:8",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "boundary",
+            "side": 0
+          },
+          "interior": false,
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          }
+        },
+        {
+          "id": "edge:12",
+          "from": "node:1",
+          "to": "node:9",
+          "group": 1,
+          "class": "primary",
+          "width": 0.56,
+          "purpose": {
+            "kind": "boundary",
+            "side": 3
+          },
+          "interior": false,
+          "traversal": {
+            "kind": "level",
+            "height": 0
+          }
+        }
+      ],
+      "adjacency": {
+        "node:0": [
+          "edge:3",
+          "edge:9"
+        ],
+        "node:1": [
+          "edge:6",
+          "edge:12"
+        ],
+        "node:2": [
+          "edge:1"
+        ],
+        "node:3": [
+          "edge:1",
+          "edge:4"
+        ],
+        "node:4": [
+          "edge:3",
+          "edge:4",
+          "edge:7"
+        ],
+        "node:5": [
+          "edge:5"
+        ],
+        "node:6": [
+          "edge:5",
+          "edge:8"
+        ],
+        "node:7": [
+          "edge:6",
+          "edge:7",
+          "edge:8"
+        ],
+        "node:8": [
+          "edge:9"
+        ],
+        "node:9": [
+          "edge:12"
+        ]
+      },
+      "walkable": [
+        {
+          "x": 2,
+          "z": 0
+        },
+        {
+          "x": 1.0000000000000002,
+          "z": 1.7320508075688772
+        },
+        {
+          "x": -0.9999999999999996,
+          "z": 1.7320508075688774
+        },
+        {
+          "x": -2,
+          "z": 2.4492935982947064e-16
+        },
+        {
+          "x": -1.0000000000000009,
+          "z": -1.7320508075688767
+        },
+        {
+          "x": 1.0000000000000002,
+          "z": -1.7320508075688772
+        }
+      ],
+      "blocked": [
+        {
+          "kind": "building",
+          "side": 1,
+          "polygon": [
+            {
+              "x": 0.1346168253932182,
+              "z": 1.6223968319211193
+            },
+            {
+              "x": -0.5023968319211191,
+              "z": 1.2546168253932182
+            },
+            {
+              "x": -0.08355683218576335,
+              "z": 0.5291646656094479
+            },
+            {
+              "x": 0.5534568251285739,
+              "z": 0.8969446721373487
+            }
+          ]
+        },
+        {
+          "kind": "building",
+          "side": 4,
+          "polygon": [
+            {
+              "x": -0.21414686058255747,
+              "z": -1.6176867466038567
+            },
+            {
+              "x": 0.6317867492503026,
+              "z": -1.1292867492503027
+            },
+            {
+              "x": 0.1655867527788975,
+              "z": -0.3218046688733981
+            },
+            {
+              "x": -0.6803468570539627,
+              "z": -0.810204666226952
+            }
+          ]
+        }
+      ],
+      "boundaries": [
+        {
+          "side": 0,
+          "group": 1,
+          "inner": {
+            "x": 0.807179676972449,
+            "z": 0.4660254037844385
+          },
+          "seam": {
+            "x": 1.5,
+            "z": 0.8660254037844385
+          },
+          "normal": {
+            "x": 0.8660254037844387,
+            "z": 0.49999999999999994
+          },
+          "end": {
+            "x": 1.5,
+            "z": 0.8660254037844385
+          },
+          "kind": "open",
+          "rise": 0,
+          "opening": 0
+        },
+        {
+          "side": 3,
+          "group": 1,
+          "inner": {
+            "x": -0.8071796769724489,
+            "z": -0.4660254037844387
+          },
+          "seam": {
+            "x": -1.4999999999999998,
+            "z": -0.8660254037844388
+          },
+          "normal": {
+            "x": -0.8660254037844386,
+            "z": -0.5000000000000001
+          },
+          "end": {
+            "x": -1.4999999999999998,
+            "z": -0.8660254037844388
+          },
+          "kind": "level",
+          "rise": 0,
+          "opening": 0
+        }
+      ],
+      "failures": []
+    },
+    "geometry": {
+      "triangles": 16,
+      "area": 2.0119094945455704,
+      "overlapArea": 0,
+      "blockedArea": 0,
+      "degenerate": 0,
+      "outsideVertices": 0,
+      "coverageGaps": []
+    }
+  }
+]

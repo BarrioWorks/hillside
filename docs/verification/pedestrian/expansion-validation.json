@@ -1,0 +1,1204 @@
+{
+  "passed": true,
+  "expectedExpansionCases": 43,
+  "expectedActualCases": 20,
+  "results": [
+    {
+      "name": "A-two-houses/uphill-1",
+      "tile": [
+        0,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 23,
+        "area": 0.7878129327468661,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "B-five-houses/uphill-0",
+      "tile": [
+        0,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 46,
+        "area": 1.3757158115765433,
+        "overlapArea": 1.251697315240996e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "C-three-hexagons/uphill-0",
+      "tile": [
+        0,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 30,
+        "area": 2.0451606264954374,
+        "overlapArea": 1.3670826234934985e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "C-three-hexagons/uphill-3",
+      "tile": [
+        0,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 29,
+        "area": 2.045160619883716,
+        "overlapArea": 1.2631881485258845e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "C-three-hexagons/uphill-0",
+      "tile": [
+        1,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 28,
+        "area": 2.011900895528135,
+        "overlapArea": 1.367082620717941e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "C-three-hexagons/uphill-3",
+      "tile": [
+        1,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 27,
+        "area": 2.011900890321911,
+        "overlapArea": 1.263188151301442e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "C-three-hexagons/uphill-0",
+      "tile": [
+        2,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 28,
+        "area": 2.011900895528135,
+        "overlapArea": 1.367082620717941e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "C-three-hexagons/uphill-3",
+      "tile": [
+        2,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 27,
+        "area": 2.011900890321911,
+        "overlapArea": 1.263188151301442e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "D-hillside/uphill-0",
+      "tile": [
+        0,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 30,
+        "area": 2.0451606264954374,
+        "overlapArea": 1.3670826234934985e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "D-hillside/uphill-3",
+      "tile": [
+        0,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 29,
+        "area": 2.045160619883716,
+        "overlapArea": 1.2631881485258845e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "D-hillside/uphill-0",
+      "tile": [
+        1,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 28,
+        "area": 2.011900895528135,
+        "overlapArea": 1.367082620717941e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "D-hillside/uphill-3",
+      "tile": [
+        1,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 27,
+        "area": 2.011900890321911,
+        "overlapArea": 1.263188151301442e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "D-hillside/uphill-0",
+      "tile": [
+        2,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 28,
+        "area": 2.011900895528135,
+        "overlapArea": 1.367082620717941e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "D-hillside/uphill-3",
+      "tile": [
+        2,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 27,
+        "area": 2.011900890321911,
+        "overlapArea": 1.263188151301442e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-4",
+      "tile": [
+        0,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 33,
+        "area": 1.7714004199164695,
+        "overlapArea": 4.995486801995241e-10,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-5",
+      "tile": [
+        0,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 31,
+        "area": 1.7714018852956936,
+        "overlapArea": 1.3131430234847308e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-3",
+      "tile": [
+        -1,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 31,
+        "area": 1.8854538127559664,
+        "overlapArea": 1.2631881499136632e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-4",
+      "tile": [
+        -1,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 33,
+        "area": 1.8854523473767424,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-4",
+      "tile": [
+        -1,
+        1
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 18,
+        "area": 0.7747944696705703,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-2",
+      "tile": [
+        1,
+        -1
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 33,
+        "area": 2.0631813966374546,
+        "overlapArea": 1.3670826221057197e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-5",
+      "tile": [
+        1,
+        -1
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 32,
+        "area": 2.063181401982204,
+        "overlapArea": 1.3670826304323924e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-1",
+      "tile": [
+        -1,
+        2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 10,
+        "area": 0.44799997520446766,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-1",
+      "tile": [
+        1,
+        1
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 10,
+        "area": 0.44799997520446766,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-3",
+      "tile": [
+        0,
+        -1
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 32,
+        "area": 1.258249209470166,
+        "overlapArea": 1.251697315240996e-8,
+        "blockedArea": 0,
+        "degenerate": 1,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-1",
+      "tile": [
+        2,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 12,
+        "area": 1.9398968779184855,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-4",
+      "tile": [
+        2,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 12,
+        "area": 1.9398968779184855,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-0",
+      "tile": [
+        2,
+        -1
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 40,
+        "area": 3.7145054573613794,
+        "overlapArea": 1.2631881485258845e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-1",
+      "tile": [
+        2,
+        -1
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 41,
+        "area": 3.7145039961544803,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-3",
+      "tile": [
+        2,
+        -1
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 39,
+        "area": 3.714505461022603,
+        "overlapArea": 1.2631881485258845e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-4",
+      "tile": [
+        2,
+        -1
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 41,
+        "area": 3.7145039961544803,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-2",
+      "tile": [
+        -2,
+        1
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 39,
+        "area": 1.92165310558702,
+        "overlapArea": 1.3670826221057197e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-3",
+      "tile": [
+        -2,
+        1
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 38,
+        "area": 1.9216530989752991,
+        "overlapArea": 1.2631881499136632e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-0",
+      "tile": [
+        1,
+        -2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 40,
+        "area": 1.4894113816241124,
+        "overlapArea": 1.251697315240996e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-3",
+      "tile": [
+        1,
+        -2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 39,
+        "area": 1.4894113892937417,
+        "overlapArea": 1.251697315240996e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-0",
+      "tile": [
+        0,
+        -2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 10,
+        "area": 0.4479999775049297,
+        "overlapArea": 1.251697315240996e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-3",
+      "tile": [
+        0,
+        -2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 10,
+        "area": 0.4479999775049297,
+        "overlapArea": 1.251697315240996e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-1",
+      "tile": [
+        -1,
+        -1
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 34,
+        "area": 1.0348822082435727,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-1",
+      "tile": [
+        2,
+        -2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 35,
+        "area": 1.8600491397985208,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-2",
+      "tile": [
+        2,
+        -2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 34,
+        "area": 1.860050611789466,
+        "overlapArea": 1.3670826221057197e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-0",
+      "tile": [
+        -2,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 36,
+        "area": 1.0777664077384288,
+        "overlapArea": 1.2548418137914297e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-5",
+      "tile": [
+        1,
+        -3
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 20,
+        "area": 0.774796204918524,
+        "overlapArea": 1.2516973207921112e-8,
+        "blockedArea": 0,
+        "degenerate": 1,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-0",
+      "tile": [
+        -1,
+        -2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 32,
+        "area": 2.0977911893606267,
+        "overlapArea": 1.3670826179423834e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "E-settlement/uphill-3",
+      "tile": [
+        -1,
+        -2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 32,
+        "area": 2.097791180422684,
+        "overlapArea": 1.2631881485258845e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-1/actual",
+      "tile": [
+        0,
+        1
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 10,
+        "area": 0.4479999775049297,
+        "overlapArea": 1.2516973207921112e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-1/actual",
+      "tile": [
+        1,
+        1
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 24,
+        "area": 1.8457996324612402,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-1/actual",
+      "tile": [
+        -1,
+        -2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 51,
+        "area": 3.7532784367691576,
+        "overlapArea": 2.734165240048103e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-1/actual",
+      "tile": [
+        2,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 38,
+        "area": 1.9252392451439044,
+        "overlapArea": 1.2631881485258845e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-1/actual",
+      "tile": [
+        -2,
+        3
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 24,
+        "area": 2.0645432759211455,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-1/actual",
+      "tile": [
+        0,
+        -3
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 12,
+        "area": 0.8959984609662626,
+        "overlapArea": 1.2516973207921112e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-2/actual",
+      "tile": [
+        1,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 10,
+        "area": 0.4479999775049297,
+        "overlapArea": 1.251697315240996e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-2/actual",
+      "tile": [
+        -1,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 19,
+        "area": 1.939888608265995,
+        "overlapArea": 1.2631881485258845e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-2/actual",
+      "tile": [
+        -2,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 47,
+        "area": 2.965246020958896,
+        "overlapArea": 1.3670826248812773e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-2/actual",
+      "tile": [
+        -2,
+        2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 37,
+        "area": 2.949982006387826,
+        "overlapArea": 1.3670826276568349e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-2/actual",
+      "tile": [
+        -1,
+        2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 47,
+        "area": 3.693371057299462,
+        "overlapArea": 2.630270777570498e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-2/actual",
+      "tile": [
+        0,
+        -2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 22,
+        "area": 1.8489887715745237,
+        "overlapArea": 1.2631881499136632e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-2/actual",
+      "tile": [
+        1,
+        -3
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 12,
+        "area": 0.8959984609662626,
+        "overlapArea": 1.2516973207921112e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-2/actual",
+      "tile": [
+        -3,
+        2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 44,
+        "area": 1.5054921160081398,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-3/actual",
+      "tile": [
+        -2,
+        0
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 10,
+        "area": 0.4479999775049297,
+        "overlapArea": 1.2516973207921112e-8,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-3/actual",
+      "tile": [
+        2,
+        -2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 24,
+        "area": 2.0978000607802194,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-3/actual",
+      "tile": [
+        1,
+        -3
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 30,
+        "area": 0.9786403989544401,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-3/actual",
+      "tile": [
+        3,
+        -3
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 35,
+        "area": 1.35155407176633,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-3/actual",
+      "tile": [
+        -1,
+        -2
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 38,
+        "area": 1.6772421419167216,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    },
+    {
+      "name": "seed-3/actual",
+      "tile": [
+        4,
+        -4
+      ],
+      "errors": [],
+      "coverage": [],
+      "height": [],
+      "geometry": {
+        "triangles": 42,
+        "area": 2.1786474014865895,
+        "overlapArea": 0,
+        "blockedArea": 0,
+        "degenerate": 0,
+        "outsideVertices": 0
+      },
+      "passed": true
+    }
+  ]
+}

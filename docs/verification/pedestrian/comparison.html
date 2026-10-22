@@ -1,0 +1,194 @@
+<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;color:var(--foreground,#263a36);font:14px var(--font-sans,system-ui)}section{margin-bottom:24px}h2{font-size:17px;margin:14px 0 8px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}figure{margin:0}.shot{overflow:hidden;aspect-ratio:1.35;border-radius:8px}.shot img{height:100%;object-fit:cover;transform:scale(1.7);transform-origin:50% 53%}.shot.settlement img{transform:none}img{width:100%;display:block;border-radius:8px}figcaption{padding:6px 0;color:var(--muted-foreground,#52645d)}summary{padding:8px 0;cursor:pointer}p{line-height:1.5}pre{white-space:pre-wrap;font-size:12px;padding:16px;background:var(--muted,#eee);border-radius:8px}@media(max-width:480px){.pair{grid-template-columns:1fr}}</style></head><body><p>Fixed seed 909352. The same tile layouts are rendered before and after the pedestrian replacement.</p><section><h2>A two houses</h2><div class="pair"><figure><div class="shot "><img src="../../screenshots/pedestrian/baseline/A-two-houses-closeup.png" alt="Original paths"></div><figcaption>Before</figcaption></figure><figure><div class="shot "><img src="../../screenshots/pedestrian/final/A-two-houses-closeup.png" alt="Planned paths"></div><figcaption>Planned network</figcaption></figure></div><details><summary>Gameplay view and route graph</summary><div class="pair"><img src="../../screenshots/pedestrian/final/A-two-houses-gameplay.png" alt="Gameplay view"><img src="../../screenshots/pedestrian/final/A-two-houses-graph.png" alt="Spatial graph overlay"></div></details></section><section><h2>B five houses</h2><div class="pair"><figure><div class="shot "><img src="../../screenshots/pedestrian/baseline/B-five-houses-closeup.png" alt="Original paths"></div><figcaption>Before</figcaption></figure><figure><div class="shot "><img src="../../screenshots/pedestrian/final/B-five-houses-closeup.png" alt="Planned paths"></div><figcaption>Planned network</figcaption></figure></div><details><summary>Gameplay view and route graph</summary><div class="pair"><img src="../../screenshots/pedestrian/final/B-five-houses-gameplay.png" alt="Gameplay view"><img src="../../screenshots/pedestrian/final/B-five-houses-graph.png" alt="Spatial graph overlay"></div></details></section><section><h2>C three hexagons</h2><div class="pair"><figure><div class="shot "><img src="../../screenshots/pedestrian/baseline/C-three-hexagons-closeup.png" alt="Original paths"></div><figcaption>Before</figcaption></figure><figure><div class="shot "><img src="../../screenshots/pedestrian/final/C-three-hexagons-closeup.png" alt="Planned paths"></div><figcaption>Planned network</figcaption></figure></div><details><summary>Gameplay view and route graph</summary><div class="pair"><img src="../../screenshots/pedestrian/final/C-three-hexagons-gameplay.png" alt="Gameplay view"><img src="../../screenshots/pedestrian/final/C-three-hexagons-graph.png" alt="Spatial graph overlay"></div></details></section><section><h2>D hillside</h2><div class="pair"><figure><div class="shot "><img src="../../screenshots/pedestrian/baseline/D-hillside-closeup.png" alt="Original paths"></div><figcaption>Before</figcaption></figure><figure><div class="shot "><img src="../../screenshots/pedestrian/final/D-hillside-closeup.png" alt="Planned paths"></div><figcaption>Planned network</figcaption></figure></div><details><summary>Gameplay view and route graph</summary><div class="pair"><img src="../../screenshots/pedestrian/final/D-hillside-gameplay.png" alt="Gameplay view"><img src="../../screenshots/pedestrian/final/D-hillside-graph.png" alt="Spatial graph overlay"></div></details></section><section><h2>E settlement</h2><div class="pair"><figure><div class="shot settlement"><img src="../../screenshots/pedestrian/baseline/E-settlement-closeup.png" alt="Original paths"></div><figcaption>Before</figcaption></figure><figure><div class="shot settlement"><img src="../../screenshots/pedestrian/final/E-settlement-closeup.png" alt="Planned paths"></div><figcaption>Planned network</figcaption></figure></div><details><summary>Gameplay view and route graph</summary><div class="pair"><img src="../../screenshots/pedestrian/final/E-settlement-gameplay.png" alt="Gameplay view"><img src="../../screenshots/pedestrian/final/E-settlement-graph.png" alt="Spatial graph overlay"></div></details></section><details><summary>Uphill expansion: existing five-house routes stay in place</summary><div class="pair"><img src="../../screenshots/pedestrian/final/B-uphill-expansion-closeup.png" alt="Five houses after uphill expansion"><img src="../../screenshots/pedestrian/final/B-uphill-expansion-graph.png" alt="Uphill expansion graph"></div></details><details><summary>Validation report</summary><pre>{
+  "source": "Actual World renderer plans and composed pavement triangles",
+  "scenes": [
+    {
+      "name": "A-two-houses",
+      "tiles": 1,
+      "doors": 2,
+      "reachedDoors": 2,
+      "unservedHomes": [],
+      "classes": {
+        "primary": 1,
+        "secondary": 1,
+        "entrance": 4
+      },
+      "pavingArea": 0.7878131163291711,
+      "pairwiseOverlapArea": 0,
+      "footprintIntrusionArea": 0,
+      "waterIntrusionArea": 0,
+      "seamPairs": 0,
+      "maxSeamGap": 0,
+      "routeFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "B-five-houses",
+      "tiles": 1,
+      "doors": 5,
+      "reachedDoors": 5,
+      "unservedHomes": [],
+      "classes": {
+        "primary": 1,
+        "secondary": 4,
+        "entrance": 10
+      },
+      "pavingArea": 1.3757143457181091,
+      "pairwiseOverlapArea": 0,
+      "footprintIntrusionArea": 0,
+      "waterIntrusionArea": 0,
+      "seamPairs": 0,
+      "maxSeamGap": 0,
+      "routeFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "C-three-hexagons",
+      "tiles": 3,
+      "doors": 6,
+      "reachedDoors": 6,
+      "unservedHomes": [],
+      "classes": {
+        "primary": 19,
+        "secondary": 0,
+        "entrance": 12
+      },
+      "pavingArea": 6.068958002998639,
+      "pairwiseOverlapArea": 0,
+      "footprintIntrusionArea": 0,
+      "waterIntrusionArea": 0,
+      "seamPairs": 2,
+      "maxSeamGap": 2.482534153247273e-16,
+      "routeFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "D-hillside",
+      "tiles": 3,
+      "doors": 6,
+      "reachedDoors": 6,
+      "unservedHomes": [],
+      "classes": {
+        "primary": 19,
+        "secondary": 0,
+        "entrance": 12
+      },
+      "pavingArea": 6.068960948183663,
+      "pairwiseOverlapArea": 2.7341652442114395e-8,
+      "footprintIntrusionArea": 0,
+      "waterIntrusionArea": 0,
+      "seamPairs": 2,
+      "maxSeamGap": 2.482534153247273e-16,
+      "routeFailures": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "name": "E-settlement",
+      "tiles": 20,
+      "doors": 37,
+      "reachedDoors": 34,
+      "unservedHomes": [
+        {
+          "tile": [
+            0,
+            1
+          ],
+          "side": 4,
+          "reason": "Tile has no rule entrance or pedestrian crossing"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "side": 5,
+          "reason": "Tile has no rule entrance or pedestrian crossing"
+        },
+        {
+          "tile": [
+            2,
+            -3
+          ],
+          "side": 2,
+          "reason": "Tile has no rule entrance or pedestrian crossing"
+        }
+      ],
+      "classes": {
+        "primary": 64,
+        "secondary": 7,
+        "entrance": 76
+      },
+      "pavingArea": 23.299818475078155,
+      "pairwiseOverlapArea": 1.3016521832609484e-8,
+      "footprintIntrusionArea": 0,
+      "waterIntrusionArea": 0,
+      "seamPairs": 8,
+      "maxSeamGap": 1.047382306668854e-15,
+      "routeFailures": [
+        {
+          "tile": [
+            0,
+            1
+          ],
+          "group": null,
+          "side": 4,
+          "at": {
+            "x": -0.11626564238477417,
+            "z": -0.5499116278661003,
+            "y": 0,
+            "heading": {
+              "x": 0.13096780331570204,
+              "z": 0.9913866221079743
+            },
+            "width": 0.15539999999999998
+          },
+          "reason": "No Rust entrance assignment"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "group": null,
+          "side": 5,
+          "at": {
+            "x": 0.5981548190141093,
+            "z": -0.22018562950670556,
+            "y": 0,
+            "heading": {
+              "x": -0.9300616232047973,
+              "z": 0.36740356155276666
+            },
+            "width": 0.15539999999999998
+          },
+          "reason": "No Rust entrance assignment"
+        },
+        {
+          "tile": [
+            2,
+            -3
+          ],
+          "group": null,
+          "side": 2,
+          "at": {
+            "x": -0.4181046183761106,
+            "z": 0.37564481382558107,
+            "y": 0,
+            "heading": {
+              "x": 0.7930820980596981,
+              "z": -0.609114755803229
+            },
+            "width": 0.15539999999999998
+          },
+          "reason": "No Rust entrance assignment"
+        }
+      ],
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "passed": true
+}</pre></details></body></html>

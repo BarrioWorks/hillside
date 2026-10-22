@@ -1,0 +1,1600 @@
+{
+  "scene": {
+    "id": "909352-closeup",
+    "framing": "closeup",
+    "seed": 909352,
+    "region": "salento",
+    "placements": 29,
+    "tiles": [
+      {
+        "q": 0,
+        "r": 0,
+        "kind": "inicio",
+        "family": "landmark",
+        "edges": [
+          "nature",
+          "homes",
+          "nature",
+          "nature",
+          "path",
+          "path"
+        ],
+        "paths": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        "entrances": [
+          null,
+          1,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          2,
+          18,
+          2,
+          2,
+          18,
+          18
+        ],
+        "meets": [
+          "match",
+          "match",
+          "match",
+          "match",
+          "differ",
+          "match"
+        ],
+        "rotation": 5,
+        "variation": 4,
+        "elevation": 2
+      },
+      {
+        "q": 0,
+        "r": 1,
+        "kind": "monte",
+        "family": "nature",
+        "edges": [
+          "nature",
+          "nature",
+          "nature",
+          "nature",
+          "homes",
+          "nature"
+        ],
+        "paths": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          2,
+          2,
+          2,
+          2,
+          null,
+          2
+        ],
+        "meets": [
+          "match",
+          "match",
+          "match",
+          "match",
+          "match",
+          "match"
+        ],
+        "rotation": 3,
+        "variation": 2,
+        "elevation": 2
+      },
+      {
+        "q": 1,
+        "r": 0,
+        "kind": "monte",
+        "family": "nature",
+        "edges": [
+          "nature",
+          "nature",
+          "nature",
+          "nature",
+          "nature",
+          "homes"
+        ],
+        "paths": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          null
+        ],
+        "meets": [
+          "match",
+          "match",
+          "match",
+          "match",
+          "match",
+          "match"
+        ],
+        "rotation": 0,
+        "variation": 12,
+        "elevation": 2
+      },
+      {
+        "q": -1,
+        "r": 0,
+        "kind": "casas",
+        "family": "residential",
+        "edges": [
+          "nature",
+          "homes",
+          "homes",
+          "path",
+          "path",
+          "homes"
+        ],
+        "paths": [
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        "entrances": [
+          null,
+          1,
+          1,
+          null,
+          null,
+          1
+        ],
+        "networks": [
+          2,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "meets": [
+          "match",
+          "differ",
+          "match",
+          "match",
+          "match",
+          "match"
+        ],
+        "rotation": 4,
+        "variation": 7,
+        "elevation": 2
+      },
+      {
+        "q": -1,
+        "r": 1,
+        "kind": "sendero",
+        "family": "landscape",
+        "edges": [
+          "nature",
+          "nature",
+          "homes",
+          "nature",
+          "path",
+          "nature"
+        ],
+        "paths": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          1,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          2,
+          2,
+          7,
+          2,
+          7,
+          2
+        ],
+        "meets": [
+          "match",
+          "match",
+          "open",
+          "match",
+          "differ",
+          "match"
+        ],
+        "rotation": 4,
+        "variation": 5,
+        "elevation": 2
+      },
+      {
+        "q": 1,
+        "r": -1,
+        "kind": "casas",
+        "family": "residential",
+        "edges": [
+          "homes",
+          "nature",
+          "path",
+          "homes",
+          "homes",
+          "path"
+        ],
+        "paths": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        "entrances": [
+          1,
+          null,
+          null,
+          1,
+          1,
+          null
+        ],
+        "networks": [
+          18,
+          2,
+          18,
+          18,
+          18,
+          18
+        ],
+        "meets": [
+          "differ",
+          "match",
+          "match",
+          "match",
+          "match",
+          "match"
+        ],
+        "rotation": 5,
+        "variation": 8,
+        "elevation": 2
+      },
+      {
+        "q": -1,
+        "r": 2,
+        "kind": "quebrada",
+        "family": "water",
+        "edges": [
+          "water",
+          "path",
+          "nature",
+          "water",
+          "nature",
+          "nature"
+        ],
+        "paths": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          10,
+          11,
+          2,
+          10,
+          2,
+          2
+        ],
+        "meets": [
+          "match",
+          "match",
+          "match",
+          "open",
+          "match",
+          "match"
+        ],
+        "rotation": 0,
+        "variation": 14,
+        "elevation": 2
+      },
+      {
+        "q": 1,
+        "r": 1,
+        "kind": "monte",
+        "family": "nature",
+        "edges": [
+          "nature",
+          "path",
+          "nature",
+          "nature",
+          "nature",
+          "nature"
+        ],
+        "paths": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          2,
+          14,
+          2,
+          2,
+          2,
+          2
+        ],
+        "meets": [
+          "open",
+          "open",
+          "match",
+          "match",
+          "match",
+          "match"
+        ],
+        "rotation": 0,
+        "variation": 12,
+        "elevation": 2
+      },
+      {
+        "q": 0,
+        "r": -1,
+        "kind": "casas",
+        "family": "residential",
+        "edges": [
+          "homes",
+          "homes",
+          "homes",
+          "path",
+          "nature",
+          "homes"
+        ],
+        "paths": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "entrances": [
+          1,
+          1,
+          1,
+          null,
+          null,
+          1
+        ],
+        "networks": [
+          15,
+          15,
+          15,
+          15,
+          16,
+          15
+        ],
+        "meets": [
+          "match",
+          "differ",
+          "match",
+          "differ",
+          "match",
+          "match"
+        ],
+        "rotation": 3,
+        "variation": 12,
+        "elevation": 2
+      },
+      {
+        "q": 2,
+        "r": 0,
+        "kind": "sendero",
+        "family": "landscape",
+        "edges": [
+          "nature",
+          "path",
+          "nature",
+          "nature",
+          "path",
+          "nature"
+        ],
+        "paths": [
+          0,
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          2,
+          18,
+          2,
+          2,
+          18,
+          2
+        ],
+        "meets": [
+          "open",
+          "open",
+          "match",
+          "match",
+          "match",
+          "match"
+        ],
+        "rotation": 4,
+        "variation": 5,
+        "elevation": 2
+      },
+      {
+        "q": 2,
+        "r": -1,
+        "kind": "plaza",
+        "family": "community",
+        "edges": [
+          "path",
+          "path",
+          "homes",
+          "path",
+          "path",
+          "homes"
+        ],
+        "paths": [
+          1,
+          1,
+          0,
+          1,
+          1,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          1,
+          null,
+          null,
+          1
+        ],
+        "networks": [
+          18,
+          18,
+          18,
+          18,
+          18,
+          18
+        ],
+        "meets": [
+          "match",
+          "match",
+          "match",
+          "differ",
+          "match",
+          "match"
+        ],
+        "rotation": 3,
+        "variation": 14,
+        "elevation": 2
+      },
+      {
+        "q": -2,
+        "r": 1,
+        "kind": "tienda",
+        "family": "community",
+        "edges": [
+          "nature",
+          "homes",
+          "path",
+          "path",
+          "homes",
+          "homes"
+        ],
+        "paths": [
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          1,
+          null,
+          null,
+          1,
+          1
+        ],
+        "networks": [
+          2,
+          21,
+          21,
+          21,
+          21,
+          21
+        ],
+        "meets": [
+          "match",
+          "open",
+          "match",
+          "match",
+          "match",
+          "match"
+        ],
+        "rotation": 2,
+        "variation": 1,
+        "elevation": 2
+      },
+      {
+        "q": 1,
+        "r": -2,
+        "kind": "casas",
+        "family": "residential",
+        "edges": [
+          "path",
+          "homes",
+          "homes",
+          "path",
+          "homes",
+          "homes"
+        ],
+        "paths": [
+          1,
+          0,
+          0,
+          2,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          1,
+          2,
+          null,
+          2,
+          1
+        ],
+        "networks": [
+          22,
+          22,
+          23,
+          23,
+          23,
+          22
+        ],
+        "meets": [
+          "differ",
+          "match",
+          "match",
+          "match",
+          "match",
+          "match"
+        ],
+        "rotation": 0,
+        "variation": 8,
+        "elevation": 2
+      },
+      {
+        "q": 0,
+        "r": -2,
+        "kind": "sendero",
+        "family": "landscape",
+        "edges": [
+          "path",
+          "nature",
+          "nature",
+          "path",
+          "nature",
+          "nature"
+        ],
+        "paths": [
+          1,
+          0,
+          0,
+          2,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          23,
+          16,
+          16,
+          26,
+          16,
+          16
+        ],
+        "meets": [
+          "match",
+          "match",
+          "match",
+          "match",
+          "match",
+          "match"
+        ],
+        "rotation": 0,
+        "variation": 12,
+        "elevation": 2
+      },
+      {
+        "q": -1,
+        "r": -1,
+        "kind": "casas",
+        "family": "residential",
+        "edges": [
+          "homes",
+          "path",
+          "homes",
+          "homes",
+          "nature",
+          "nature"
+        ],
+        "paths": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "entrances": [
+          1,
+          null,
+          1,
+          1,
+          null,
+          null
+        ],
+        "networks": [
+          5,
+          5,
+          5,
+          5,
+          16,
+          16
+        ],
+        "meets": [
+          "differ",
+          "match",
+          "match",
+          "open",
+          "match",
+          "match"
+        ],
+        "rotation": 0,
+        "variation": 2,
+        "elevation": 2
+      },
+      {
+        "q": 2,
+        "r": -2,
+        "kind": "tienda",
+        "family": "community",
+        "edges": [
+          "homes",
+          "path",
+          "path",
+          "homes",
+          "nature",
+          "homes"
+        ],
+        "paths": [
+          0,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "entrances": [
+          1,
+          null,
+          null,
+          1,
+          null,
+          1
+        ],
+        "networks": [
+          18,
+          18,
+          18,
+          18,
+          16,
+          18
+        ],
+        "meets": [
+          "differ",
+          "match",
+          "match",
+          "differ",
+          "match",
+          "match"
+        ],
+        "rotation": 2,
+        "variation": 3,
+        "elevation": 2
+      },
+      {
+        "q": 2,
+        "r": -3,
+        "kind": "monte",
+        "family": "nature",
+        "edges": [
+          "nature",
+          "nature",
+          "homes",
+          "nature",
+          "nature",
+          "nature"
+        ],
+        "paths": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          16,
+          16,
+          null,
+          16,
+          16,
+          16
+        ],
+        "meets": [
+          "match",
+          "match",
+          "match",
+          "match",
+          "open",
+          "open"
+        ],
+        "rotation": 1,
+        "variation": 8,
+        "elevation": 2
+      },
+      {
+        "q": -2,
+        "r": 0,
+        "kind": "casas",
+        "family": "residential",
+        "edges": [
+          "path",
+          "homes",
+          "homes",
+          "nature",
+          "nature",
+          "homes"
+        ],
+        "paths": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          1,
+          1,
+          null,
+          null,
+          1
+        ],
+        "networks": [
+          5,
+          5,
+          5,
+          33,
+          33,
+          5
+        ],
+        "meets": [
+          "match",
+          "match",
+          "match",
+          "open",
+          "open",
+          "match"
+        ],
+        "rotation": 5,
+        "variation": 5,
+        "elevation": 2
+      },
+      {
+        "q": 1,
+        "r": -3,
+        "kind": "sendero",
+        "family": "landscape",
+        "edges": [
+          "nature",
+          "homes",
+          "nature",
+          "nature",
+          "nature",
+          "path"
+        ],
+        "paths": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "entrances": [
+          null,
+          1,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          16,
+          35,
+          16,
+          16,
+          16,
+          35
+        ],
+        "meets": [
+          "match",
+          "match",
+          "match",
+          "match",
+          "open",
+          "open"
+        ],
+        "rotation": 5,
+        "variation": 11,
+        "elevation": 2
+      },
+      {
+        "q": -1,
+        "r": -2,
+        "kind": "casas",
+        "family": "residential",
+        "edges": [
+          "path",
+          "nature",
+          "homes",
+          "path",
+          "homes",
+          "homes"
+        ],
+        "paths": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          1,
+          null,
+          1,
+          1
+        ],
+        "networks": [
+          26,
+          16,
+          26,
+          26,
+          26,
+          26
+        ],
+        "meets": [
+          "match",
+          "match",
+          "open",
+          "open",
+          "open",
+          "differ"
+        ],
+        "rotation": 0,
+        "variation": 2,
+        "elevation": 3
+      },
+      {
+        "q": -3,
+        "r": 1,
+        "kind": "casas",
+        "family": "residential",
+        "edges": [
+          "path",
+          "homes",
+          "homes",
+          "homes",
+          "path",
+          "homes"
+        ],
+        "paths": [
+          1,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "entrances": [
+          null,
+          1,
+          1,
+          1,
+          null,
+          1
+        ],
+        "networks": [
+          21,
+          21,
+          21,
+          21,
+          21,
+          21
+        ],
+        "meets": [
+          "match",
+          "match",
+          "open",
+          "open",
+          "open",
+          "match"
+        ],
+        "rotation": 0,
+        "variation": 15,
+        "elevation": 3
+      },
+      {
+        "q": 0,
+        "r": -3,
+        "kind": "sendero",
+        "family": "landscape",
+        "edges": [
+          "nature",
+          "nature",
+          "path",
+          "nature",
+          "nature",
+          "path"
+        ],
+        "paths": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        "entrances": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          16,
+          16,
+          40,
+          16,
+          16,
+          40
+        ],
+        "meets": [
+          "match",
+          "match",
+          "differ",
+          "open",
+          "open",
+          "open"
+        ],
+        "rotation": 2,
+        "variation": 4,
+        "elevation": 3
+      },
+      {
+        "q": 3,
+        "r": -3,
+        "kind": "monte",
+        "family": "nature",
+        "edges": [
+          "nature",
+          "nature",
+          "homes",
+          "nature",
+          "nature",
+          "nature"
+        ],
+        "paths": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          16,
+          16,
+          null,
+          16,
+          16,
+          16
+        ],
+        "meets": [
+          "open",
+          "match",
+          "match",
+          "match",
+          "open",
+          "open"
+        ],
+        "rotation": 1,
+        "variation": 5,
+        "elevation": 2
+      },
+      {
+        "q": 0,
+        "r": 2,
+        "kind": "quebrada",
+        "family": "water",
+        "edges": [
+          "water",
+          "nature",
+          "nature",
+          "water",
+          "nature",
+          "nature"
+        ],
+        "paths": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          10,
+          2,
+          2,
+          10,
+          2,
+          2
+        ],
+        "meets": [
+          "open",
+          "match",
+          "match",
+          "match",
+          "match",
+          "match"
+        ],
+        "rotation": 0,
+        "variation": 8,
+        "elevation": 2
+      },
+      {
+        "q": -3,
+        "r": 2,
+        "kind": "casas",
+        "family": "residential",
+        "edges": [
+          "homes",
+          "homes",
+          "path",
+          "homes",
+          "homes",
+          "path"
+        ],
+        "paths": [
+          0,
+          0,
+          2,
+          0,
+          0,
+          1
+        ],
+        "entrances": [
+          1,
+          2,
+          null,
+          2,
+          1,
+          null
+        ],
+        "networks": [
+          21,
+          44,
+          44,
+          44,
+          21,
+          21
+        ],
+        "meets": [
+          "open",
+          "open",
+          "open",
+          "open",
+          "match",
+          "match"
+        ],
+        "rotation": 5,
+        "variation": 10,
+        "elevation": 3
+      },
+      {
+        "q": 3,
+        "r": -1,
+        "kind": "casas",
+        "family": "residential",
+        "edges": [
+          "path",
+          "homes",
+          "nature",
+          "path",
+          "homes",
+          "homes"
+        ],
+        "paths": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          1,
+          null,
+          null,
+          1,
+          1
+        ],
+        "networks": [
+          18,
+          18,
+          2,
+          18,
+          18,
+          18
+        ],
+        "meets": [
+          "open",
+          "open",
+          "match",
+          "match",
+          "match",
+          "open"
+        ],
+        "rotation": 0,
+        "variation": 3,
+        "elevation": 2
+      },
+      {
+        "q": -1,
+        "r": 3,
+        "kind": "sendero",
+        "family": "landscape",
+        "edges": [
+          "nature",
+          "nature",
+          "path",
+          "nature",
+          "path",
+          "nature"
+        ],
+        "paths": [
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          2,
+          2,
+          11,
+          2,
+          11,
+          2
+        ],
+        "meets": [
+          "match",
+          "open",
+          "open",
+          "match",
+          "match",
+          "match"
+        ],
+        "rotation": 4,
+        "variation": 5,
+        "elevation": 3
+      },
+      {
+        "q": 3,
+        "r": -2,
+        "kind": "casas",
+        "family": "residential",
+        "edges": [
+          "path",
+          "homes",
+          "homes",
+          "path",
+          "nature",
+          "homes"
+        ],
+        "paths": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          1,
+          1,
+          null,
+          null,
+          1
+        ],
+        "networks": [
+          50,
+          50,
+          50,
+          50,
+          16,
+          50
+        ],
+        "meets": [
+          "open",
+          "match",
+          "match",
+          "differ",
+          "match",
+          "open"
+        ],
+        "rotation": 3,
+        "variation": 10,
+        "elevation": 2
+      },
+      {
+        "q": -2,
+        "r": 3,
+        "kind": "quebrada",
+        "family": "water",
+        "edges": [
+          "nature",
+          "water",
+          "nature",
+          "water",
+          "nature",
+          "nature"
+        ],
+        "paths": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          2,
+          53,
+          2,
+          53,
+          2,
+          2
+        ],
+        "meets": [
+          "match",
+          "open",
+          "open",
+          "open",
+          "open",
+          "match"
+        ],
+        "rotation": 1,
+        "variation": 0,
+        "elevation": 2
+      },
+      {
+        "q": 0,
+        "r": 3,
+        "kind": "monte",
+        "family": "nature",
+        "edges": [
+          "nature",
+          "homes",
+          "nature",
+          "nature",
+          "nature",
+          "nature"
+        ],
+        "paths": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "entrances": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "networks": [
+          2,
+          null,
+          2,
+          2,
+          2,
+          2
+        ],
+        "meets": [
+          "open",
+          "open",
+          "open",
+          "match",
+          "match",
+          "open"
+        ],
+        "rotation": 2,
+        "variation": 1,
+        "elevation": 3
+      }
+    ],
+    "camera": {
+      "position": [
+        28.213702515811065,
+        52.19499745312416,
+        56.83499994183547
+      ],
+      "quaternion": [
+        -0.33610709950577733,
+        0.24264492966803478,
+        0.09005962588294,
+        0.9055632057200828
+      ],
+      "zoom": 2.5,
+      "left": -21.6,
+      "right": 21.6,
+      "top": 13.5,
+      "bottom": -13.5,
+      "near": 0.1,
+      "far": 400,
+      "target": [
+        -2.0999999999999996,
+        0,
+        4.330127018922193
+      ]
+    },
+    "lighting": "afternoon",
+    "resolution": [
+      1440,
+      900
+    ]
+  },
+  "stage": "candidates",
+  "candidate": "cool",
+  "compositionHash": "6fd5e6a55ea83fea96adf0b69903935a510fda066485fc8614c64f429d78ef4b",
+  "metrics": {
+    "frames": 121,
+    "renderFrames": 22,
+    "continuousRendering": true,
+    "graphics": {
+      "quality": "high",
+      "software": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "shadowSize": 2048
+    },
+    "lighting": "afternoon",
+    "environment": {
+      "candidate": "cool",
+      "toneMapping": "neutral",
+      "exposure": 1
+    },
+    "shadowUpdates": 4,
+    "shadowAutoUpdate": false,
+    "shadowNeedsUpdate": false,
+    "frameMs": 483.3000000000011,
+    "p95FrameMs": 500.09999999999854,
+    "frameSamples": 6,
+    "renderMs": 477.19999998807907,
+    "renderSamples": 7,
+    "drawCalls": 97,
+    "triangles": 116610,
+    "geometries": 133,
+    "textures": 2,
+    "tiles": 30,
+    "tileParts": 314,
+    "cachedGeometries": 127,
+    "batchCount": 125,
+    "allocatedBatchCount": 127,
+    "groundTriangles": 886,
+    "renderObjectCount": 130,
+    "reconciled": 31,
+    "reconcileMs": 630.5,
+    "pixelRatio": 1,
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "coreMilliseconds": 21.900000005960464,
+    "revision": 1,
+    "averageFrameMs": 483.3166666666666,
+    "materialCount": 21,
+    "geometryBufferBytes": 4015516,
+    "gpuMemoryBytes": null,
+    "gpuMemoryNote": "WebGL does not expose total GPU allocation; geometry buffer bytes exclude driver, textures, shadows and instance buffers.",
+    "adapter": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "colorManagement": {
+      "output": "srgb",
+      "toneMapping": 7,
+      "exposure": 1
+    },
+    "fog": {
+      "near": 60,
+      "far": 140,
+      "color": "ece5ca"
+    },
+    "shadow": {
+      "type": 2,
+      "mapSize": [
+        2048,
+        2048
+      ],
+      "bias": -0.0004,
+      "normalBias": 0.025
+    },
+    "sun": {
+      "color": "f2e2c8",
+      "intensity": 2.8499999999999996,
+      "position": [
+        -28.226780798397876,
+        41.00308031828838,
+        -35.412511555327534
+      ]
+    },
+    "sky": {
+      "color": "d7e4e5",
+      "ground": "adac98",
+      "intensity": 2.2
+    }
+  },
+  "errors": []
+}

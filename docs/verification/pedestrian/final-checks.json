@@ -1,0 +1,53 @@
+{
+  "recordedAt": "2026-10-21T22:00:09.226181+00:00",
+  "productionBuild": "passed",
+  "typecheck": "passed as part of production build",
+  "lint": {
+    "status": "passed",
+    "files": 67
+  },
+  "focusedPedestrianTests": {
+    "passed": 51,
+    "failed": 0,
+    "log": "focused-check.log"
+  },
+  "verificationInstrumentTests": {
+    "passed": 12,
+    "failed": 0
+  },
+  "fullSequentialTests": {
+    "passed": 250,
+    "failed": 1,
+    "unhandledErrors": 1,
+    "failure": "Preexisting atmosphere.test.ts:175 regional light color equality",
+    "unhandledError": "Vitest onTaskUpdate RPC timeout",
+    "log": "unit-check.log"
+  },
+  "renderedAcceptance": {
+    "passed": true,
+    "requiredScenes": 5,
+    "requiredScreenshots": 15,
+    "supplementalScreenshots": 3,
+    "failedRequiredRoutes": 0,
+    "unservedNullRuleHomes": 3,
+    "maxScenePairwiseOverlapArea": 2.7341652442114395e-08,
+    "buildingIntrusionArea": 0,
+    "waterIntrusionArea": 0
+  },
+  "stableExpansion": {
+    "frozenUphillCases": 43,
+    "actualLowerOwnedStairTiles": 20,
+    "status": "passed"
+  },
+  "independentReview": {
+    "productionCorrection": "Two independent Codex reviewers found no remaining production defect in their probes",
+    "verifierCorrection": "resolved by independent review; 16 probes (3 valid pass, 13 mutations reject)",
+    "unavailable": [
+      "claude-opus-5-5 API rate limit after retry",
+      "claude-fable-5-1 API rate limit after retry"
+    ]
+  },
+  "referenceLimit": "Requested external screenshot was not attached; compared saved baseline and classic/12-paths-joined.png",
+  "sourceHashes": "source-hashes.json",
+  "unrelatedWork": "Preserved initial environment changes; no commits or resets"
+}

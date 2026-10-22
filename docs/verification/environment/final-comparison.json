@@ -1,0 +1,110 @@
+[
+  {
+    "file": "docs/screenshots/environment/final/2-closeup-balanced.json",
+    "compositionMatches": true,
+    "cameraAndSceneMatch": true,
+    "beforeTriangles": 96360,
+    "afterTriangles": 79640,
+    "beforeDrawCalls": 115,
+    "afterDrawCalls": 119
+  },
+  {
+    "file": "docs/screenshots/environment/final/2-closeup-cool.json",
+    "compositionMatches": true,
+    "cameraAndSceneMatch": true,
+    "beforeTriangles": 96360,
+    "afterTriangles": 79640,
+    "beforeDrawCalls": 115,
+    "afterDrawCalls": 119
+  },
+  {
+    "file": "docs/screenshots/environment/final/2-closeup-warm.json",
+    "compositionMatches": true,
+    "cameraAndSceneMatch": true,
+    "beforeTriangles": 96360,
+    "afterTriangles": 79640,
+    "beforeDrawCalls": 115,
+    "afterDrawCalls": 119
+  },
+  {
+    "file": "docs/screenshots/environment/final/2-overview-balanced.json",
+    "compositionMatches": true,
+    "cameraAndSceneMatch": true,
+    "beforeTriangles": 99926,
+    "afterTriangles": 83905,
+    "beforeDrawCalls": 125,
+    "afterDrawCalls": 133
+  },
+  {
+    "file": "docs/screenshots/environment/final/2-overview-cool.json",
+    "compositionMatches": true,
+    "cameraAndSceneMatch": true,
+    "beforeTriangles": 99926,
+    "afterTriangles": 83905,
+    "beforeDrawCalls": 125,
+    "afterDrawCalls": 133
+  },
+  {
+    "file": "docs/screenshots/environment/final/2-overview-warm.json",
+    "compositionMatches": true,
+    "cameraAndSceneMatch": true,
+    "beforeTriangles": 99926,
+    "afterTriangles": 83905,
+    "beforeDrawCalls": 125,
+    "afterDrawCalls": 133
+  },
+  {
+    "file": "docs/screenshots/environment/final/909352-closeup-balanced.json",
+    "compositionMatches": true,
+    "cameraAndSceneMatch": true,
+    "beforeTriangles": 116610,
+    "afterTriangles": 100906,
+    "beforeDrawCalls": 97,
+    "afterDrawCalls": 102
+  },
+  {
+    "file": "docs/screenshots/environment/final/909352-closeup-cool.json",
+    "compositionMatches": true,
+    "cameraAndSceneMatch": true,
+    "beforeTriangles": 116610,
+    "afterTriangles": 100906,
+    "beforeDrawCalls": 97,
+    "afterDrawCalls": 102
+  },
+  {
+    "file": "docs/screenshots/environment/final/909352-closeup-warm.json",
+    "compositionMatches": true,
+    "cameraAndSceneMatch": true,
+    "beforeTriangles": 116610,
+    "afterTriangles": 100906,
+    "beforeDrawCalls": 97,
+    "afterDrawCalls": 102
+  },
+  {
+    "file": "docs/screenshots/environment/final/909352-overview-balanced.json",
+    "compositionMatches": true,
+    "cameraAndSceneMatch": true,
+    "beforeTriangles": 121730,
+    "afterTriangles": 106326,
+    "beforeDrawCalls": 133,
+    "afterDrawCalls": 141
+  },
+  {
+    "file": "docs/screenshots/environment/final/909352-overview-cool.json",
+    "compositionMatches": true,
+    "cameraAndSceneMatch": true,
+    "beforeTriangles": 121730,
+    "afterTriangles": 106326,
+    "beforeDrawCalls": 133,
+    "afterDrawCalls": 141
+  },
+  {
+    "file": "docs/screenshots/environment/final/909352-overview-warm.json",
+    "compositionMatches": true,
+    "cameraAndSceneMatch": true,
+    "beforeTriangles": 121730,
+    "afterTriangles": 106326,
+    "beforeDrawCalls": 133,
+    "afterDrawCalls": 141
+  }
+]

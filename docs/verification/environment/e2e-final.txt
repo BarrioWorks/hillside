@@ -1,0 +1,22 @@
+
+> barrio-builder@0.1.0 test:e2e
+> playwright test --update-snapshots
+
+
+Running 10 tests using 1 worker
+
+(node:2522839) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 web/tests/game.spec.ts:72:1 › places a tile on a fitting spot for the previewed points (9.9s)
+  ✓   2 web/tests/game.spec.ts:107:1 › shows the region, the tile in hand, and turns it with the tray buttons (6.3s)
+  ✓   3 web/tests/game.spec.ts:127:1 › refuses a spot where the tile in hand cannot go (23.1s)
+  ✓   4 web/tests/game.spec.ts:152:1 › skips the tile in hand once per run (6.0s)
+  ✓   5 web/tests/game.spec.ts:168:1 › shows the results when the deck runs out (10.6s)
+  ✓   6 web/tests/game.spec.ts:218:1 › shows three quests and pays one on the placement that completes it (25.5s)
+  ✓   7 web/tests/game.spec.ts:263:1 › keeps the run across a reload (12.1s)
+  ✓   8 web/tests/game.spec.ts:288:1 › turns the camera with the view buttons (14.2s)
+  ✓   9 web/tests/game.spec.ts:316:3 › matches the opening neighborhood baseline (3.6s)
+/home/agent/code/OVH/barrio.works/web/tests/game.spec.ts-snapshots/developed-linux.png is re-generated, writing actual.
+  ✓  10 web/tests/game.spec.ts:316:3 › matches the developed neighborhood baseline (5.9s)
+
+  10 passed (2.0m)

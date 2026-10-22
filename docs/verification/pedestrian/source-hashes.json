@@ -1,0 +1,23 @@
+{
+  "web/src/render/tiles.ts": "dc95766cfa1e99038cd664bc997ccef7bba5ba21fc2ec24a06161a5000b3793f",
+  "web/src/render/world.ts": "0a5e2ad51be1bef7fc2517d0129422860b6c19bbd211576477dd5ac568ce1317",
+  "web/src/render/debug.ts": "98cfa2f3151b6f47ab81d6b9d6075a8f677201648bbaa047a7abc86307f55d8f",
+  "web/src/render/ground.ts": "d48e45d008fc20f4448928b183bee21f39125a075668da54eceb090f5f8beb8b",
+  "web/tests/tiles.test.ts": "77e4507d58cb5a16e25e96d93479dff1297345d2a0f2395824ab22be745b4cb0",
+  "package.json": "a7709caded78904dad31fc4f3f64b1f9e859c1204b8a6df1ac4dcd76d37e73f3",
+  "web/src/render/architecture.ts": "c13fb065f3b6cb04b9ecfbb5570c0646b720510b28ba0bb368eaa422c97ca7fd",
+  "web/tests/debug.test.ts": "69ac3424a0fb25c663d81cb0742005c298d23d252f9be89b25e48e87f23c735c",
+  "web/src/render/pedestrian.ts": "b8976e9bc6109b8a4ed1440acf8c557edc849948d588b1f9576233f6c437ed81",
+  "web/src/render/building-door.ts": "b562fceb6e182955e29cfc08809ca6863b51c205472bcca25d17a2b8362882ac",
+  "web/tests/pedestrian-network.test.ts": "17a3a27cb9c5eb383b55188d712c8de42baf5ef48b02344e2fb3cb03da49dcb1",
+  "web/tests/pedestrian.test.ts": "0af80ba5d186309d613b4783395ed76db676896f22f7ba90b59af88b16c18e2b",
+  "tools/pedestrian-verify.mjs": "185978dfd8a63e62e334b1d028cd7905845a57c0e92f74942e62692e78abc094",
+  "tools/pedestrian-gallery.mjs": "d3bd1026d8cf71f71c7a4013469ed15d18fb4f340fb20d1ba616b6bdcf96dd10",
+  "tools/pedestrian-geometry.test.mjs": "61cd5b49cefcf679721dad26c28736dfb2c72f9a82f2472d71077f7a54e42231",
+  "tools/pedestrian-geometry.mjs": "a1dca7d2fdc05e074d0e2e2778ba4f137762dd5da8de7315caf2810b733a7e7d",
+  "tools/pedestrian-scenes.mjs": "0e175c40f396f3e8d8fb73c4425dd35dd3535ba5be1a75b3f2924cb13de965e5",
+  "tools/pedestrian-capture.mjs": "f9b7d6849c56d20a23a660db6ef780b46f4292460dbb7e087bae518c1d8d613d",
+  "tools/pedestrian-inventory.mjs": "0680134fc2b69c5e03af661fe0fdeebfbdfa1dd1b375c4cc44d8102f7c867720",
+  "tools/pedestrian-expansion.mjs": "d2f21d22e34117613bf34bced5ab3b8275edd62c6841e7e5d2e87e24410db82d",
+  "tools/pedestrian-inventory.test.mjs": "4f71ade119b1bf70a5842655898740a2b67a7a6bba640986725d5e76844098af"
+}
